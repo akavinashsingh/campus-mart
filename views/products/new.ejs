@@ -1,0 +1,136 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">List Your Item for Sale</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/products" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        
+                        <!-- Basic Information -->
+                        <div class="mb-3">
+                            <label class="form-label">Product Title *</label>
+                            <input type="text" name="product[title]" class="form-control" 
+                                   placeholder="e.g., MacBook Air 2020" required>
+                            <div class="invalid-feedback">Please enter a product title.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Description *</label>
+                            <textarea name="product[description]" class="form-control" rows="4" 
+                                      placeholder="Describe your item in detail..." required></textarea>
+                            <div class="invalid-feedback">Please enter a description.</div>
+                        </div>
+                        
+                        <!-- Category and Condition -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Category *</label>
+                                <select name="product[category]" class="form-select" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Books">Books</option>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="Furniture">Furniture</option>
+                                    <option value="Clothing">Clothing</option>
+                                    <option value="Sports">Sports</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Condition *</label>
+                                <select name="product[condition]" class="form-select" required>
+                                    <option value="">Select Condition</option>
+                                    <option value="New">New</option>
+                                    <option value="Like New">Like New</option>
+                                    <option value="Good">Good</option>
+                                    <option value="Fair">Fair</option>
+                                    <option value="Poor">Poor</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Pricing -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Original Price (₹) *</label>
+                                <input type="number" name="product[originalPrice]" class="form-control" 
+                                       placeholder="Original price when new" min="0" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Selling Price (₹) *</label>
+                                <input type="number" name="product[price]" class="form-control" 
+                                       placeholder="Your selling price" min="0" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Negotiation -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="product[isNegotiable]" value="true" id="negotiable">
+                                <label class="form-check-label" for="negotiable">
+                                    Price is negotiable
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Location -->
+                        <div class="mb-3">
+                            <label class="form-label">Pickup Location *</label>
+                            <input type="text" name="product[location]" class="form-control" 
+                                   placeholder="Where can buyers pick up the item?" required>
+                            <small class="text-muted">e.g., Hostel Block A, Library, Main Gate</small>
+                        </div>
+                        
+                        <!-- Contact Method -->
+                        <div class="mb-3">
+                            <label class="form-label">Preferred Contact Method</label>
+                            <select name="product[contactMethod]" class="form-select">
+                                <option value="WhatsApp">WhatsApp</option>
+                                <option value="Email">Email</option>
+                                <option value="Phone">Phone Call</option>
+                                <option value="In-person">In-person Meeting</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Images -->
+                        <div class="mb-3">
+                            <label class="form-label">Product Images (Max 5) *</label>
+                            <input type="file" name="product[images]" class="form-control" 
+                                   accept="image/*" multiple required>
+                            <small class="text-muted">Upload clear photos of your item from different angles</small>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-plus-circle me-2"></i>List Item for Sale
+                            </button>
+                            <a href="/products" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Form validation
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>

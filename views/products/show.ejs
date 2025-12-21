@@ -1,0 +1,350 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/products">Browse</a></li>
+            <li class="breadcrumb-item"><a href="/products?category=<%= product.category %>"><%= product.category %></a></li>
+            <li class="breadcrumb-item active" aria-current="page"><%= product.title %></li>
+        </ol>
+    </nav>
+    
+    <!-- Product Details -->
+    <div class="row">
+        <!-- Images -->
+        <div class="col-md-7">
+            <div class="card shadow-sm mb-4">
+                <% if(product.isSold) { %>
+                    <div class="sold-overlay">
+                        <div class="sold-text">SOLD</div>
+                    </div>
+                <% } %>
+                
+                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <% product.images.forEach((image, index) => { %>
+                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                <img src="<%= image.url %>" class="d-block w-100 product-main-image" alt="Product image">
+                            </div>
+                        <% }) %>
+                    </div>
+                    
+                    <% if(product.images.length > 1) { %>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    <% } %>
+                </div>
+                
+                <!-- Thumbnails -->
+                <% if(product.images.length > 1) { %>
+                    <div class="row mt-3 px-3">
+                        <% product.images.forEach((image, index) => { %>
+                            <div class="col-3">
+                                <a href="#" class="thumbnail <%= index === 0 ? 'active' : '' %>" data-bs-target="#productCarousel" data-bs-slide-to="<%= index %>">
+                                    <img src="<%= image.url %>" class="img-thumbnail" style="height: 80px; width: 100%; object-fit: cover;">
+                                </a>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        
+        <!-- Product Info -->
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title"><%= product.title %></h2>
+                    
+                    <!-- Badges -->
+                    <div class="mb-3">
+                        <span class="badge bg-primary me-2"><%= product.category %></span>
+                        <span class="badge bg-<%= 
+                            product.condition === 'New' ? 'success' : 
+                            product.condition === 'Like New' ? 'info' : 
+                            product.condition === 'Good' ? 'primary' : 'secondary' 
+                        %> me-2">
+                            <%= product.condition %>
+                        </span>
+                        <% if(product.isNegotiable) { %>
+                            <span class="badge bg-warning me-2">Negotiable</span>
+                        <% } %>
+                        <span class="badge bg-light text-dark">
+                            <i class="fas fa-university me-1"></i><%= product.college %>
+                        </span>
+                    </div>
+                    
+                    <!-- Price -->
+                    <div class="mb-4">
+                        <h3 class="text-primary">₹<%= product.price.toLocaleString("en-IN") %></h3>
+                        <p class="text-muted mb-0">
+                            <del>Original: ₹<%= product.originalPrice.toLocaleString("en-IN") %></del>
+                            <span class="text-success ms-2">
+                                (<%= Math.round((1 - product.price/product.originalPrice) * 100) %>% off)
+                            </span>
+                        </p>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="mb-4">
+                        <h5>Description</h5>
+                        <p class="card-text"><%= product.description %></p>
+                    </div>
+                    
+                    <!-- Details -->
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <div class="detail-item">
+                                <small class="text-muted">Location</small>
+                                <p class="mb-0">
+                                    <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                                    <%= product.location %>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="detail-item">
+                                <small class="text-muted">Contact via</small>
+                                <p class="mb-0">
+                                    <i class="fas fa-comments text-primary me-1"></i>
+                                    <%= product.contactMethod %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Seller Info -->
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <% if(product.owner.profileImage) { %>
+                                    <img src="<%= product.owner.profileImage.url %>" 
+                                         class="rounded-circle me-3" 
+                                         width="50" height="50" 
+                                         alt="Seller">
+                                <% } else { %>
+                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" 
+                                         style="width: 50px; height: 50px;">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                <% } %>
+                                
+                                <div>
+                                    <h6 class="mb-1"><%= product.owner.username %></h6>
+                                    <small class="text-muted">
+                                        <i class="fas fa-star text-warning"></i>
+                                        <%= product.owner.rating.toFixed(1) %> 
+                                        (<%= product.owner.totalRatings %> reviews)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2">
+                        <% if(!product.isSold) { %>
+                            <% if(currUser && product.owner._id.equals(currUser._id)) { %>
+                                <a href="/products/<%= product._id %>/edit" class="btn btn-warning">
+                                    <i class="fas fa-edit me-2"></i>Edit Listing
+                                </a>
+                                <form action="/products/<%= product._id %>/sold" method="POST" class="d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-check-circle me-2"></i>Mark as Sold
+                                    </button>
+                                </form>
+                                <form action="/products/<%= product._id %>?_method=DELETE" method="POST" class="d-grid">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-trash me-2"></i>Delete Listing
+                                    </button>
+                                </form>
+                            <% } else { %>
+                                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#contactModal">
+                                    <i class="fas fa-message me-2"></i>Contact Seller
+                                </button>
+                                <button class="btn btn-outline-primary">
+                                    <i class="fas fa-heart me-2"></i>Save Item
+                                </button>
+                            <% } %>
+                        <% } else { %>
+                            <div class="alert alert-warning text-center">
+                                <i class="fas fa-ban me-2"></i>This item has been sold
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Reviews Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Reviews & Ratings</h4>
+                    
+                    <% if(product.reviews.length > 0) { %>
+                        <% product.reviews.forEach(review => { %>
+                            <div class="review-item mb-3 pb-3 border-bottom">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong><%= review.author.username %></strong>
+                                        <div class="starability-result mb-2" data-rating="<%= review.rating %>"></div>
+                                    </div>
+                                    <small class="text-muted">
+                                        <%= new Date(review.createdAt).toLocaleDateString() %>
+                                    </small>
+                                </div>
+                                <p class="mb-0"><%= review.comment %></p>
+                                
+                                <% if(currUser && review.author._id.equals(currUser._id)) { %>
+                                    <form action="/products/<%= product._id %>/reviews/<%= review._id %>?_method=DELETE" 
+                                          method="POST" class="mt-2">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            Delete Review
+                                        </button>
+                                    </form>
+                                <% } %>
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <p class="text-muted text-center">No reviews yet. Be the first to review!</p>
+                    <% } %>
+                    
+                    <!-- Add Review Form -->
+                    <% if(currUser && !product.owner._id.equals(currUser._id)) { %>
+                        <div class="mt-4">
+                            <h5>Add a Review</h5>
+                            <form action="/products/<%= product._id %>/reviews" method="POST">
+                                <div class="mb-3">
+                                    <label class="form-label">Rating</label>
+                                    <select name="review[rating]" class="form-select" required>
+                                        <option value="">Select Rating</option>
+                                        <option value="5">5 - Excellent</option>
+                                        <option value="4">4 - Good</option>
+                                        <option value="3">3 - Average</option>
+                                        <option value="2">2 - Poor</option>
+                                        <option value="1">1 - Terrible</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Your Review</label>
+                                    <textarea name="review[comment]" class="form-control" rows="3" 
+                                              placeholder="Share your experience with this seller..." required></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary">Submit Review</button>
+                            </form>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contact Modal -->
+<div class="modal fade" id="contactModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Contact Seller</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Contact <strong><%= product.owner.username %></strong> about "<%= product.title %>"</p>
+                
+                <div class="mb-3">
+                    <label class="form-label">Your Message</label>
+                    <textarea class="form-control" rows="4" 
+                              placeholder="Hi, I'm interested in your item..."></textarea>
+                </div>
+                
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Seller prefers contact via: <strong><%= product.contactMethod %></strong>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send Message</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .product-main-image {
+        height: 400px;
+        object-fit: contain;
+        background: #f8f9fa;
+    }
+    
+    .thumbnail {
+        cursor: pointer;
+        border: 2px solid transparent;
+        border-radius: 5px;
+        padding: 2px;
+    }
+    
+    .thumbnail.active {
+        border-color: #0d6efd;
+    }
+    
+    .thumbnail:hover {
+        border-color: #dee2e6;
+    }
+    
+    .sold-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+    }
+    
+    .sold-text {
+        color: white;
+        font-size: 4rem;
+        font-weight: bold;
+        transform: rotate(-30deg);
+        opacity: 0.8;
+    }
+    
+    .detail-item {
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+    
+    .review-item:last-child {
+        border-bottom: none !important;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+</style>
+
+<script>
+    // Initialize carousel thumbnail selection
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script>
