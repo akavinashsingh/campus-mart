@@ -21,6 +21,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
     profileImage: {
         url: String,
         filename: String
@@ -37,6 +41,8 @@ const userSchema = new Schema({
         type: Boolean,
         default: false
     },
+    verificationToken: String,
+    verificationTokenExpires: Date,
     createdAt: {
         type: Date,
         default: Date.now

@@ -62,3 +62,11 @@ module.exports.validateReview = (req, res, next) => {
         next();
     }
 };
+
+module.exports.isAdmin = (req, res, next) => {
+    if (!req.isAuthenticated() || !req.user.isAdmin) {
+        req.flash("error", "Admin access required");
+        return res.redirect("/admin/login");
+    }
+    next();
+};

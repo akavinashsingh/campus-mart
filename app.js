@@ -19,6 +19,7 @@ const ExpressError = require("./utils/ExpressError.js");
 const productRouter = require("./routes/products.js");
 const reviewRouter = require("./routes/reviews.js");
 const userRouter = require("./routes/users.js");
+const adminRouter = require("./routes/admin.js");
 
 const dbUrl = process.env.ATLASDB_URL;
 
@@ -33,6 +34,35 @@ main()
 
 async function main() {
     await mongoose.connect(dbUrl);
+    await ensureDefaultAdmin();
+}
+
+async function ensureDefaultAdmin() {
+    const username = process.env.DEFAULT_ADMIN_USERNAME || "admin";
+    const password = process.env.DEFAULT_ADMIN_PASSWORD || "admin123";
+    const email = process.env.DEFAULT_ADMIN_EMAIL || "admin@campus.local";
+
+    let admin = await User.findOne({ username });
+    if (!admin) {
+        admin = new User({
+            username,
+            email,
+            college: "Administration",
+            phone: "0000000000",
+            isAdmin: true,
+            isVerified: true,
+        });
+        await User.register(admin, password);
+        console.log(`Default admin created: ${username} / ${password}`);
+    } else {
+        if (!admin.isAdmin) {
+            admin.isAdmin = true;
+        }
+        // Always align the admin password with DEFAULT_ADMIN_PASSWORD so login works
+        await admin.setPassword(password);
+        await admin.save();
+        console.log(`Default admin ensured. Username: ${username} / ${password}`);
+    }
 }
 
 // App configuration
@@ -90,6 +120,7 @@ app.use((req, res, next) => {
 app.use("/products", productRouter);
 app.use("/products/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+app.use("/admin", adminRouter);
 
 // Home route
 app.get("/", (req, res) => {

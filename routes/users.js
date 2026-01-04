@@ -25,6 +25,8 @@ router.route("/login")
         userController.login
     );
 
+router.get("/verify", wrapAsync(userController.verifyEmail));
+
 router.get("/logout", userController.logout);
 router.get("/profile", isLoggedIn, userController.renderProfile);
 router.put("/profile/:id", isLoggedIn, upload.single('profileImage'), wrapAsync(userController.updateProfile));
