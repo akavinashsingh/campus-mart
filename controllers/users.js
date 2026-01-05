@@ -76,12 +76,14 @@ module.exports.logout = (req, res, next) => {
 };
 
 module.exports.renderProfile = async (req, res) => {
-    const user = await User.findById(req.user._id)
-        .populate({
-            path: 'products',
-            model: 'Product'
-        });
+    const user = await User.findById(req.user._id);
     res.render("users/profile.ejs", { user });
+};
+
+module.exports.getMyProducts = async (req, res) => {
+    const Product = require("../models/Product");
+    const products = await Product.find({ owner: req.user._id }).sort({ createdAt: -1 });
+    res.json(products);
 };
 
 module.exports.updateProfile = async (req, res) => {

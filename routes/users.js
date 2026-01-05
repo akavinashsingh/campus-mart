@@ -31,4 +31,7 @@ router.get("/logout", userController.logout);
 router.get("/profile", isLoggedIn, userController.renderProfile);
 router.put("/profile/:id", isLoggedIn, upload.single('profileImage'), wrapAsync(userController.updateProfile));
 
+// API endpoint for fetching user's products
+router.get("/api/my-products", isLoggedIn, wrapAsync(userController.getMyProducts));
+
 module.exports = router;
