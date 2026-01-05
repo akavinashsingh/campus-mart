@@ -4,53 +4,77 @@
     <div class="row">
         <!-- Filters -->
         <div class="col-md-3 mb-4">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm sticky-top" style="top: 20px;">
                 <div class="card-body">
-                    <h5 class="card-title">Filters</h5>
-                    <form action="/products" method="GET">
+                    <h5 class="card-title mb-3">
+                        <i class="fas fa-filter me-2"></i>Filters
+                    </h5>
+                    <form action="/products" method="GET" id="filterForm">
                         <div class="mb-3">
-                            <label class="form-label">Category</label>
-                            <select class="form-select" name="category">
+                            <label class="form-label fw-semibold">Category</label>
+                            <select class="form-select" name="category" onchange="this.form.submit()">
                                 <option value="">All Categories</option>
-                                <option value="Books">Books</option>
-                                <option value="Electronics">Electronics</option>
-                                <option value="Furniture">Furniture</option>
-                                <option value="Clothing">Clothing</option>
-                                <option value="Sports">Sports</option>
-                                <option value="Other">Other</option>
+                                <option value="Books" <%= filters?.category === 'Books' ? 'selected' : '' %>>Books</option>
+                                <option value="Electronics" <%= filters?.category === 'Electronics' ? 'selected' : '' %>>Electronics</option>
+                                <option value="Furniture" <%= filters?.category === 'Furniture' ? 'selected' : '' %>>Furniture</option>
+                                <option value="Clothing" <%= filters?.category === 'Clothing' ? 'selected' : '' %>>Clothing</option>
+                                <option value="Sports" <%= filters?.category === 'Sports' ? 'selected' : '' %>>Sports</option>
+                                <option value="Other" <%= filters?.category === 'Other' ? 'selected' : '' %>>Other</option>
                             </select>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Condition</label>
-                            <select class="form-select" name="condition">
+                            <label class="form-label fw-semibold">Condition</label>
+                            <select class="form-select" name="condition" onchange="this.form.submit()">
                                 <option value="">Any Condition</option>
-                                <option value="New">New</option>
-                                <option value="Like New">Like New</option>
-                                <option value="Good">Good</option>
-                                <option value="Fair">Fair</option>
-                                <option value="Poor">Poor</option>
+                                <option value="New" <%= filters?.condition === 'New' ? 'selected' : '' %>>New</option>
+                                <option value="Like New" <%= filters?.condition === 'Like New' ? 'selected' : '' %>>Like New</option>
+                                <option value="Good" <%= filters?.condition === 'Good' ? 'selected' : '' %>>Good</option>
+                                <option value="Fair" <%= filters?.condition === 'Fair' ? 'selected' : '' %>>Fair</option>
+                                <option value="Poor" <%= filters?.condition === 'Poor' ? 'selected' : '' %>>Poor</option>
                             </select>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Price Range</label>
+                            <label class="form-label fw-semibold">Price Range</label>
+                            <div class="mb-2">
+                                <input type="range" class="form-range" id="priceRangeMax" min="0" max="50000" step="100" 
+                                       value="<%= filters?.maxPrice || 50000 %>">
+                                <div class="d-flex justify-content-between text-muted small">
+                                    <span>₹0</span>
+                                    <span id="maxPriceDisplay">₹<%= (filters?.maxPrice || 50000).toLocaleString('en-IN') %></span>
+                                </div>
+                            </div>
                             <div class="row g-2">
                                 <div class="col">
-                                    <input type="number" class="form-control" name="minPrice" placeholder="Min" min="0">
+                                    <input type="number" class="form-control form-control-sm" name="minPrice" 
+                                           id="minPriceInput" placeholder="Min" min="0" 
+                                           value="<%= filters?.minPrice || '' %>">
                                 </div>
                                 <div class="col">
-                                    <input type="number" class="form-control" name="maxPrice" placeholder="Max" min="0">
+                                    <input type="number" class="form-control form-control-sm" name="maxPrice" 
+                                           id="maxPriceInput" placeholder="Max" min="0" 
+                                           value="<%= filters?.maxPrice || '' %>">
                                 </div>
                             </div>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">College</label>
-                            <input type="text" class="form-control" name="college" placeholder="Enter college name">
+                            <label class="form-label fw-semibold">College</label>
+                            <input type="text" class="form-control" name="college" 
+                                   placeholder="Enter college name" value="<%= filters?.college || '' %>">
                         </div>
                         
-                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                        <input type="hidden" name="sort" value="<%= filters?.sort || '' %>">
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check me-2"></i>Apply Filters
+                            </button>
+                            <a href="/products" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-redo me-2"></i>Reset All
+                            </a>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -58,6 +82,23 @@
         
         <!-- Product Listings -->
         <div class="col-md-9">
+            <!-- Header with sort and count -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="mb-0">
+                    <i class="fas fa-box me-2"></i>
+                    <span class="text-muted fw-normal">Found <%= allProducts.length %> items</span>
+                </h4>
+                <div class="d-flex align-items-center gap-2">
+                    <label class="mb-0 text-muted small">Sort by:</label>
+                    <select class="form-select form-select-sm" style="width: auto;" onchange="sortProducts(this.value)">
+                        <option value="newest" <%= filters?.sort === 'newest' || !filters?.sort ? 'selected' : '' %>>Newest First</option>
+                        <option value="oldest" <%= filters?.sort === 'oldest' ? 'selected' : '' %>>Oldest First</option>
+                        <option value="price-low" <%= filters?.sort === 'price-low' ? 'selected' : '' %>>Price: Low to High</option>
+                        <option value="price-high" <%= filters?.sort === 'price-high' ? 'selected' : '' %>>Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+            
             <div class="row">
                 <% if(allProducts.length === 0) { %>
                     <div class="col-12">
@@ -158,3 +199,39 @@
         font-weight: 600;
     }
 </style>
+
+<script>
+    // Price range slider functionality
+    const priceRangeMax = document.getElementById('priceRangeMax');
+    const maxPriceDisplay = document.getElementById('maxPriceDisplay');
+    const maxPriceInput = document.getElementById('maxPriceInput');
+    
+    priceRangeMax.addEventListener('input', function() {
+        const value = this.value;
+        maxPriceDisplay.textContent = '₹' + Number(value).toLocaleString('en-IN');
+        maxPriceInput.value = value;
+    });
+    
+    maxPriceInput.addEventListener('input', function() {
+        const value = this.value;
+        if (value && value <= 50000) {
+            priceRangeMax.value = value;
+            maxPriceDisplay.textContent = '₹' + Number(value).toLocaleString('en-IN');
+        }
+    });
+    
+    // Sort functionality
+    function sortProducts(sortValue) {
+        const form = document.getElementById('filterForm');
+        const sortInput = form.querySelector('input[name="sort"]');
+        sortInput.value = sortValue;
+        form.submit();
+    }
+    
+    // Auto-submit on filter change (optional enhancement)
+    document.querySelectorAll('#filterForm select[name="category"], #filterForm select[name="condition"]').forEach(select => {
+        select.addEventListener('change', function() {
+            document.getElementById('filterForm').submit();
+        });
+    });
+</script>
