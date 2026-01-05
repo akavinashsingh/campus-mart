@@ -48,6 +48,15 @@ module.exports.renderLoginForm = (req, res) => {
 };
 
 module.exports.login = async (req, res) => {
+    // Auto-verify test accounts for development/testing
+    const testAccounts = ['seller_john', 'buyer_sarah'];
+    if (testAccounts.includes(req.user.username) && !req.user.isVerified) {
+        req.user.isVerified = true;
+        req.user.verificationToken = undefined;
+        req.user.verificationTokenExpires = undefined;
+        await req.user.save();
+    }
+    
     if (!req.user.isVerified) {
         req.logout(() => {});
         req.flash("error", "Please verify your email before logging in.");

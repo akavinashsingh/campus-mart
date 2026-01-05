@@ -41,6 +41,17 @@ module.exports.isReviewAuthor = async (req, res, next) => {
     next();
 };
 
+module.exports.isNotProductOwner = async (req, res, next) => {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    
+    if (product.owner.equals(req.user._id)) {
+        req.flash("error", "You cannot rate your own product");
+        return res.redirect(`/products/${id}`);
+    }
+    next();
+};
+
 module.exports.validateProduct = (req, res, next) => {
     const { error } = productSchema.validate(req.body);
     

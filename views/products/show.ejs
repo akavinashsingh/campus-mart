@@ -124,15 +124,18 @@
                     <div class="card bg-light mb-4">
                         <div class="card-body">
                             <div class="d-flex align-items-center">
-                                <% if(product.owner.profileImage) { %>
+                                <% if(product.owner.profileImage && product.owner.profileImage.url) { %>
                                     <img src="<%= product.owner.profileImage.url %>" 
-                                         class="rounded-circle me-3" 
-                                         width="50" height="50" 
-                                         alt="Seller">
+                                         class="rounded-circle me-3 border" 
+                                         width="60" height="60" 
+                                         style="object-fit: cover;"
+                                         alt="<%= product.owner.username %>">
                                 <% } else { %>
-                                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" 
-                                         style="width: 50px; height: 50px;">
-                                        <i class="fas fa-user text-white"></i>
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3 border" 
+                                         style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                        <span class="text-white fw-bold" style="font-size: 24px;">
+                                            <%= product.owner.username.charAt(0).toUpperCase() %>
+                                        </span>
                                     </div>
                                 <% } %>
                                 
@@ -245,6 +248,16 @@
                                 <button type="submit" class="btn btn-primary">Submit Review</button>
                             </form>
                         </div>
+                    <% } else if(currUser && product.owner._id.equals(currUser._id)) { %>
+                        <div class="mt-4 alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            You cannot review your own product. Only buyers can leave reviews.
+                        </div>
+                    <% } else { %>
+                        <div class="mt-4 alert alert-warning">
+                            <i class="fas fa-sign-in-alt me-2"></i>
+                            <a href="/login" class="alert-link">Log in</a> to leave a review
+                        </div>
                     <% } %>
                 </div>
             </div>
@@ -263,20 +276,79 @@
             <div class="modal-body">
                 <p>Contact <strong><%= product.owner.username %></strong> about "<%= product.title %>"</p>
                 
-                <div class="mb-3">
-                    <label class="form-label">Your Message</label>
-                    <textarea class="form-control" rows="4" 
-                              placeholder="Hi, I'm interested in your item..."></textarea>
+                <div class="alert alert-info mb-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Preferred Contact Method: <%= product.contactMethod %></strong>
                 </div>
                 
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Seller prefers contact via: <strong><%= product.contactMethod %></strong>
+                <% if(product.contactMethod === 'Email') { %>
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="fas fa-envelope me-2 text-primary"></i>Email Address
+                            </h6>
+                            <p class="mb-0">
+                                <a href="mailto:<%= product.owner.email %>" class="text-decoration-none">
+                                    <%= product.owner.email %>
+                                </a>
+                            </p>
+                            <small class="text-muted">Click to open your email client</small>
+                        </div>
+                    </div>
+                <% } else if(product.contactMethod === 'Phone') { %>
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="fas fa-phone me-2 text-success"></i>Phone Number
+                            </h6>
+                            <p class="mb-0">
+                                <a href="tel:<%= product.owner.phone %>" class="text-decoration-none">
+                                    <%= product.owner.phone %>
+                                </a>
+                            </p>
+                            <small class="text-muted">Click to call on mobile devices</small>
+                        </div>
+                    </div>
+                <% } else if(product.contactMethod === 'WhatsApp') { %>
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="fab fa-whatsapp me-2 text-success"></i>WhatsApp
+                            </h6>
+                            <p class="mb-0">
+                                <a href="https://wa.me/<%= product.owner.phone.replace(/\D/g, '') %>?text=Hi, I'm interested in your <%= product.title %>" 
+                                   target="_blank" class="text-decoration-none">
+                                    <%= product.owner.phone %>
+                                </a>
+                            </p>
+                            <small class="text-muted">Click to chat on WhatsApp</small>
+                        </div>
+                    </div>
+                <% } else if(product.contactMethod === 'In-person') { %>
+                    <div class="card bg-light mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <i class="fas fa-handshake me-2 text-warning"></i>Meet In-Person
+                            </h6>
+                            <p class="mb-2">
+                                <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                                <strong>Location:</strong> <%= product.location %>
+                            </p>
+                            <p class="mb-0 text-muted">
+                                The seller prefers to meet in person at the campus location mentioned above.
+                            </p>
+                        </div>
+                    </div>
+                <% } %>
+                
+                <div class="mb-3">
+                    <label class="form-label">Additional Message (Optional)</label>
+                    <textarea class="form-control" rows="3" 
+                              placeholder="Add any specific questions or details..."></textarea>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send Message</button>
             </div>
         </div>
     </div>
