@@ -8,12 +8,21 @@ cloudinary.config({
     api_secret: process.env.CLOUD_API_SECRET
 });
 
-// 2. Define the storage settings
+// 2. Define the storage settings with image optimization
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'campusmart_DEV', // The name of the folder in Cloudinary
         allowedFormats: ["png", "jpg", "jpeg"], // Restrict file types
+        transformation: [
+            { 
+                width: 1200,      // Max width
+                height: 1200,     // Max height
+                crop: 'limit',    // Don't upscale, only downscale if needed
+                quality: 'auto',  // Automatic quality optimization
+                fetch_format: 'auto' // Automatic format selection (WebP for supported browsers)
+            }
+        ]
     },
 });
 
