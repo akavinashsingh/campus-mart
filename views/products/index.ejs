@@ -611,6 +611,87 @@
         }
     }
 
+    /* Extra-small devices (portrait phones, less than 576px) */
+    @media (max-width: 576px) {
+        /* Hero tightening */
+        .hero-section {
+            min-height: 220px;
+            padding: 16px 10px;
+        }
+        .hero-title {
+            font-size: 1.6rem;
+            margin-bottom: 6px;
+        }
+        .hero-subtitle {
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+        }
+        .hero-stats {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-width: 360px;
+            margin-top: 14px;
+        }
+        .stat-item {
+            padding: 8px;
+        }
+        .stat-number {
+            font-size: 1.3rem;
+            margin-bottom: 4px;
+        }
+        /* Reduce background load on phones */
+        .floating-element {
+            display: none;
+        }
+
+        /* Filters: disable sticky on small screens */
+        .sticky-top {
+            position: static !important;
+            top: auto !important;
+        }
+
+        /* Cards: compact spacing & typography */
+        .card-body {
+            padding: 6px !important;
+        }
+        .card-title {
+            font-size: 12px;
+            margin-bottom: 2px !important;
+        }
+        .meta-info small {
+            font-size: 10px;
+        }
+        .price-section {
+            padding: 6px;
+        }
+        .price-main {
+            font-size: 13px;
+        }
+        .price-original {
+            font-size: 10px;
+        }
+        .seller-info {
+            gap: 2px;
+            font-size: 10px;
+        }
+        .product-image-container {
+            aspect-ratio: 4 / 3;
+        }
+        .condition-badge {
+            font-size: 9px;
+            padding: 3px 7px !important;
+        }
+        .view-badge {
+            font-size: 9px;
+            padding: 3px 6px;
+            border-radius: 10px;
+        }
+        .sold-badge {
+            font-size: 9px;
+            padding: 3px 9px;
+        }
+    }
+
     
     /* Responsive Adjustments */
     @media (max-width: 768px) {
