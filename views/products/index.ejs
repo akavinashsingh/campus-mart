@@ -1,6 +1,55 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="container mt-4">
+<!-- Animated Hero Section -->
+<div class="hero-section">
+    <div class="animated-bg">
+        <div class="floating-element floating-book">
+            <i class="fas fa-book"></i>
+        </div>
+        <div class="floating-element floating-laptop">
+            <i class="fas fa-laptop"></i>
+        </div>
+        <div class="floating-element floating-dumbbell">
+            <i class="fas fa-dumbbell"></i>
+        </div>
+        <div class="floating-element floating-soccer">
+            <i class="fas fa-futbol"></i>
+        </div>
+        <div class="floating-element floating-graduation">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="floating-element floating-pencil">
+            <i class="fas fa-pencil-alt"></i>
+        </div>
+        <div class="gradient-circle circle-1"></div>
+        <div class="gradient-circle circle-2"></div>
+        <div class="gradient-circle circle-3"></div>
+    </div>
+    <div class="hero-content">
+        <h1 class="hero-title">Welcome to CampusMart</h1>
+        <p class="hero-subtitle">Your Ultimate Campus Marketplace for Books, Electronics, Sports & More</p>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <span class="stat-number">📚</span>
+                <p>Academic Items</p>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">💻</span>
+                <p>Tech & Electronics</p>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">⚽</span>
+                <p>Sports & Fitness</p>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">🏆</span>
+                <p>Best Deals</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-3">
     <div class="row">
         <!-- Filters -->
         <div class="col-md-3 mb-4">
@@ -337,6 +386,231 @@
         margin: 0;
         line-height: 1.2;
     }
+    
+    /* Hero Section Animations */
+    .hero-section {
+        position: relative;
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin: 0 -12px;
+        padding: 30px 16px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .animated-bg {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        overflow: hidden;
+    }
+    
+    /* Gradient Circles */
+    .gradient-circle {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.15;
+        mix-blend-mode: screen;
+    }
+    
+    .circle-1 {
+        width: 220px;
+        height: 220px;
+        background: rgba(255, 255, 255, 0.5);
+        top: -110px;
+        right: -110px;
+        animation: float 20s infinite ease-in-out;
+    }
+    
+    .circle-2 {
+        width: 150px;
+        height: 150px;
+        background: rgba(255, 255, 255, 0.3);
+        bottom: -75px;
+        left: 10%;
+        animation: float 25s infinite ease-in-out;
+        animation-delay: 2s;
+    }
+    
+    .circle-3 {
+        width: 180px;
+        height: 180px;
+        background: rgba(255, 255, 255, 0.4);
+        bottom: 20%;
+        right: 5%;
+        animation: float 22s infinite ease-in-out;
+        animation-delay: 4s;
+    }
+    
+    /* Floating Elements */
+    .floating-element {
+        position: absolute;
+        font-size: 44px;
+        opacity: 0.8;
+        z-index: 2;
+        animation: float 6s infinite ease-in-out;
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    }
+    
+    .floating-book {
+        top: 10%;
+        left: 5%;
+        animation-delay: 0s;
+    }
+    
+    .floating-laptop {
+        top: 20%;
+        right: 8%;
+        animation-delay: 1s;
+        font-size: 38px;
+    }
+    
+    .floating-dumbbell {
+        bottom: 15%;
+        left: 8%;
+        animation-delay: 2s;
+        font-size: 34px;
+    }
+    
+    .floating-soccer {
+        top: 30%;
+        left: 50%;
+        animation-delay: 0.5s;
+    }
+    
+    .floating-graduation {
+        bottom: 25%;
+        right: 12%;
+        animation-delay: 1.5s;
+        font-size: 40px;
+    }
+    
+    .floating-pencil {
+        top: 15%;
+        left: 25%;
+        animation-delay: 2.5s;
+        font-size: 30px;
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px) translateX(0px) rotate(0deg);
+        }
+        25% {
+            transform: translateY(-20px) translateX(10px) rotate(5deg);
+        }
+        50% {
+            transform: translateY(-40px) translateX(-10px) rotate(-5deg);
+        }
+        75% {
+            transform: translateY(-20px) translateX(15px) rotate(3deg);
+        }
+    }
+    
+    /* Hero Content */
+    .hero-content {
+        position: relative;
+        z-index: 3;
+        text-align: center;
+        color: white;
+        animation: slideUp 0.8s ease-out;
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .hero-title {
+        font-size: 2.4rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        letter-spacing: -1px;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.05rem;
+        margin-bottom: 24px;
+        opacity: 0.95;
+        font-weight: 300;
+    }
+    
+    /* Hero Stats */
+    .hero-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+        gap: 14px;
+        margin-top: 24px;
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .stat-item {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .stat-item:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .stat-number {
+        display: block;
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+    }
+    
+    .stat-item p {
+        margin: 0;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section {
+            min-height: 260px;
+            padding: 24px 12px;
+        }
+        
+        .hero-title {
+            font-size: 1.8rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 0.9rem;
+        }
+        
+        .floating-element {
+            font-size: 32px;
+        }
+        
+        .circle-1, .circle-2, .circle-3 {
+            display: none;
+        }
+    }
+
     
     /* Responsive Adjustments */
     @media (max-width: 768px) {
