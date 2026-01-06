@@ -1,0 +1,183 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4 mb-5">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-chart-line me-2"></i>Seller Analytics Dashboard</h2>
+        <a href="/profile" class="btn btn-outline-primary"><i class="fas fa-arrow-left me-2"></i>Back to Profile</a>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-cube fa-2x text-primary mb-3"></i>
+                    <h3 class="mb-1"><%= analytics.totalListings %></h3>
+                    <p class="text-muted mb-0">Total Listings</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-eye fa-2x text-info mb-3"></i>
+                    <h3 class="mb-1"><%= analytics.totalViews.toLocaleString() %></h3>
+                    <p class="text-muted mb-0">Total Views</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-store fa-2x text-success mb-3"></i>
+                    <h3 class="mb-1"><%= analytics.activeListings %></h3>
+                    <p class="text-muted mb-0">Active Listings</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="fas fa-check-circle fa-2x text-warning mb-3"></i>
+                    <h3 class="mb-1"><%= analytics.avgViewsPerListing %></h3>
+                    <p class="text-muted mb-0">Avg Views/Item</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Products by Views -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h4 class="mb-0"><i class="fas fa-star me-2"></i>Top Products by Views</h4>
+        </div>
+        <div class="card-body">
+            <% if (analytics.topProducts.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Views</th>
+                                <th>Status</th>
+                                <th>Price</th>
+                                <th class="text-end">Interest Level</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% analytics.topProducts.forEach(product => { %>
+                                <tr onclick="window.location.href='/products/analytics/<%= product._id %>'" style="cursor: pointer;">
+                                    <td>
+                                        <strong><%= product.title %></strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info"><%= product.viewCount || 0 %></span>
+                                    </td>
+                                    <td>
+                                        <% if(product.isSold) { %>
+                                            <span class="badge bg-secondary">Sold</span>
+                                        <% } else { %>
+                                            <span class="badge bg-success">Active</span>
+                                        <% } %>
+                                    </td>
+                                    <td>₹<%= product.price.toLocaleString("en-IN") %></td>
+                                    <td class="text-end">
+                                        <% if(product.viewCount < 5) { %>
+                                            <span class="badge bg-danger">Low</span>
+                                        <% } else if(product.viewCount < 15) { %>
+                                            <span class="badge bg-warning">Medium</span>
+                                        <% } else { %>
+                                            <span class="badge bg-success">High</span>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle me-2"></i>No products listed yet. Start by creating a new listing!
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- All Products with Views -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <h4 class="mb-0"><i class="fas fa-list me-2"></i>All Listings Performance</h4>
+        </div>
+        <div class="card-body">
+            <% if (products.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Views</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Posted</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% products.forEach(product => { %>
+                                <tr>
+                                    <td>
+                                        <a href="/products/<%= product._id %>" class="text-decoration-none fw-500">
+                                            <%= product.title %>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info"><%= product.viewCount || 0 %></span>
+                                    </td>
+                                    <td><span class="badge bg-light text-dark"><%= product.category %></span></td>
+                                    <td>₹<%= product.price.toLocaleString("en-IN") %></td>
+                                    <td>
+                                        <% if(product.isSold) { %>
+                                            <span class="badge bg-secondary">Sold</span>
+                                        <% } else { %>
+                                            <span class="badge bg-success">Active</span>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            <%= new Date(product.createdAt).toLocaleDateString() %>
+                                        </small>
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="/products/analytics/<%= product._id %>" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-chart-bar me-1"></i>Analytics
+                                        </a>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle me-2"></i>No listings yet. Create your first listing to start tracking views!
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+    }
+    
+    .card-header {
+        border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+</style>

@@ -54,6 +54,29 @@ module.exports.showProduct = async (req, res) => {
         return res.redirect("/products");
     }
     
+    // Track view: increment viewCount and record in viewHistory
+    product.viewCount = (product.viewCount || 0) + 1;
+    
+    // Only record user views, not guest views
+    if (req.user) {
+        // Check if this user already viewed this product in the last hour to avoid spam
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+        const recentView = product.viewHistory.find(
+            view => view.userId.toString() === req.user._id.toString() && 
+                    view.viewedAt > oneHourAgo
+        );
+        
+        // Only record if not viewed recently
+        if (!recentView) {
+            product.viewHistory.push({
+                userId: req.user._id,
+                viewedAt: new Date()
+            });
+        }
+    }
+    
+    await product.save();
+    
     res.render("products/show.ejs", { product });
 };
 
@@ -133,4 +156,92 @@ module.exports.searchProducts = async (req, res) => {
     }).populate("owner");
     
     res.render("products/index.ejs", { allProducts: products });
+};
+
+module.exports.getSellerAnalytics = async (req, res) => {
+    try {
+        const products = await Product.find({ owner: req.user._id })
+            .sort({ createdAt: -1 })
+            .populate("owner");
+        
+        // Calculate analytics
+        const analytics = {
+            totalListings: products.length,
+            totalViews: 0,
+            activeListings: 0,
+            soldListings: 0,
+            avgViewsPerListing: 0,
+            topProducts: []
+        };
+        
+        products.forEach(product => {
+            analytics.totalViews += product.viewCount || 0;
+            if (product.isSold) {
+                analytics.soldListings++;
+            } else {
+                analytics.activeListings++;
+            }
+        });
+        
+        // Calculate average views
+        if (analytics.totalListings > 0) {
+            analytics.avgViewsPerListing = Math.round(analytics.totalViews / analytics.totalListings);
+        }
+        
+        // Get top 5 products by views
+        analytics.topProducts = products
+            .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
+            .slice(0, 5);
+        
+        res.render("products/analytics.ejs", { products, analytics });
+    } catch (err) {
+        req.flash("error", "Error loading analytics");
+        res.redirect("/profile");
+    }
+};
+
+module.exports.getProductAnalytics = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await Product.findById(id)
+            .populate("owner")
+            .populate("viewHistory.userId", "username email");
+        
+        if (!product) {
+            req.flash("error", "Product not found!");
+            return res.redirect("/analytics");
+        }
+        
+        // Check if user is the owner
+        if (!product.owner._id.equals(req.user._id)) {
+            req.flash("error", "You can only view analytics for your own products!");
+            return res.redirect("/analytics");
+        }
+        
+        // Calculate view trends
+        const viewsByDay = {};
+        if (product.viewHistory && product.viewHistory.length > 0) {
+            product.viewHistory.forEach(view => {
+                const date = new Date(view.viewedAt).toLocaleDateString();
+                viewsByDay[date] = (viewsByDay[date] || 0) + 1;
+            });
+        }
+        
+        // Get unique users who viewed
+        const uniqueViewers = new Set(
+            product.viewHistory
+                .filter(v => v.userId)
+                .map(v => v.userId._id.toString())
+        ).size;
+        
+        res.render("products/product-analytics.ejs", { 
+            product, 
+            viewsByDay,
+            uniqueViewers,
+            totalViews: product.viewCount || 0
+        });
+    } catch (err) {
+        req.flash("error", "Error loading product analytics");
+        res.redirect("/analytics");
+    }
 };

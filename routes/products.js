@@ -19,6 +19,8 @@ router.route("/")
 
 router.get("/new", isLoggedIn, productController.renderNewForm);
 router.get("/search", wrapAsync(productController.searchProducts));
+router.get("/analytics/dashboard", isLoggedIn, wrapAsync(productController.getSellerAnalytics));
+router.get("/analytics/:id", isLoggedIn, wrapAsync(productController.getProductAnalytics));
 
 router.route("/:id")
     .get(wrapAsync(productController.showProduct))

@@ -67,7 +67,21 @@ const productSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    viewCount: {
+        type: Number,
+        default: 0
+    },
+    viewHistory: [{
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: "User"
+        },
+        viewedAt: {
+            type: Date,
+            default: Date.now
+        }
+    }]
 });
 
 productSchema.post("findOneAndDelete", async (product) => {

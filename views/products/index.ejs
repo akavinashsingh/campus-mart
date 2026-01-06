@@ -99,7 +99,7 @@
                 </div>
             </div>
             
-            <div class="row">
+            <div class="row g-3">
                 <% if(allProducts.length === 0) { %>
                     <div class="col-12">
                         <div class="alert alert-info">
@@ -109,55 +109,86 @@
                 <% } %>
                 
                 <% for(let product of allProducts) { %>
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card product-card h-100 shadow-sm">
-                            <% if(product.isSold) { %>
-                                <div class="sold-badge">SOLD</div>
-                            <% } %>
-                            
-                            <img src="<%= product.images[0] ? product.images[0].url : '/images/default-product.jpg' %>" 
-                                 class="card-img-top product-image" 
-                                 alt="<%= product.title %>">
-                            
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title"><%= product.title %></h5>
-                                <p class="card-text text-muted">
-                                    <small>
-                                        <i class="fas fa-tag me-1"></i><%= product.category %> • 
-                                        <i class="fas fa-university me-1"></i><%= product.college %>
-                                    </small>
-                                </p>
-                                <p class="card-text"><%= product.description.substring(0, 80) %>...</p>
-                                
-                                <div class="mt-auto">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="price h5 text-primary mb-0">
-                                            ₹<%= product.price.toLocaleString("en-IN") %>
-                                        </span>
-                                        <span class="text-muted text-decoration-line-through">
-                                            ₹<%= product.originalPrice.toLocaleString("en-IN") %>
-                                        </span>
+                    <div class="col-md-6 col-lg-4 col-xl-3">
+                        <a href="/products/<%= product._id %>" class="product-card-link">
+                            <div class="card product-card h-100 shadow-sm">
+                                <!-- Product Image Container -->
+                                <div class="product-image-container position-relative">
+                                    <img src="<%= product.images[0] ? product.images[0].url : '/images/default-product.jpg' %>" 
+                                         class="card-img-top product-image" 
+                                         alt="<%= product.title %>">
+                                    
+                                    <% if(product.isSold) { %>
+                                        <div class="sold-badge">SOLD</div>
+                                    <% } %>
+                                    
+                                    <!-- View Count Badge -->
+                                    <div class="view-badge">
+                                        <i class="fas fa-eye"></i> <%= product.viewCount || 0 %>
                                     </div>
                                     
-                                    <div class="d-flex justify-content-between mt-2">
-                                        <span class="badge bg-<%= 
-                                            product.condition === 'New' ? 'success' : 
-                                            product.condition === 'Like New' ? 'info' : 
-                                            product.condition === 'Good' ? 'primary' : 'secondary' 
-                                        %>">
-                                            <%= product.condition %>
-                                        </span>
-                                        <% if(product.isNegotiable) { %>
-                                            <span class="badge bg-warning">Negotiable</span>
+                                    <!-- Condition Badge -->
+                                    <div class="condition-badge badge bg-<%= 
+                                        product.condition === 'New' ? 'success' : 
+                                        product.condition === 'Like New' ? 'info' : 
+                                        product.condition === 'Good' ? 'primary' : 'secondary' 
+                                    %>">
+                                        <%= product.condition %>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-body p-2 d-flex flex-column">
+                                    <!-- Title -->
+                                    <h6 class="card-title mb-1 text-truncate" title="<%= product.title %>">
+                                        <%= product.title %>
+                                    </h6>
+                                    
+                                    <!-- Meta Info -->
+                                    <div class="meta-info mb-1">
+                                        <small class="text-muted d-block lh-1">
+                                            <i class="fas fa-tag me-1" style="color: #6c757d; font-size: 10px;"></i><%= product.category %>
+                                        </small>
+                                    </div>
+                                    
+                                    <!-- Price Section -->
+                                    <div class="price-section mb-1">
+                                        <div class="d-flex align-items-baseline gap-1">
+                                            <span class="price-main text-primary fw-bold">
+                                                ₹<%= product.price.toLocaleString("en-IN") %>
+                                            </span>
+                                            <span class="price-original text-muted text-decoration-line-through" style="font-size: 11px;">
+                                                ₹<%= product.originalPrice.toLocaleString("en-IN") %>
+                                            </span>
+                                        </div>
+                                        <% let discount = Math.round((1 - product.price/product.originalPrice) * 100); %>
+                                        <% if(discount > 0) { %>
+                                            <small class="text-success fw-semibold" style="font-size: 11px;">
+                                                <i class="fas fa-arrow-down me-1"></i><%= discount %>% off
+                                            </small>
                                         <% } %>
                                     </div>
                                     
-                                    <a href="/products/<%= product._id %>" class="btn btn-outline-primary w-100 mt-3">
-                                        View Details
-                                    </a>
+                                    <!-- Seller Info -->
+                                    <div class="seller-info">
+                                        <% if(product.owner && product.owner.profileImage && product.owner.profileImage.url) { %>
+                                            <img src="<%= product.owner.profileImage.url %>" 
+                                                 class="rounded-circle me-1" 
+                                                 width="20" height="20" 
+                                                 style="object-fit: cover;"
+                                                 alt="<%= product.owner.username %>">
+                                        <% } else if(product.owner) { %>
+                                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center me-1" 
+                                                 style="width: 20px; height: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 9px; color: white;">
+                                                <%= product.owner.username.charAt(0).toUpperCase() %>
+                                            </div>
+                                        <% } %>
+                                        <small class="text-muted fw-medium" style="font-size: 11px;">
+                                            <%= product.owner ? product.owner.username : 'Unknown' %>
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 <% } %>
             </div>
@@ -166,37 +197,156 @@
 </div>
 
 <style>
-    .product-card {
-        transition: transform 0.2s;
-        border: none;
-        border-radius: 12px;
-        overflow: hidden;
+    /* Card Link Wrapper */
+    .product-card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        height: 100%;
     }
     
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    /* Card Styling */
+    .product-card {
+        transition: all 0.3s ease;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #fff;
+        height: 100%;
+        cursor: pointer;
+    }
+    
+    .product-card-link:hover .product-card {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+        border-color: #0d6efd;
+    }
+    
+    /* Image Container */
+    .product-image-container {
+        position: relative;
+        overflow: hidden;
+        background: #f8f9fa;
+        aspect-ratio: 1;
     }
     
     .product-image {
-        height: 200px;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
+        transition: transform 0.3s ease;
     }
     
+    .product-card-link:hover .product-image {
+        transform: scale(1.1);
+    }
+    
+    /* Badges */
     .sold-badge {
         position: absolute;
-        top: 10px;
-        right: 10px;
-        background: #dc3545;
+        top: 6px;
+        right: 6px;
+        background: rgba(220, 53, 69, 0.95);
         color: white;
-        padding: 5px 15px;
+        padding: 3px 10px;
         border-radius: 20px;
-        font-weight: bold;
-        z-index: 1;
+        font-weight: 600;
+        font-size: 10px;
+        z-index: 2;
+        backdrop-filter: blur(4px);
     }
     
-    .price {
+    .view-badge {
+        position: absolute;
+        bottom: 6px;
+        left: 6px;
+        background: rgba(13, 110, 253, 0.95);
+        color: white;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 500;
+        z-index: 2;
+        backdrop-filter: blur(4px);
+    }
+    
+    .view-badge i {
+        margin-right: 3px;
+    }
+    
+    .condition-badge {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        font-size: 10px;
         font-weight: 600;
+        padding: 3px 8px !important;
+        z-index: 2;
+    }
+    
+    /* Card Body */
+    .card-body {
+        padding: 8px !important;
+    }
+    
+    .card-title {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.3;
+        color: #212529;
+        margin-bottom: 4px !important;
+    }
+    
+    .meta-info {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        margin-bottom: 4px !important;
+    }
+    
+    .meta-info small {
+        font-size: 11px;
+        line-height: 1.2;
+    }
+    
+    /* Price Section */
+    .price-section {
+        background: #f8f9fa;
+        padding: 6px 8px;
+        border-radius: 5px;
+        margin-bottom: 4px !important;
+    }
+    
+    .price-main {
+        font-size: 14px;
+    }
+    
+    .price-original {
+        font-size: 11px;
+    }
+    
+    /* Seller Info */
+    .seller-info {
+        display: flex;
+        align-items: center;
+        font-size: 11px;
+        gap: 3px;
+    }
+    
+    .seller-info small {
+        margin: 0;
+        line-height: 1.2;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .card-title {
+            font-size: 12px;
+        }
+        
+        .price-main {
+            font-size: 13px;
+        }
     }
 </style>
 
