@@ -40,45 +40,51 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.showProduct = async (req, res) => {
-    const { id } = req.params;
-    const product = await Product.findById(id)
-        .populate({
-            path: "reviews",
-            populate: {
-                path: "author"
-            }
-        })
-        .populate("owner");
-    
-    if (!product) {
-        req.flash("error", "Product not found!");
-        return res.redirect("/products");
-    }
-    
-    // Track view: increment viewCount and record in viewHistory
-    product.viewCount = (product.viewCount || 0) + 1;
-    
-    // Only record user views, not guest views
-    if (req.user) {
-        // Check if this user already viewed this product in the last hour to avoid spam
-        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-        const recentView = product.viewHistory.find(
-            view => view.userId.toString() === req.user._id.toString() && 
-                    view.viewedAt > oneHourAgo
-        );
+    try {
+        const { id } = req.params;
+        const product = await Product.findById(id)
+            .populate({
+                path: "reviews",
+                populate: {
+                    path: "author"
+                }
+            })
+            .populate("owner");
         
-        // Only record if not viewed recently
-        if (!recentView) {
-            product.viewHistory.push({
-                userId: req.user._id,
-                viewedAt: new Date()
-            });
+        if (!product) {
+            req.flash("error", "Product not found!");
+            return res.redirect("/products");
         }
+        
+        // Track view: increment viewCount and record in viewHistory
+        product.viewCount = (product.viewCount || 0) + 1;
+        
+        // Only record user views, not guest views
+        if (req.user) {
+            // Check if this user already viewed this product in the last hour to avoid spam
+            const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+            const recentView = product.viewHistory.find(
+                view => view.userId.toString() === req.user._id.toString() && 
+                        view.viewedAt > oneHourAgo
+            );
+            
+            // Only record if not viewed recently
+            if (!recentView) {
+                product.viewHistory.push({
+                    userId: req.user._id,
+                    viewedAt: new Date()
+                });
+            }
+        }
+        
+        await product.save();
+        
+        res.render("products/show.ejs", { product });
+    } catch (err) {
+        console.error("Error showing product:", err);
+        req.flash("error", "Error loading product");
+        res.redirect("/products");
     }
-    
-    await product.save();
-    
-    res.render("products/show.ejs", { product });
 };
 
 module.exports.createProduct = async (req, res, next) => {
@@ -103,60 +109,112 @@ module.exports.createProduct = async (req, res, next) => {
 };
 
 module.exports.renderEditForm = async (req, res) => {
-    const { id } = req.params;
-    const product = await Product.findById(id);
-    
-    if (!product) {
-        req.flash("error", "Product not found!");
-        return res.redirect("/products");
+    try {
+        const { id } = req.params;
+        const product = await Product.findById(id);
+        
+        if (!product) {
+            req.flash("error", "Product not found!");
+            return res.redirect("/products");
+        }
+        
+        res.render("products/edit.ejs", { product });
+    } catch (err) {
+        console.error("Error loading edit form:", err);
+        req.flash("error", "Error loading product");
+        res.redirect("/products");
     }
-    
-    res.render("products/edit.ejs", { product });
 };
 
 module.exports.updateProduct = async (req, res) => {
-    const { id } = req.params;
-    const product = await Product.findByIdAndUpdate(id, { ...req.body.product });
-    
-    if (req.files && req.files.length > 0) {
-        const images = req.files.map(f => ({
-            url: f.path,
-            filename: f.filename
-        }));
-        product.images.push(...images);
-        await product.save();
+    try {
+        const { id } = req.params;
+        const product = await Product.findByIdAndUpdate(id, { ...req.body.product });
+        
+        if (!product) {
+            req.flash("error", "Product not found!");
+            return res.redirect("/products");
+        }
+        
+        if (req.files && req.files.length > 0) {
+            const images = req.files.map(f => ({
+                url: f.path,
+                filename: f.filename
+            }));
+            product.images.push(...images);
+            await product.save();
+        }
+        
+        req.flash("success", "Product updated successfully!");
+        res.redirect(`/products/${id}`);
+    } catch (err) {
+        console.error("Error updating product:", err);
+        req.flash("error", "Error updating product");
+        res.redirect("/products");
     }
-    
-    req.flash("success", "Product updated successfully!");
-    res.redirect(`/products/${id}`);
 };
 
 module.exports.markAsSold = async (req, res) => {
-    const { id } = req.params;
-    await Product.findByIdAndUpdate(id, { isSold: true });
-    req.flash("success", "Product marked as sold!");
-    res.redirect(`/products/${id}`);
+    try {
+        const { id } = req.params;
+        const product = await Product.findByIdAndUpdate(id, { isSold: true });
+        
+        if (!product) {
+            req.flash("error", "Product not found!");
+            return res.redirect("/products");
+        }
+        
+        req.flash("success", "Product marked as sold!");
+        res.redirect(`/products/${id}`);
+    } catch (err) {
+        console.error("Error marking product as sold:", err);
+        req.flash("error", "Error updating product");
+        res.redirect("/products");
+    }
 };
 
 module.exports.destroyProduct = async (req, res) => {
-    const { id } = req.params;
-    await Product.findByIdAndDelete(id);
-    req.flash("success", "Product deleted successfully!");
-    res.redirect("/products");
+    try {
+        const { id } = req.params;
+        const product = await Product.findByIdAndDelete(id);
+        
+        if (!product) {
+            req.flash("error", "Product not found!");
+            return res.redirect("/products");
+        }
+        
+        req.flash("success", "Product deleted successfully!");
+        res.redirect("/products");
+    } catch (err) {
+        console.error("Error deleting product:", err);
+        req.flash("error", "Error deleting product");
+        res.redirect("/products");
+    }
 };
 
 module.exports.searchProducts = async (req, res) => {
-    const { q } = req.query;
-    const products = await Product.find({
-        $or: [
-            { title: { $regex: q, $options: 'i' } },
-            { description: { $regex: q, $options: 'i' } },
-            { category: { $regex: q, $options: 'i' } }
-        ],
-        isSold: false
-    }).populate("owner");
-    
-    res.render("products/index.ejs", { allProducts: products });
+    try {
+        const { q } = req.query;
+        
+        if (!q || q.trim() === '') {
+            return res.redirect('/products');
+        }
+        
+        const products = await Product.find({
+            $or: [
+                { title: { $regex: q, $options: 'i' } },
+                { description: { $regex: q, $options: 'i' } },
+                { category: { $regex: q, $options: 'i' } }
+            ],
+            isSold: false
+        }).populate("owner");
+        
+        res.render("products/index.ejs", { allProducts: products, filters: req.query });
+    } catch (err) {
+        console.error("Error searching products:", err);
+        req.flash("error", "Error searching products");
+        res.redirect("/products");
+    }
 };
 
 module.exports.getSellerAnalytics = async (req, res) => {

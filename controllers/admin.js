@@ -45,57 +45,93 @@ module.exports.dashboard = async (req, res) => {
 };
 
 module.exports.listUsers = async (req, res) => {
-    const users = await User.find({}).sort({ createdAt: -1 });
-    res.render("admin/users.ejs", { users });
+    try {
+        const users = await User.find({}).sort({ createdAt: -1 });
+        res.render("admin/users.ejs", { users });
+    } catch (err) {
+        console.error("Error listing users:", err);
+        req.flash("error", "Error loading users");
+        res.redirect("/admin");
+    }
 };
 
 module.exports.userDetail = async (req, res) => {
-    const { id } = req.params;
-    const user = await User.findById(id);
-    if (!user) {
-        req.flash("error", "User not found");
-        return res.redirect("/admin/users");
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id);
+        if (!user) {
+            req.flash("error", "User not found");
+            return res.redirect("/admin/users");
+        }
+        const products = await Product.find({ owner: id }).sort({ createdAt: -1 });
+        res.render("admin/user-detail.ejs", { user, products });
+    } catch (err) {
+        console.error("Error loading user details:", err);
+        req.flash("error", "Error loading user details");
+        res.redirect("/admin/users");
     }
-    const products = await Product.find({ owner: id }).sort({ createdAt: -1 });
-    res.render("admin/user-detail.ejs", { user, products });
 };
 
 module.exports.deleteUser = async (req, res) => {
-    const { id } = req.params;
-    const user = await User.findById(id);
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id);
 
-    if (!user) {
-        req.flash("error", "User not found");
-        return res.redirect("/admin/users");
-    }
-
-    if (user.isAdmin) {
-        req.flash("error", "Cannot delete another admin");
-        return res.redirect("/admin/users");
-    }
-
-    const products = await Product.find({ owner: id });
-    for (const product of products) {
-        if (product.reviews && product.reviews.length > 0) {
-            await Review.deleteMany({ _id: { $in: product.reviews } });
+        if (!user) {
+            req.flash("error", "User not found");
+            return res.redirect("/admin/users");
         }
-    }
-    await Product.deleteMany({ owner: id });
-    await Review.deleteMany({ author: id });
-    await User.findByIdAndDelete(id);
 
-    req.flash("success", "User and related data deleted");
-    res.redirect("/admin/users");
+        if (user.isAdmin) {
+            req.flash("error", "Cannot delete another admin");
+            return res.redirect("/admin/users");
+        }
+
+        const products = await Product.find({ owner: id });
+        for (const product of products) {
+            if (product.reviews && product.reviews.length > 0) {
+                await Review.deleteMany({ _id: { $in: product.reviews } });
+            }
+        }
+        await Product.deleteMany({ owner: id });
+        await Review.deleteMany({ author: id });
+        await User.findByIdAndDelete(id);
+
+        req.flash("success", "User and related data deleted");
+        res.redirect("/admin/users");
+    } catch (err) {
+        console.error("Error deleting user:", err);
+        req.flash("error", "Error deleting user");
+        res.redirect("/admin/users");
+    }
 };
 
 module.exports.listProducts = async (req, res) => {
-    const products = await Product.find({}).populate("owner").sort({ createdAt: -1 });
-    res.render("admin/products.ejs", { products });
+    try {
+        const products = await Product.find({}).populate("owner").sort({ createdAt: -1 });
+        res.render("admin/products.ejs", { products });
+    } catch (err) {
+        console.error("Error listing products:", err);
+        req.flash("error", "Error loading products");
+        res.redirect("/admin");
+    }
 };
 
 module.exports.deleteProduct = async (req, res) => {
-    const { id } = req.params;
-    await Product.findByIdAndDelete(id);
-    req.flash("success", "Product deleted");
-    res.redirect("/admin/products");
+    try {
+        const { id } = req.params;
+        const product = await Product.findByIdAndDelete(id);
+        
+        if (!product) {
+            req.flash("error", "Product not found");
+            return res.redirect("/admin/products");
+        }
+        
+        req.flash("success", "Product deleted");
+        res.redirect("/admin/products");
+    } catch (err) {
+        console.error("Error deleting product:", err);
+        req.flash("error", "Error deleting product");
+        res.redirect("/admin/products");
+    }
 };

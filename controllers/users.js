@@ -76,56 +76,96 @@ module.exports.logout = (req, res, next) => {
 };
 
 module.exports.renderProfile = async (req, res) => {
-    const user = await User.findById(req.user._id);
-    res.render("users/profile.ejs", { user });
+    try {
+        const user = await User.findById(req.user._id);
+        
+        if (!user) {
+            req.flash("error", "User not found");
+            return res.redirect("/products");
+        }
+        
+        res.render("users/profile.ejs", { user });
+    } catch (err) {
+        console.error("Error loading profile:", err);
+        req.flash("error", "Error loading profile");
+        res.redirect("/products");
+    }
 };
 
 module.exports.getMyProducts = async (req, res) => {
-    const Product = require("../models/Product");
-    const products = await Product.find({ owner: req.user._id }).sort({ createdAt: -1 });
-    res.json(products);
+    try {
+        const Product = require("../models/Product");
+        const products = await Product.find({ owner: req.user._id }).sort({ createdAt: -1 });
+        res.json(products);
+    } catch (err) {
+        console.error("Error fetching products:", err);
+        res.status(500).json({ error: "Error fetching products" });
+    }
 };
 
 module.exports.updateProfile = async (req, res) => {
-    const { id } = req.params;
-    const user = await User.findByIdAndUpdate(id, { ...req.body.user });
-    
-    if (req.file) {
-        user.profileImage = {
-            url: req.file.path,
-            filename: req.file.filename
-        };
-        await user.save();
+    try {
+        const { id } = req.params;
+        
+        if (id !== req.user._id.toString()) {
+            req.flash("error", "Unauthorized");
+            return res.redirect("/profile");
+        }
+        
+        const user = await User.findByIdAndUpdate(id, { ...req.body.user });
+        
+        if (!user) {
+            req.flash("error", "User not found");
+            return res.redirect("/products");
+        }
+        
+        if (req.file) {
+            user.profileImage = {
+                url: req.file.path,
+                filename: req.file.filename
+            };
+            await user.save();
+        }
+        
+        req.flash("success", "Profile updated successfully!");
+        res.redirect("/profile");
+    } catch (err) {
+        console.error("Error updating profile:", err);
+        req.flash("error", "Error updating profile");
+        res.redirect("/profile");
     }
-    
-    req.flash("success", "Profile updated successfully!");
-    res.redirect("/profile");
 };
 
 module.exports.verifyEmail = async (req, res) => {
-    const { token } = req.query;
-    if (!token) {
-        req.flash("error", "Invalid verification link");
-        return res.redirect("/login");
+    try {
+        const { token } = req.query;
+        if (!token) {
+            req.flash("error", "Invalid verification link");
+            return res.redirect("/login");
+        }
+
+        const user = await User.findOne({
+            verificationToken: token,
+            verificationTokenExpires: { $gt: Date.now() },
+        });
+
+        if (!user) {
+            req.flash("error", "Verification link is invalid or has expired.");
+            return res.redirect("/login");
+        }
+
+        user.isVerified = true;
+        user.verificationToken = undefined;
+        user.verificationTokenExpires = undefined;
+        await user.save();
+
+        req.flash("success", "Email verified! You can now log in.");
+        res.redirect("/login");
+    } catch (err) {
+        console.error("Error verifying email:", err);
+        req.flash("error", "Error verifying email");
+        res.redirect("/login");
     }
-
-    const user = await User.findOne({
-        verificationToken: token,
-        verificationTokenExpires: { $gt: Date.now() },
-    });
-
-    if (!user) {
-        req.flash("error", "Verification link is invalid or has expired.");
-        return res.redirect("/login");
-    }
-
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    user.verificationTokenExpires = undefined;
-    await user.save();
-
-    req.flash("success", "Email verified! You can now log in.");
-    res.redirect("/login");
 };
 
 async function sendVerificationEmail(req, toEmail, token) {
