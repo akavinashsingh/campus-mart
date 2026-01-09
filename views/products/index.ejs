@@ -50,15 +50,100 @@
 </div>
 
 <div class="container mt-3">
+    <div class="d-md-none mb-3">
+        <button class="btn btn-outline-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#mobileFilters" aria-expanded="false" aria-controls="mobileFilters">
+            <i class="fas fa-filter me-2"></i>Show Filters
+        </button>
+    </div>
     <div class="row">
-        <!-- Filters -->
-        <div class="col-md-3 mb-4">
+        <!-- Mobile Filters (collapsed) -->
+        <div class="col-12 d-md-none">
+            <div class="collapse mb-3" id="mobileFilters">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-filter me-2"></i>Filters
+                        </h5>
+                        <form action="/products" method="GET" id="filterFormMobile">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Category</label>
+                                <select class="form-select" name="category" onchange="this.form.submit()">
+                                    <option value="">All Categories</option>
+                                    <option value="Books" <%= filters?.category === 'Books' ? 'selected' : '' %>>Books</option>
+                                    <option value="Electronics" <%= filters?.category === 'Electronics' ? 'selected' : '' %>>Electronics</option>
+                                    <option value="Furniture" <%= filters?.category === 'Furniture' ? 'selected' : '' %>>Furniture</option>
+                                    <option value="Clothing" <%= filters?.category === 'Clothing' ? 'selected' : '' %>>Clothing</option>
+                                    <option value="Sports" <%= filters?.category === 'Sports' ? 'selected' : '' %>>Sports</option>
+                                    <option value="Other" <%= filters?.category === 'Other' ? 'selected' : '' %>>Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Condition</label>
+                                <select class="form-select" name="condition" onchange="this.form.submit()">
+                                    <option value="">Any Condition</option>
+                                    <option value="New" <%= filters?.condition === 'New' ? 'selected' : '' %>>New</option>
+                                    <option value="Like New" <%= filters?.condition === 'Like New' ? 'selected' : '' %>>Like New</option>
+                                    <option value="Good" <%= filters?.condition === 'Good' ? 'selected' : '' %>>Good</option>
+                                    <option value="Fair" <%= filters?.condition === 'Fair' ? 'selected' : '' %>>Fair</option>
+                                    <option value="Poor" <%= filters?.condition === 'Poor' ? 'selected' : '' %>>Poor</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Price Range</label>
+                                <div class="mb-2">
+                                    <input type="range" class="form-range" id="priceRangeMaxMobile" min="0" max="50000" step="100" 
+                                           value="<%= filters?.maxPrice || 50000 %>">
+                                    <div class="d-flex justify-content-between text-muted small">
+                                        <span>₹0</span>
+                                        <span id="maxPriceDisplayMobile">₹<%= (filters?.maxPrice || 50000).toLocaleString('en-IN') %></span>
+                                    </div>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col">
+                                        <input type="number" class="form-control form-control-sm" name="minPrice" 
+                                               id="minPriceInputMobile" placeholder="Min" min="0" 
+                                               value="<%= filters?.minPrice || '' %>">
+                                    </div>
+                                    <div class="col">
+                                        <input type="number" class="form-control form-control-sm" name="maxPrice" 
+                                               id="maxPriceInputMobile" placeholder="Max" min="0" 
+                                               value="<%= filters?.maxPrice || '' %>">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">College</label>
+                                <input type="text" class="form-control" name="college" 
+                                       placeholder="Enter college name" value="<%= filters?.college || '' %>">
+                            </div>
+                            
+                            <input type="hidden" name="sort" value="<%= filters?.sort || '' %>">
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-check me-2"></i>Apply Filters
+                                </button>
+                                <a href="/products" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-redo me-2"></i>Reset All
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Desktop Filters -->
+        <div class="col-md-3 mb-4 d-none d-md-block">
             <div class="card shadow-sm sticky-top" style="top: 20px;">
                 <div class="card-body">
                     <h5 class="card-title mb-3">
                         <i class="fas fa-filter me-2"></i>Filters
                     </h5>
-                    <form action="/products" method="GET" id="filterForm">
+                    <form action="/products" method="GET" id="filterFormDesktop">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Category</label>
                             <select class="form-select" name="category" onchange="this.form.submit()">
@@ -158,7 +243,7 @@
                 <% } %>
                 
                 <% for(let product of allProducts) { %>
-                    <div class="col-md-6 col-lg-4 col-xl-3">
+                    <div class="col-6 col-md-6 col-lg-4 col-xl-3">
                         <a href="/products/<%= product._id %>" class="product-card-link">
                             <div class="card product-card h-100 shadow-sm">
                                 <!-- Product Image Container -->
