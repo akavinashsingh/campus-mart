@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Product = require("../models/Product");
 const Review = require("../models/Review");
+const ContactLog = require("../models/ContactLog");
 
 module.exports.renderLoginForm = (req, res) => {
     res.render("admin/login.ejs");
@@ -31,7 +32,16 @@ module.exports.dashboard = async (req, res) => {
     const totalUsers = await User.countDocuments();
     const totalProducts = await Product.countDocuments();
     const activeProducts = await Product.countDocuments({ isSold: false });
-    res.render("admin/dashboard.ejs", { stats: { totalUsers, totalProducts, activeProducts } });
+    const recentContacts = await ContactLog.find({})
+        .populate('product', 'title')
+        .populate('seller', 'username')
+        .populate('buyer', 'username')
+        .sort({ createdAt: -1 })
+        .limit(10);
+    res.render("admin/dashboard.ejs", { 
+        stats: { totalUsers, totalProducts, activeProducts }, 
+        recentContacts 
+    });
 };
 
 module.exports.listUsers = async (req, res) => {

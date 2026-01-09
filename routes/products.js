@@ -35,5 +35,6 @@ router.route("/:id")
 
 router.get("/:id/edit", isLoggedIn, isOwner, wrapAsync(productController.renderEditForm));
 router.post("/:id/sold", isLoggedIn, isOwner, wrapAsync(productController.markAsSold));
+router.post("/:id/contact", isLoggedIn, wrapAsync(productController.logContact));
 
 module.exports = router;

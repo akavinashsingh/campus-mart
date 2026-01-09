@@ -294,7 +294,10 @@
                                 <i class="fas fa-envelope me-2 text-primary"></i>Email Address
                             </h6>
                             <p class="mb-0">
-                                <a href="mailto:<%= product.owner.email %>" class="text-decoration-none">
+                                <a href="mailto:<%= product.owner.email %>?subject=<%= encodeURIComponent('Inquiry about ' + product.title) %>" 
+                                   class="text-decoration-none contact-link" 
+                                   data-contact-method="Email"
+                                   onclick="logContact(event, '<%= product._id %>', 'Email')">
                                     <%= product.owner.email %>
                                 </a>
                             </p>
@@ -308,7 +311,10 @@
                                 <i class="fas fa-phone me-2 text-success"></i>Phone Number
                             </h6>
                             <p class="mb-0">
-                                <a href="tel:<%= product.owner.phone %>" class="text-decoration-none">
+                                <a href="tel:<%= product.owner.phone %>" 
+                                   class="text-decoration-none contact-link"
+                                   data-contact-method="Phone"
+                                   onclick="logContact(event, '<%= product._id %>', 'Phone')">
                                     <%= product.owner.phone %>
                                 </a>
                             </p>
@@ -322,8 +328,11 @@
                                 <i class="fab fa-whatsapp me-2 text-success"></i>WhatsApp
                             </h6>
                             <p class="mb-0">
-                                <a href="https://wa.me/<%= product.owner.phone.replace(/\D/g, '') %>?text=Hi, I'm interested in your <%= product.title %>" 
-                                   target="_blank" class="text-decoration-none">
+                                <a href="https://wa.me/<%= product.owner.phone.replace(/\D/g, '') %>?text=<%= encodeURIComponent('Hi, I\'m interested in your ' + product.title) %>" 
+                                   target="_blank" 
+                                   class="text-decoration-none contact-link"
+                                   data-contact-method="WhatsApp"
+                                   onclick="logContact(event, '<%= product._id %>', 'WhatsApp')">
                                     <%= product.owner.phone %>
                                 </a>
                             </p>
@@ -343,15 +352,12 @@
                             <p class="mb-0 text-muted">
                                 The seller prefers to meet in person at the campus location mentioned above.
                             </p>
+                            <button class="btn btn-sm btn-primary mt-2" onclick="logContact(event, '<%= product._id %>', 'In-person')">
+                                <i class="fas fa-bell me-1"></i>Notify Interest
+                            </button>
                         </div>
                     </div>
                 <% } %>
-                
-                <div class="mb-3">
-                    <label class="form-label">Additional Message (Optional)</label>
-                    <textarea class="form-control" rows="3" 
-                              placeholder="Add any specific questions or details..."></textarea>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -425,4 +431,31 @@
             this.classList.add('active');
         });
     });
+
+    // Log contact attempt to server and notify admin
+    function logContact(event, productId, method) {
+        // For In-person, prevent default and just log
+        if (method === 'In-person') {
+            event.preventDefault();
+        }
+        
+        // Send log to server
+        fetch(`/products/${productId}/contact`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ contactMethod: method })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && method === 'In-person') {
+                alert('Your interest has been noted! The seller will be notified.');
+            }
+        })
+        .catch(err => console.error('Error logging contact:', err));
+        
+        // For email/phone/whatsapp, allow default action (opening mail/call/whatsapp)
+        // For in-person, we prevented default and show alert instead
+    }
 </script>

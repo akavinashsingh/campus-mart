@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const ContactLog = require("../models/ContactLog");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
@@ -243,5 +244,35 @@ module.exports.getProductAnalytics = async (req, res) => {
     } catch (err) {
         req.flash("error", "Error loading product analytics");
         res.redirect("/analytics");
+    }
+};
+
+module.exports.logContact = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { contactMethod } = req.body;
+        
+        const product = await Product.findById(id);
+        if (!product) {
+            return res.status(404).json({ success: false, message: "Product not found" });
+        }
+        
+        // Don't log if seller is contacting their own product
+        if (product.owner.equals(req.user._id)) {
+            return res.json({ success: true, message: "Owner view, not logged" });
+        }
+        
+        const contactLog = new ContactLog({
+            product: product._id,
+            seller: product.owner,
+            buyer: req.user._id,
+            contactMethod: contactMethod
+        });
+        
+        await contactLog.save();
+        res.json({ success: true, message: "Contact logged" });
+    } catch (err) {
+        console.error("Error logging contact:", err);
+        res.status(500).json({ success: false, message: "Error logging contact" });
     }
 };
