@@ -128,6 +128,11 @@ app.get("/", (req, res) => {
     res.redirect("/products");
 });
 
+// Favicon handler - prevent 500 errors
+app.get("/favicon.ico", (req, res) => {
+    res.status(204).end();
+});
+
 // 404 Handler
 app.all("/*any", (req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));

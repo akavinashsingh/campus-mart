@@ -28,6 +28,13 @@
     <div class="hero-content">
         <h1 class="hero-title">Welcome to CampusMart</h1>
         <p class="hero-subtitle">Your Ultimate Campus Marketplace for Books, Electronics, Sports & More</p>
+        <% if(!currUser) { %>
+            <div class="hero-cta">
+                <a href="/login" class="btn btn-light btn-lg shadow-sm">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login to Buy/Sell
+                </a>
+            </div>
+        <% } %>
         <div class="hero-stats">
             <div class="stat-item">
                 <span class="stat-number">📚</span>
@@ -341,19 +348,41 @@
     
     /* Card Styling */
     .product-card {
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         border: 1px solid #e9ecef;
-        border-radius: 8px;
+        border-radius: 12px;
         overflow: hidden;
         background: #fff;
         height: 100%;
         cursor: pointer;
+        position: relative;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    
+    .product-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 12px;
+        padding: 2px;
+        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.3s ease;
     }
     
     .product-card-link:hover .product-card {
-        transform: translateY(-6px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15) !important;
-        border-color: #0d6efd;
+        transform: translateY(-8px);
+        box-shadow: 0 12px 28px rgba(102, 126, 234, 0.25) !important;
+    }
+    
+    .product-card-link:hover .product-card::before {
+        opacity: 1;
     }
     
     /* Image Container */
@@ -394,14 +423,15 @@
         position: absolute;
         bottom: 6px;
         left: 6px;
-        background: rgba(13, 110, 253, 0.95);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        padding: 3px 8px;
-        border-radius: 12px;
+        padding: 4px 10px;
+        border-radius: 20px;
         font-size: 10px;
-        font-weight: 500;
+        font-weight: 600;
         z-index: 2;
-        backdrop-filter: blur(4px);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
     
     .view-badge i {
@@ -414,8 +444,11 @@
         left: 6px;
         font-size: 10px;
         font-weight: 600;
-        padding: 3px 8px !important;
+        padding: 4px 10px !important;
         z-index: 2;
+        border-radius: 20px !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(8px);
     }
     
     /* Card Body */
@@ -445,10 +478,11 @@
     
     /* Price Section */
     .price-section {
-        background: #f8f9fa;
-        padding: 6px 8px;
-        border-radius: 5px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 8px 10px;
+        border-radius: 8px;
         margin-bottom: 4px !important;
+        border: 1px solid rgba(0, 0, 0, 0.05);
     }
     
     .price-main {
@@ -482,7 +516,8 @@
         overflow: hidden;
         margin: 0 -12px;
         padding: 30px 16px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        box-shadow: inset 0 -4px 20px rgba(0, 0, 0, 0.1);
     }
     
     .animated-bg {
@@ -634,6 +669,57 @@
         font-weight: 300;
     }
     
+    /* Hero CTA */
+    .hero-cta {
+        margin: 20px 0 10px;
+        animation: fadeInUp 1s ease-out 0.3s both;
+    }
+    
+    .hero-cta .btn {
+        font-weight: 600;
+        padding: 14px 36px;
+        border-radius: 50px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 1.1rem;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+        border: 2px solid rgba(255, 255, 255, 0.3) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-cta .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s;
+    }
+    
+    .hero-cta .btn:hover::before {
+        left: 100%;
+    }
+    
+    .hero-cta .btn:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+        border-color: rgba(255, 255, 255, 0.6) !important;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
     /* Hero Stats */
     .hero-stats {
         display: grid;
@@ -646,18 +732,20 @@
     }
     
     .stat-item {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(10px);
-        padding: 10px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(15px);
+        padding: 12px;
+        border-radius: 16px;
+        border: 1.5px solid rgba(255, 255, 255, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
     
     .stat-item:hover {
-        background: rgba(255, 255, 255, 0.25);
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+        border-color: rgba(255, 255, 255, 0.6);
     }
     
     .stat-number {
@@ -685,6 +773,11 @@
         
         .hero-subtitle {
             font-size: 0.9rem;
+        }
+        
+        .hero-cta .btn {
+            font-size: 1rem;
+            padding: 10px 28px;
         }
         
         .floating-element {
