@@ -163,7 +163,7 @@
                                     <small class="text-muted">
                                         <i class="fas fa-star text-warning"></i>
                                         <%= product.owner.rating.toFixed(1) %> 
-                                        (<%= product.owner.totalRatings %> reviews)
+                                        (<%= product.owner.totalComments %> comments)
                                     </small>
                                 </div>
                             </div>
@@ -211,7 +211,7 @@
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h4 class="card-title mb-4">Reviews & Ratings</h4>
+                    <h4 class="card-title mb-4">Comments</h4>
                     
                     <% if(product.reviews.length > 0) { %>
                         <% product.reviews.forEach(review => { %>
@@ -219,7 +219,6 @@
                                 <div class="d-flex justify-content-between">
                                     <div>
                                         <strong><%= review.author.username %></strong>
-                                        <div class="starability-result mb-2" data-rating="<%= review.rating %>"></div>
                                     </div>
                                     <small class="text-muted">
                                         <%= new Date(review.createdAt).toLocaleDateString() %>
@@ -231,51 +230,39 @@
                                     <form action="/products/<%= product._id %>/reviews/<%= review._id %>?_method=DELETE" 
                                           method="POST" class="mt-2">
                                         <button type="submit" class="btn btn-sm btn-outline-danger">
-                                            Delete Review
+                                            Delete Comment
                                         </button>
                                     </form>
                                 <% } %>
                             </div>
                         <% }) %>
                     <% } else { %>
-                        <p class="text-muted text-center">No reviews yet. Be the first to review!</p>
+                        <p class="text-muted text-center">No comments yet. Be the first to comment!</p>
                     <% } %>
                     
                     <!-- Add Review Form -->
                     <% if(currUser && !product.owner._id.equals(currUser._id)) { %>
                         <div class="mt-4">
-                            <h5>Add a Review</h5>
+                            <h5>Add a Comment</h5>
                             <form action="/products/<%= product._id %>/reviews" method="POST">
                                 <div class="mb-3">
-                                    <label class="form-label">Rating</label>
-                                    <select name="review[rating]" class="form-select" required>
-                                        <option value="">Select Rating</option>
-                                        <option value="5">5 - Excellent</option>
-                                        <option value="4">4 - Good</option>
-                                        <option value="3">3 - Average</option>
-                                        <option value="2">2 - Poor</option>
-                                        <option value="1">1 - Terrible</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label">Your Review</label>
+                                    <label class="form-label">Your Comment</label>
                                     <textarea name="review[comment]" class="form-control" rows="3" 
                                               placeholder="Share your experience with this seller..." required></textarea>
                                 </div>
                                 
-                                <button type="submit" class="btn btn-primary">Submit Review</button>
+                                <button type="submit" class="btn btn-primary">Submit Comment</button>
                             </form>
                         </div>
                     <% } else if(currUser && product.owner._id.equals(currUser._id)) { %>
                         <div class="mt-4 alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
-                            You cannot review your own product. Only buyers can leave reviews.
+                            You cannot comment on your own product. Only buyers can leave comments.
                         </div>
                     <% } else { %>
                         <div class="mt-4 alert alert-warning">
                             <i class="fas fa-sign-in-alt me-2"></i>
-                            <a href="/login" class="alert-link">Log in</a> to leave a review
+                            <a href="/login" class="alert-link">Log in</a> to leave a comment
                         </div>
                     <% } %>
                 </div>

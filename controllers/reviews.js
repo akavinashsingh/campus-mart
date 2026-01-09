@@ -14,14 +14,9 @@ module.exports.createReview = async (req, res) => {
     await newReview.save();
     await product.save();
     
-    // Update seller rating
-    const seller = await User.findById(product.owner);
-    const totalRating = seller.rating * seller.totalRatings + newReview.rating;
-    seller.totalRatings += 1;
-    seller.rating = totalRating / seller.totalRatings;
-    await seller.save();
+    // Rating removed: no seller rating updates from reviews
     
-    req.flash("success", "Review added successfully!");
+    req.flash("success", "Comment added successfully!");
     res.redirect(`/products/${product._id}`);
 };
 
@@ -31,6 +26,6 @@ module.exports.destroyReview = async (req, res) => {
     await Product.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
     
-    req.flash("success", "Review deleted!");
+    req.flash("success", "Comment deleted!");
     res.redirect(`/products/${id}`);
 };

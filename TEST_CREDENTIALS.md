@@ -61,3 +61,24 @@ module.exports.login = async (req, res) => {
 2. Sign up both users with any email address (verification will be skipped)
 3. Start testing product creation and reviews immediately
 
+---
+
+## Admin Login (Local Testing)
+
+A default admin user is auto-created on server start if missing.
+
+- Username: `admin`
+- Email: `admin@campus.local`
+- Password: `admin123`
+
+You can override these with environment variables:
+
+- `DEFAULT_ADMIN_USERNAME`
+- `DEFAULT_ADMIN_PASSWORD`
+- `DEFAULT_ADMIN_EMAIL`
+
+Admin routes for quick access:
+
+- Login: `/admin/login`
+- Dashboard: `/admin`
+

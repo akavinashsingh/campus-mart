@@ -46,7 +46,7 @@ module.exports.isNotProductOwner = async (req, res, next) => {
     const product = await Product.findById(id);
     
     if (product.owner.equals(req.user._id)) {
-        req.flash("error", "You cannot rate your own product");
+        req.flash("error", "You cannot comment on your own product");
         return res.redirect(`/products/${id}`);
     }
     next();
