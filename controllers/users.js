@@ -8,9 +8,9 @@ module.exports.renderSignupForm = (req, res) => {
 
 module.exports.signup = async (req, res) => {
     try {
-        const { username, email, password, college, phone } = req.body;
+        const { fullName, email, password, college, phone } = req.body;
         
-        if (!username || !email || !password || !college || !phone) {
+        if (!fullName || !email || !password || !college || !phone) {
             req.flash("error", "All fields are required");
             return res.redirect("/signup");
         }
@@ -20,7 +20,7 @@ module.exports.signup = async (req, res) => {
 
         const newUser = new User({
             email,
-            username,
+            fullName,
             college,
             phone,
             verificationToken,
@@ -49,8 +49,8 @@ module.exports.renderLoginForm = (req, res) => {
 
 module.exports.login = async (req, res) => {
     // Auto-verify test accounts for development/testing
-    const testAccounts = ['seller_john', 'buyer_sarah'];
-    if (testAccounts.includes(req.user.username) && !req.user.isVerified) {
+    const testAccounts = ['seller.john@college.edu', 'buyer.sarah@college.edu'];
+    if (testAccounts.includes(req.user.email) && !req.user.isVerified) {
         req.user.isVerified = true;
         req.user.verificationToken = undefined;
         req.user.verificationTokenExpires = undefined;
@@ -62,7 +62,7 @@ module.exports.login = async (req, res) => {
         req.flash("error", "Please verify your email before logging in.");
         return res.redirect("/login");
     }
-    req.flash("success", `Welcome back, ${req.user.username}!`);
+    req.flash("success", `Welcome back, ${req.user.fullName}!`);
     const redirectUrl = res.locals.redirectUrl || "/products";
     res.redirect(redirectUrl);
 };
@@ -168,6 +168,112 @@ module.exports.verifyEmail = async (req, res) => {
     }
 };
 
+module.exports.renderForgotPasswordForm = (req, res) => {
+    res.render("users/forgot-password.ejs");
+};
+
+module.exports.forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            req.flash("error", "Please provide an email address");
+            return res.redirect("/forgot-password");
+        }
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            // Don't reveal if email exists or not for security
+            req.flash("success", "If an account with that email exists, you will receive a password reset link.");
+            return res.redirect("/login");
+        }
+
+        // Generate reset token
+        const resetToken = crypto.randomBytes(32).toString("hex");
+        user.passwordResetToken = resetToken;
+        user.passwordResetTokenExpires = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+        await user.save();
+
+        // Send password reset email
+        await sendPasswordResetEmail(req, email, resetToken);
+
+        req.flash("success", "Password reset link has been sent to your email. It expires in 1 hour.");
+        res.redirect("/login");
+    } catch (err) {
+        console.error("Forgot password error:", err);
+        req.flash("error", "Error processing password reset request");
+        res.redirect("/forgot-password");
+    }
+};
+
+module.exports.renderResetPasswordForm = async (req, res) => {
+    try {
+        const { token } = req.query;
+
+        if (!token) {
+            req.flash("error", "Invalid reset link");
+            return res.redirect("/login");
+        }
+
+        const user = await User.findOne({
+            passwordResetToken: token,
+            passwordResetTokenExpires: { $gt: Date.now() },
+        });
+
+        if (!user) {
+            req.flash("error", "Password reset link is invalid or has expired.");
+            return res.redirect("/login");
+        }
+
+        res.render("users/reset-password.ejs", { token });
+    } catch (err) {
+        console.error("Error rendering reset form:", err);
+        req.flash("error", "Error loading password reset form");
+        res.redirect("/login");
+    }
+};
+
+module.exports.resetPassword = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { password, confirmPassword } = req.body;
+
+        if (!password || !confirmPassword) {
+            req.flash("error", "All fields are required");
+            return res.redirect(`/reset-password?token=${token}`);
+        }
+
+        if (password !== confirmPassword) {
+            req.flash("error", "Passwords do not match");
+            return res.redirect(`/reset-password?token=${token}`);
+        }
+
+        const user = await User.findOne({
+            passwordResetToken: token,
+            passwordResetTokenExpires: { $gt: Date.now() },
+        });
+
+        if (!user) {
+            req.flash("error", "Password reset link is invalid or has expired.");
+            return res.redirect("/login");
+        }
+
+        // Set new password using passport-local-mongoose
+        await user.setPassword(password);
+        user.passwordResetToken = undefined;
+        user.passwordResetTokenExpires = undefined;
+        await user.save();
+
+        req.flash("success", "Your password has been reset successfully. Please log in with your new password.");
+        res.redirect("/login");
+    } catch (err) {
+        console.error("Reset password error:", err);
+        req.flash("error", "Error resetting password");
+        res.redirect("/login");
+    }
+};
+
 async function sendVerificationEmail(req, toEmail, token) {
     const baseUrl = `${req.protocol}://${req.get("host")}`;
     const verifyUrl = `${baseUrl}/verify?token=${token}`;
@@ -204,6 +310,46 @@ async function sendVerificationEmail(req, toEmail, token) {
         } catch (err) {
             console.error("Email send failed:", err.message);
             console.log("Fallback: Use verification link above to verify email");
+        }
+    }
+}
+
+async function sendPasswordResetEmail(req, toEmail, token) {
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const resetUrl = `${baseUrl}/reset-password?token=${token}`;
+
+    // Always log the reset link for fallback
+    console.log("[Password reset link]", resetUrl);
+
+    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE } = process.env;
+    let transporter;
+
+    if (SMTP_HOST && SMTP_PORT && SMTP_USER && SMTP_PASS) {
+        transporter = nodemailer.createTransport({
+            host: SMTP_HOST,
+            port: Number(SMTP_PORT),
+            secure: SMTP_SECURE === "true",
+            auth: {
+                user: SMTP_USER,
+                pass: SMTP_PASS,
+            },
+        });
+    }
+
+    const mailOptions = {
+        from: process.env.SMTP_FROM || "no-reply@campus-mart",
+        to: toEmail,
+        subject: "Reset your Campus Marketplace password",
+        html: `<p>Hi,</p><p>You requested to reset your password. Click the link below to set a new password:</p><p><a href="${resetUrl}">${resetUrl}</a></p><p>This link expires in 1 hour.</p><p>If you did not request this, please ignore this email.</p>`,
+    };
+
+    if (transporter) {
+        try {
+            await transporter.sendMail(mailOptions);
+            console.log("Password reset email sent successfully to:", toEmail);
+        } catch (err) {
+            console.error("Email send failed:", err.message);
+            console.log("Fallback: Use reset link above to reset password");
         }
     }
 }

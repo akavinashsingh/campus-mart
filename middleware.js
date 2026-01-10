@@ -23,6 +23,11 @@ module.exports.isOwner = async (req, res, next) => {
     const { id } = req.params;
     const product = await Product.findById(id);
     
+    if (!product) {
+        req.flash("error", "Product not found");
+        return res.redirect("/products");
+    }
+    
     if (!product.owner.equals(req.user._id)) {
         req.flash("error", "You don't have permission to do that");
         return res.redirect(`/products/${id}`);
@@ -34,13 +39,23 @@ module.exports.isReviewAuthor = async (req, res, next) => {
     const { reviewId } = req.params;
     const review = await Review.findById(reviewId);
     
+    if (!review) {
+        req.flash("error", "Comment not found");
+        return res.redirect("/products");
+    }
+    
     if (!review.author.equals(req.user._id)) {
         req.flash("error", "You don't have permission to do that");
         return res.redirect(`/products/${req.params.id}`);
     }
     next();
 };
-
+!product) {
+        req.flash("error", "Product not found");
+        return res.redirect("/products");
+    }
+    
+    if (
 module.exports.isNotProductOwner = async (req, res, next) => {
     const { id } = req.params;
     const product = await Product.findById(id);

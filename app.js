@@ -29,7 +29,9 @@ main()
         console.log("Connected to MongoDB");
     })
     .catch(err => {
-        console.log(err);
+        console.error("Database connection failed:", err.message);
+        console.error("Application cannot start without database connection");
+        process.exit(1);
     });
 
 async function main() {
@@ -38,22 +40,22 @@ async function main() {
 }
 
 async function ensureDefaultAdmin() {
-    const username = process.env.DEFAULT_ADMIN_USERNAME || "admin";
-    const password = process.env.DEFAULT_ADMIN_PASSWORD || "admin123";
     const email = process.env.DEFAULT_ADMIN_EMAIL || "admin@campus.local";
+    const fullName = process.env.DEFAULT_ADMIN_NAME || "Administrator";
+    const password = process.env.DEFAULT_ADMIN_PASSWORD || "admin123";
 
-    let admin = await User.findOne({ username });
+    let admin = await User.findOne({ email });
     if (!admin) {
         admin = new User({
-            username,
             email,
+            fullName,
             college: "Administration",
             phone: "0000000000",
             isAdmin: true,
             isVerified: true,
         });
         await User.register(admin, password);
-        console.log(`Default admin created: ${username} / ${password}`);
+        console.log(`Default admin created: ${email} / ${password}`);
     } else {
         if (!admin.isAdmin) {
             admin.isAdmin = true;
@@ -152,4 +154,19 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise);
+    console.error('Reason:', reason);
+    // Optionally exit process or log to error tracking service
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    console.error('Stack:', error.stack);
+    // Exit after logging critical errors
+    process.exit(1);
 });

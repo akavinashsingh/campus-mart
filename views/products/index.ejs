@@ -316,15 +316,15 @@
                                                  class="rounded-circle me-1" 
                                                  width="20" height="20" 
                                                  style="object-fit: cover;"
-                                                 alt="<%= product.owner.username %>">
+                                                 alt="<%= product.owner.fullName %>">
                                         <% } else if(product.owner) { %>
                                             <div class="rounded-circle d-inline-flex align-items-center justify-content-center me-1" 
                                                  style="width: 20px; height: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 9px; color: white;">
-                                                <%= product.owner.username.charAt(0).toUpperCase() %>
+                                                <%= product.owner.fullName.charAt(0).toUpperCase() %>
                                             </div>
                                         <% } %>
                                         <small class="text-muted fw-medium" style="font-size: 11px;">
-                                            <%= product.owner ? product.owner.username : 'Unknown' %>
+                                            <%= product.owner ? product.owner.fullName : 'Unknown' %>
                                         </small>
                                     </div>
                                 </div>

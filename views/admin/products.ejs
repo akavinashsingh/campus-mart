@@ -26,7 +26,7 @@
                     <% products.forEach(product => { %>
                         <tr>
                             <td><%= product.title %></td>
-                            <td><%= product.owner ? product.owner.username : 'N/A' %></td>
+                            <td><%= product.owner ? product.owner.fullName : 'N/A' %></td>
                             <td><%= product.category %></td>
                             <td>₹<%= product.price %></td>
                             <td>

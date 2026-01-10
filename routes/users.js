@@ -25,10 +25,20 @@ router.route("/login")
         userController.login
     );
 
+router.route("/forgot-password")
+    .get(userController.renderForgotPasswordForm)
+    .post(wrapAsync(userController.forgotPassword));
+
+router.route("/reset-password")
+    .get(wrapAsync(userController.renderResetPasswordForm));
+
+router.route("/reset-password/:token")
+    .post(wrapAsync(userController.resetPassword));
+
 router.get("/verify", wrapAsync(userController.verifyEmail));
 
 router.get("/logout", userController.logout);
-router.get("/profile", isLoggedIn, userController.renderProfile);
+router.get("/profile", isLoggedIn, wrapAsync(userController.renderProfile));
 router.put("/profile/:id", isLoggedIn, upload.single('profileImage'), wrapAsync(userController.updateProfile));
 
 // API endpoint for fetching user's products

@@ -8,10 +8,9 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
-    username: {
+    fullName: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     college: {
         type: String,
@@ -43,11 +42,13 @@ const userSchema = new Schema({
     },
     verificationToken: String,
     verificationTokenExpires: Date,
+    passwordResetToken: String,
+    passwordResetTokenExpires: Date,
     createdAt: {
         type: Date,
         default: Date.now
     }
 });
 
-userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(passportLocalMongoose, { usernameField: 'email' });
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

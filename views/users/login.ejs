@@ -10,13 +10,16 @@
                 <div class="card-body p-4">
                     <form action="/login" method="POST" class="needs-validation" novalidate>
                         <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input name="username" type="text" id="username" class="form-control" required />
+                            <label for="email" class="form-label">Email</label>
+                            <input name="email" type="email" id="email" class="form-control" placeholder="name@college.edu" required />
                         </div>
 
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
                             <input name="password" type="password" id="password" class="form-control" required />
+                            <small class="d-block mt-2">
+                                <a href="/forgot-password" class="text-decoration-none">Forgot password?</a>
+                            </small>
                         </div>
 
                         <div class="d-grid gap-2">

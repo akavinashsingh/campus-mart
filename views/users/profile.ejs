@@ -11,18 +11,18 @@
                              class="rounded-circle border" 
                              width="100" height="100" 
                              style="object-fit: cover;"
-                             alt="<%= user.username %>">
+                             alt="<%= user.fullName %>">
                     <% } else { %>
                         <div class="rounded-circle d-flex align-items-center justify-content-center border" 
                              style="width: 100px; height: 100px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                             <span class="text-white fw-bold" style="font-size: 48px;">
-                                <%= user.username.charAt(0).toUpperCase() %>
+                                <%= user.fullName.charAt(0).toUpperCase() %>
                             </span>
                         </div>
                     <% } %>
                 </div>
                 <div class="col">
-                    <h3 class="mb-1"><%= user.username %></h3>
+                    <h3 class="mb-1"><%= user.fullName %></h3>
                     <p class="text-muted mb-2">
                         <i class="fas fa-envelope me-2"></i><%= user.email %>
                     </p>
@@ -168,8 +168,8 @@
             <form action="/profile/<%= user._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <input type="text" name="user[username]" class="form-control" value="<%= user.username %>" required>
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="user[fullName]" class="form-control" value="<%= user.fullName %>" required>
                     </div>
                     
                     <div class="mb-3">

@@ -5,34 +5,40 @@ const mapToken = process.env.MAP_TOKEN;
 const geocodingClient = mbxGeocoding({ accessToken: mapToken });
 
 module.exports.index = async (req, res) => {
-    const { category, college, condition, minPrice, maxPrice, sort } = req.query;
-    let query = { isSold: false };
-    
-    if (category) query.category = category;
-    if (college) query.college = college;
-    if (condition) query.condition = condition;
-    if (minPrice || maxPrice) {
-        query.price = {};
-        if (minPrice) query.price.$gte = Number(minPrice);
-        if (maxPrice) query.price.$lte = Number(maxPrice);
+    try {
+        const { category, college, condition, minPrice, maxPrice, sort } = req.query;
+        let query = { isSold: false };
+        
+        if (category) query.category = category;
+        if (college) query.college = college;
+        if (condition) query.condition = condition;
+        if (minPrice || maxPrice) {
+            query.price = {};
+            if (minPrice) query.price.$gte = Number(minPrice);
+            if (maxPrice) query.price.$lte = Number(maxPrice);
+        }
+        
+        // Build sort options
+        let sortOptions = { createdAt: -1 }; // Default: newest first
+        
+        if (sort === 'price-low') {
+            sortOptions = { price: 1 };
+        } else if (sort === 'price-high') {
+            sortOptions = { price: -1 };
+        } else if (sort === 'oldest') {
+            sortOptions = { createdAt: 1 };
+        }
+        
+        const allProducts = await Product.find(query)
+            .populate("owner")
+            .sort(sortOptions);
+        
+        res.render("products/index.ejs", { allProducts, filters: req.query });
+    } catch (err) {
+        console.error("Error fetching products:", err);
+        req.flash("error", "Error loading products");
+        res.redirect("/");
     }
-    
-    // Build sort options
-    let sortOptions = { createdAt: -1 }; // Default: newest first
-    
-    if (sort === 'price-low') {
-        sortOptions = { price: 1 };
-    } else if (sort === 'price-high') {
-        sortOptions = { price: -1 };
-    } else if (sort === 'oldest') {
-        sortOptions = { createdAt: 1 };
-    }
-    
-    const allProducts = await Product.find(query)
-        .populate("owner")
-        .sort(sortOptions);
-    
-    res.render("products/index.ejs", { allProducts, filters: req.query });
 };
 
 module.exports.renderNewForm = (req, res) => {
@@ -264,7 +270,7 @@ module.exports.getProductAnalytics = async (req, res) => {
         const { id } = req.params;
         const product = await Product.findById(id)
             .populate("owner")
-            .populate("viewHistory.userId", "username email");
+            .populate("viewHistory.userId", "fullName email");
         
         if (!product) {
             req.flash("error", "Product not found!");

@@ -34,8 +34,8 @@ module.exports.dashboard = async (req, res) => {
     const activeProducts = await Product.countDocuments({ isSold: false });
     const recentContacts = await ContactLog.find({})
         .populate('product', 'title')
-        .populate('seller', 'username')
-        .populate('buyer', 'username')
+        .populate('seller', 'fullName')
+        .populate('buyer', 'fullName')
         .sort({ createdAt: -1 })
         .limit(10);
     res.render("admin/dashboard.ejs", { 

@@ -19,7 +19,7 @@ Edit the **login** middleware to auto-verify test users:
 // In controllers/users.js - modify the login function:
 module.exports.login = async (req, res) => {
     // For testing: auto-verify test accounts
-    if (['seller_john', 'buyer_sarah'].includes(req.user.username)) {
+    if (['seller.john@college.edu', 'buyer.sarah@college.edu'].includes(req.user.email)) {
         req.user.isVerified = true;
         await req.user.save();
     }
@@ -29,7 +29,7 @@ module.exports.login = async (req, res) => {
         req.flash("error", "Please verify your email before logging in.");
         return res.redirect("/login");
     }
-    req.flash("success", `Welcome back, ${req.user.username}!`);
+    req.flash("success", `Welcome back, ${req.user.fullName}!`);
     const redirectUrl = res.locals.redirectUrl || "/products";
     res.redirect(redirectUrl);
 };
@@ -40,15 +40,15 @@ module.exports.login = async (req, res) => {
 ## Recommended Test Users (Using Option 3 - Skip Verification for Testing)
 
 ### Test User 1 (Seller)
-- **Username**: `seller_john`
-- **Email**: `john@testcollege.local`
+- **Full Name**: `John Seller`
+- **Email**: `seller.john@college.edu`
 - **Password**: `TestPass123!`
 - **Phone**: `9876543210`
 - **College**: `MIT`
 
 ### Test User 2 (Buyer)
-- **Username**: `buyer_sarah`
-- **Email**: `sarah@testcollege.local`
+- **Full Name**: `Sarah Buyer`
+- **Email**: `buyer.sarah@college.edu`
 - **Password**: `TestPass456!`
 - **Phone**: `9876543211`
 - **College**: `Stanford`

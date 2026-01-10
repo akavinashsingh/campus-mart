@@ -148,18 +148,18 @@
                                          class="rounded-circle me-3 border" 
                                          width="60" height="60" 
                                          style="object-fit: cover;"
-                                         alt="<%= product.owner.username %>">
+                                         alt="<%= product.owner.fullName %>">
                                 <% } else { %>
                                     <div class="rounded-circle d-flex align-items-center justify-content-center me-3 border" 
                                          style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                                         <span class="text-white fw-bold" style="font-size: 24px;">
-                                            <%= product.owner.username.charAt(0).toUpperCase() %>
+                                            <%= product.owner.fullName.charAt(0).toUpperCase() %>
                                         </span>
                                     </div>
                                 <% } %>
                                 
                                 <div>
-                                    <h6 class="mb-1"><%= product.owner.username %></h6>
+                                    <h6 class="mb-1"><%= product.owner.fullName %></h6>
                                     <small class="text-muted">
                                         <i class="fas fa-star text-warning"></i>
                                         <%= product.owner.rating.toFixed(1) %> 
@@ -218,7 +218,7 @@
                             <div class="review-item mb-3 pb-3 border-bottom">
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <strong><%= review.author.username %></strong>
+                                        <strong><%= review.author.fullName %></strong>
                                     </div>
                                     <small class="text-muted">
                                         <%= new Date(review.createdAt).toLocaleDateString() %>
@@ -280,7 +280,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Contact <strong><%= product.owner.username %></strong> about "<%= product.title %>"</p>
+                <p>Contact <strong><%= product.owner.fullName %></strong> about "<%= product.title %>"</p>
                 
                 <div class="alert alert-info mb-3">
                     <i class="fas fa-info-circle me-2"></i>
