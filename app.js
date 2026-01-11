@@ -23,6 +23,14 @@ const adminRouter = require("./routes/admin.js");
 
 const dbUrl = process.env.ATLASDB_URL;
 
+console.log("DEBUG: NODE_ENV =", process.env.NODE_ENV);
+console.log("DEBUG: ATLASDB_URL defined?", !!dbUrl);
+
+if (!dbUrl) {
+    console.error("ERROR: ATLASDB_URL environment variable is not set!");
+    process.exit(1);
+}
+
 // Database connection
 main()
     .then(() => {
