@@ -50,15 +50,15 @@ module.exports.isReviewAuthor = async (req, res, next) => {
     }
     next();
 };
-!product) {
-        req.flash("error", "Product not found");
-        return res.redirect("/products");
-    }
-    
-    if (
+
 module.exports.isNotProductOwner = async (req, res, next) => {
     const { id } = req.params;
     const product = await Product.findById(id);
+    
+    if (!product) {
+        req.flash("error", "Product not found");
+        return res.redirect("/products");
+    }
     
     if (product.owner.equals(req.user._id)) {
         req.flash("error", "You cannot comment on your own product");
