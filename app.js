@@ -71,7 +71,7 @@ async function ensureDefaultAdmin() {
         // Always align the admin password with DEFAULT_ADMIN_PASSWORD so login works
         await admin.setPassword(password);
         await admin.save();
-        console.log(`Default admin ensured. Username: ${username} / ${password}`);
+        console.log(`Default admin ensured. Email: ${email} / Password set`);
     }
 }
 
@@ -115,7 +115,8 @@ app.use(flash());
 // Passport configuration
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
+// Use email as the username field for local authentication
+passport.use(new LocalStrategy({ usernameField: 'email' }, User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
