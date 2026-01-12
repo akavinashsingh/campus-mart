@@ -29,19 +29,26 @@ module.exports.logout = (req, res, next) => {
 };
 
 module.exports.dashboard = async (req, res) => {
-    const totalUsers = await User.countDocuments();
-    const totalProducts = await Product.countDocuments();
-    const activeProducts = await Product.countDocuments({ isSold: false });
-    const recentContacts = await ContactLog.find({})
-        .populate('product', 'title')
-        .populate('seller', 'fullName')
-        .populate('buyer', 'fullName')
-        .sort({ createdAt: -1 })
-        .limit(10);
-    res.render("admin/dashboard.ejs", { 
-        stats: { totalUsers, totalProducts, activeProducts }, 
-        recentContacts 
-    });
+    try {
+        const totalUsers = await User.countDocuments();
+        const totalProducts = await Product.countDocuments();
+        const activeProducts = await Product.countDocuments({ isSold: false });
+        const recentContacts = await ContactLog.find({})
+            .populate('product', 'title')
+            .populate('seller', 'fullName username')
+            .populate('buyer', 'fullName username')
+            .sort({ createdAt: -1 })
+            .limit(10);
+        
+        res.render("admin/dashboard.ejs", { 
+            stats: { totalUsers, totalProducts, activeProducts }, 
+            recentContacts 
+        });
+    } catch (err) {
+        console.error("Error loading dashboard:", err);
+        req.flash("error", "Error loading dashboard");
+        res.redirect("/admin/login");
+    }
 };
 
 module.exports.listUsers = async (req, res) => {
@@ -75,6 +82,13 @@ module.exports.userDetail = async (req, res) => {
 module.exports.deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
+        
+        // Validate ID format
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+            req.flash("error", "Invalid user ID");
+            return res.redirect("/admin/users");
+        }
+        
         const user = await User.findById(id);
 
         if (!user) {
@@ -87,6 +101,7 @@ module.exports.deleteUser = async (req, res) => {
             return res.redirect("/admin/users");
         }
 
+        // Delete user's products, reviews, and contacts
         const products = await Product.find({ owner: id });
         for (const product of products) {
             if (product.reviews && product.reviews.length > 0) {
@@ -95,13 +110,14 @@ module.exports.deleteUser = async (req, res) => {
         }
         await Product.deleteMany({ owner: id });
         await Review.deleteMany({ author: id });
+        await ContactLog.deleteMany({ $or: [{ buyer: id }, { seller: id }] });
         await User.findByIdAndDelete(id);
 
-        req.flash("success", "User and related data deleted");
+        req.flash("success", "User and related data deleted successfully");
         res.redirect("/admin/users");
     } catch (err) {
         console.error("Error deleting user:", err);
-        req.flash("error", "Error deleting user");
+        req.flash("error", "Error deleting user. Please try again.");
         res.redirect("/admin/users");
     }
 };
@@ -120,6 +136,13 @@ module.exports.listProducts = async (req, res) => {
 module.exports.deleteProduct = async (req, res) => {
     try {
         const { id } = req.params;
+        
+        // Validate ID format
+        if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+            req.flash("error", "Invalid product ID");
+            return res.redirect("/admin/products");
+        }
+        
         const product = await Product.findByIdAndDelete(id);
         
         if (!product) {
@@ -127,11 +150,17 @@ module.exports.deleteProduct = async (req, res) => {
             return res.redirect("/admin/products");
         }
         
-        req.flash("success", "Product deleted");
+        // Clean up associated reviews and contacts
+        if (product.reviews && product.reviews.length > 0) {
+            await Review.deleteMany({ _id: { $in: product.reviews } });
+        }
+        await ContactLog.deleteMany({ product: id });
+        
+        req.flash("success", "Product and related data deleted successfully");
         res.redirect("/admin/products");
     } catch (err) {
         console.error("Error deleting product:", err);
-        req.flash("error", "Error deleting product");
+        req.flash("error", "Error deleting product. Please try again.");
         res.redirect("/admin/products");
     }
 };

@@ -159,7 +159,7 @@ module.exports.verifyEmail = async (req, res) => {
         user.verificationTokenExpires = undefined;
         await user.save();
 
-        req.flash("success", "Email verified! You can now log in.");
+        req.flash("success", "Email verified! Welcome to CampusMart. You can now log in.");
         res.redirect("/login");
     } catch (err) {
         console.error("Error verifying email:", err);
@@ -277,6 +277,9 @@ module.exports.resetPassword = async (req, res) => {
 async function sendVerificationEmail(req, toEmail, token) {
     const baseUrl = `${req.protocol}://${req.get("host")}`;
     const verifyUrl = `${baseUrl}/verify?token=${token}`;
+    
+    // Always log the verification link for fallback
+    console.log("[Email verification link]", verifyUrl);
 
     // Always log the verification link for fallback
     console.log("[Email verification link]", verifyUrl);

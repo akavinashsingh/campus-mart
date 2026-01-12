@@ -4,6 +4,8 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require("express");
 const app = express();
+const http = require("http");
+const socketIO = require("socket.io");
 const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
@@ -15,7 +17,19 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/User.js");
 
+const server = http.createServer(app);
+const io = socketIO(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
+
+// Make io accessible to routes
+app.set('io', io);
+
 const ExpressError = require("./utils/ExpressError.js");
+const { convertMongooseError, logError } = require("./utils/errorHandler.js");
 const productRouter = require("./routes/products.js");
 const reviewRouter = require("./routes/reviews.js");
 const userRouter = require("./routes/users.js");
@@ -128,6 +142,20 @@ app.use((req, res, next) => {
     next();
 });
 
+// Socket.IO connection handling for real-time notifications
+io.on('connection', (socket) => {
+    console.log('Admin connected:', socket.id);
+    
+    socket.on('join-admin', (adminId) => {
+        socket.join(`admin-${adminId}`);
+        console.log(`Admin ${adminId} joined notification room`);
+    });
+    
+    socket.on('disconnect', () => {
+        console.log('Admin disconnected:', socket.id);
+    });
+});
+
 // Routes
 app.use("/products", productRouter);
 app.use("/products/:id/reviews", reviewRouter);
@@ -155,13 +183,48 @@ app.use((err, req, res, next) => {
     if (res.headersSent) {
         return next(err);
     }
+    
+    // Convert Mongoose errors to ExpressError
+    const mongooseError = convertMongooseError(err);
+    if (mongooseError) {
+        err = mongooseError;
+    }
+    
+    // Log the error with context
+    logError(err, {
+        method: req.method,
+        url: req.originalUrl,
+        userId: req.user?._id,
+        userEmail: req.user?.email
+    });
+    
     const { statusCode = 500, message = "Something went wrong!" } = err;
-    res.status(statusCode).render("error", { message });
+    
+    // Don't expose internal details in production
+    const displayMessage = statusCode === 500 && process.env.NODE_ENV === 'production' 
+        ? 'Internal server error. Please try again later.'
+        : message;
+    
+    // For JSON requests
+    if (req.accepts('json') && req.headers['content-type']?.includes('application/json')) {
+        return res.status(statusCode).json({
+            success: false,
+            error: displayMessage,
+            statusCode
+        });
+    }
+    
+    // For HTML requests
+    res.status(statusCode).render("error", { 
+        message: displayMessage,
+        statusCode,
+        error: process.env.NODE_ENV === 'development' ? err : {}
+    });
 });
 
 // Start server
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
 

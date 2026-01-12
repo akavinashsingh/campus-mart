@@ -334,6 +334,24 @@ module.exports.logContact = async (req, res) => {
         });
         
         await contactLog.save();
+        
+        // Populate the contact log for notification
+        await contactLog.populate([
+            { path: 'buyer', select: 'username fullName email' },
+            { path: 'seller', select: 'username fullName email' },
+            { path: 'product', select: 'title price' }
+        ]);
+        
+        // Emit real-time notification to admin
+        const io = req.app.get('io');
+        if (io) {
+            io.emit('new-buyer-contact', {
+                message: `New buyer contact: ${contactLog.buyer.fullName} contacted ${contactLog.seller.fullName} about "${contactLog.product.title}"`,
+                contact: contactLog,
+                timestamp: new Date().toLocaleString()
+            });
+        }
+        
         res.json({ success: true, message: "Contact logged" });
     } catch (err) {
         console.error("Error logging contact:", err);

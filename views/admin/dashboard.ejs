@@ -8,6 +8,13 @@
         </form>
     </div>
 
+    <!-- Real-time Notification Alert -->
+    <div id="notificationAlert" class="alert alert-info alert-dismissible fade" role="alert" style="display: none;">
+        <i class="fas fa-bell me-2"></i>
+        <span id="notificationText"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
     <div class="row g-3">
         <div class="col-md-4">
             <div class="card shadow-sm h-100">
@@ -43,10 +50,14 @@
     <!-- Recent Contact Activity -->
     <% if(recentContacts && recentContacts.length > 0) { %>
         <div class="mt-5">
-            <h4 class="mb-3"><i class="fas fa-envelope me-2"></i>Recent Contact Activity</h4>
+            <h4 class="mb-3"><i class="fas fa-envelope me-2"></i>Recent Contact Activity
+                <span class="badge bg-success ms-2" id="liveIndicator" style="display: none;">
+                    <i class="fas fa-circle me-1"></i>LIVE
+                </span>
+            </h4>
             <div class="card shadow-sm">
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0">
+                    <table class="table table-hover mb-0" id="contactsTable">
                         <thead class="table-light">
                             <tr>
                                 <th>Date/Time</th>
@@ -56,7 +67,7 @@
                                 <th>Method</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="contactsBody">
                             <% recentContacts.forEach(contact => { %>
                                 <tr>
                                     <td>
@@ -106,9 +117,81 @@
             <div class="mt-2">
                 <small class="text-muted">
                     <i class="fas fa-info-circle me-1"></i>
-                    Showing last 10 contact attempts
+                    Showing last 10 contact attempts (auto-refreshing)
                 </small>
             </div>
         </div>
     <% } %>
 </div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    // Connect to Socket.IO
+    const socket = io();
+    const adminId = '<%= currUser?._id %>';
+    
+    if (adminId) {
+        socket.emit('join-admin', adminId);
+        console.log('Admin connected to real-time notifications');
+    }
+    
+    // Listen for new buyer contacts
+    socket.on('new-buyer-contact', (data) => {
+        console.log('New contact notification:', data);
+        
+        // Show live indicator
+        document.getElementById('liveIndicator').style.display = 'inline-block';
+        
+        // Show notification alert
+        const alert = document.getElementById('notificationAlert');
+        const alertText = document.getElementById('notificationText');
+        alertText.innerHTML = `<strong>New Contact!</strong> ${data.message}`;
+        alert.classList.add('show');
+        alert.style.display = 'block';
+        
+        // Add new row to table if it exists
+        const contactsBody = document.getElementById('contactsBody');
+        if (contactsBody && data.contact) {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>
+                    <small>${data.timestamp}</small>
+                </td>
+                <td>${data.contact.buyer?.username || 'Unknown'}</td>
+                <td>${data.contact.seller?.username || 'Unknown'}</td>
+                <td>${data.contact.product?.title || 'Deleted'}</td>
+                <td>
+                    <span class="badge bg-${
+                        data.contact.contactMethod === 'Email' ? 'primary' : 
+                        data.contact.contactMethod === 'WhatsApp' ? 'success' : 
+                        data.contact.contactMethod === 'Phone' ? 'info' : 'warning'
+                    }">
+                        <i class="fas fa-${
+                            data.contact.contactMethod === 'Email' ? 'envelope' : 
+                            data.contact.contactMethod === 'WhatsApp' ? 'fab fa-whatsapp' : 
+                            data.contact.contactMethod === 'Phone' ? 'phone' : 'handshake'
+                        } me-1"></i>
+                        ${data.contact.contactMethod}
+                    </span>
+                </td>
+            `;
+            // Insert at top and remove the last row to keep max 10 visible
+            contactsBody.insertBefore(newRow, contactsBody.firstChild);
+            if (contactsBody.children.length > 10) {
+                contactsBody.removeChild(contactsBody.lastChild);
+            }
+        }
+        
+        // Auto-dismiss alert after 5 seconds
+        setTimeout(() => {
+            alert.classList.remove('show');
+            setTimeout(() => { alert.style.display = 'none'; }, 150);
+        }, 5000);
+    });
+    
+    // Hide live indicator when page loses focus
+    window.addEventListener('blur', () => {
+        document.getElementById('liveIndicator').style.display = 'none';
+    });
+</script>
+

@@ -63,8 +63,12 @@ body {
 .card-header {
     border-radius: 16px 16px 0 0 !important;
     font-weight: 600;
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.card-header.bg-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
 }
 
 /* Buttons */
