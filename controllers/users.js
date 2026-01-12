@@ -303,7 +303,7 @@ async function sendVerificationEmail(req, toEmail, token) {
         from: process.env.SMTP_FROM || "no-reply@campus-mart",
         to: toEmail,
         subject: "Verify your Campus Marketplace account",
-        html: `<p>Hi,</p><p>Please verify your email by clicking the link below:</p><p><a href="${verifyUrl}">${verifyUrl}</a></p><p>This link expires in 24 hours.</p>`,
+        html: `<p>Hi,</p><p>Please verify your email by clicking the link below:</p><p><a href="${verifyUrl}">${verifyUrl}</a></p><p>This link expires in 24 hours.</p><hr><p style="color: #666; font-size: 12px;"><strong>Need help?</strong> If you didn't create this account or have any issues, contact us at <a href="mailto:23uj1a0504@mrem.ac.in">23uj1a0504@mrem.ac.in</a></p>`,
     };
 
     if (transporter) {
@@ -343,7 +343,7 @@ async function sendPasswordResetEmail(req, toEmail, token) {
         from: process.env.SMTP_FROM || "no-reply@campus-mart",
         to: toEmail,
         subject: "Reset your Campus Marketplace password",
-        html: `<p>Hi,</p><p>You requested to reset your password. Click the link below to set a new password:</p><p><a href="${resetUrl}">${resetUrl}</a></p><p>This link expires in 1 hour.</p><p>If you did not request this, please ignore this email.</p>`,
+        html: `<p>Hi,</p><p>You requested to reset your password. Click the link below to set a new password:</p><p><a href="${resetUrl}">${resetUrl}</a></p><p>This link expires in 1 hour.</p><p>If you did not request this, please ignore this email.</p><hr><p style="color: #666; font-size: 12px;"><strong>Having trouble?</strong> Contact support at <a href="mailto:23uj1a0504@mrem.ac.in">23uj1a0504@mrem.ac.in</a></p>`,
     };
 
     if (transporter) {
