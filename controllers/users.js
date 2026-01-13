@@ -28,10 +28,13 @@ module.exports.signup = async (req, res) => {
             isVerified: false,
         });
         await User.register(newUser, password);
+        console.log("✓ User registered successfully:", email);
 
         // Send email asynchronously (don't wait for it)
+        console.log("→ Attempting to send verification email to:", email);
         sendVerificationEmail(req, email, verificationToken).catch(err => {
-            console.error("Email send error:", err.message);
+            console.error("✗ Email send error:", err.message);
+            console.error("✗ Full error:", err);
         });
 
         req.flash("success", "Account created! Check your email to verify before logging in.");
@@ -275,19 +278,27 @@ module.exports.resetPassword = async (req, res) => {
 };
 
 async function sendVerificationEmail(req, toEmail, token) {
+    console.log("\n=== Sending Verification Email ===");
+    console.log("To:", toEmail);
+    console.log("Token:", token.substring(0, 20) + "...");
+    
     const baseUrl = `${req.protocol}://${req.get("host")}`;
     const verifyUrl = `${baseUrl}/verify?token=${token}`;
     
-    // Always log the verification link for fallback
-    console.log("[Email verification link]", verifyUrl);
-
-    // Always log the verification link for fallback
-    console.log("[Email verification link]", verifyUrl);
+    console.log("\n📧 Verification link:", verifyUrl);
 
     const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE } = process.env;
     let transporter;
 
+    console.log("SMTP Config Check:", {
+        host: SMTP_HOST ? "✓" : "✗",
+        port: SMTP_PORT ? "✓" : "✗",
+        user: SMTP_USER ? "✓" : "✗",
+        pass: SMTP_PASS ? "✓" : "✗"
+    });
+
     if (SMTP_HOST && SMTP_PORT && SMTP_USER && SMTP_PASS) {
+        console.log("→ Creating email transporter...");
         transporter = nodemailer.createTransport({
             host: SMTP_HOST,
             port: Number(SMTP_PORT),
@@ -297,6 +308,8 @@ async function sendVerificationEmail(req, toEmail, token) {
                 pass: SMTP_PASS,
             },
         });
+    } else {
+        console.error("✗ SMTP configuration incomplete!");
     }
 
     const mailOptions = {
@@ -308,12 +321,23 @@ async function sendVerificationEmail(req, toEmail, token) {
 
     if (transporter) {
         try {
-            await transporter.sendMail(mailOptions);
-            console.log("Email sent successfully to:", toEmail);
+            console.log("→ Sending email...");
+            const info = await transporter.sendMail(mailOptions);
+            console.log("✓ Email sent successfully to:", toEmail);
+            console.log("✓ Message ID:", info.messageId);
+            console.log("===========================\n");
         } catch (err) {
-            console.error("Email send failed:", err.message);
-            console.log("Fallback: Use verification link above to verify email");
+            console.error("\n✗ Email send failed:", err.message);
+            console.error("✗ Error code:", err.code);
+            console.error("✗ Full error:", err);
+            console.log("⚠ Fallback: Use verification link above to verify email");
+            console.log("===========================\n");
+            throw err; // Re-throw to be caught by outer catch
         }
+    } else {
+        console.error("✗ No transporter configured - email not sent!");
+        console.log("⚠ Use verification link above manually");
+        console.log("===========================\n");
     }
 }
 
