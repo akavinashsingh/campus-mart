@@ -299,15 +299,29 @@ async function sendVerificationEmail(req, toEmail, token) {
 
     if (SMTP_HOST && SMTP_PORT && SMTP_USER && SMTP_PASS) {
         console.log("→ Creating email transporter...");
+        
+        // Use port 465 with SSL for better compatibility with cloud hosting
+        const port = Number(SMTP_PORT);
+        const secure = port === 465 ? true : (SMTP_SECURE === "true");
+        
         transporter = nodemailer.createTransport({
             host: SMTP_HOST,
-            port: Number(SMTP_PORT),
-            secure: SMTP_SECURE === "true",
+            port: port,
+            secure: secure,
             auth: {
                 user: SMTP_USER,
                 pass: SMTP_PASS,
             },
+            connectionTimeout: 10000, // 10 seconds
+            greetingTimeout: 5000,    // 5 seconds
+            socketTimeout: 15000,     // 15 seconds
+            pool: true,               // Use connection pooling
+            maxConnections: 1,        // Limit concurrent connections
+            rateDelta: 20000,         // Minimum time between sends
+            rateLimit: 5              // Max emails per rateDelta
         });
+        
+        console.log(`→ Transporter config: ${SMTP_HOST}:${port} (secure: ${secure})`);
     } else {
         console.error("✗ SMTP configuration incomplete!");
     }
@@ -322,17 +336,51 @@ async function sendVerificationEmail(req, toEmail, token) {
     if (transporter) {
         try {
             console.log("→ Sending email...");
-            const info = await transporter.sendMail(mailOptions);
+            
+            // Wrap in Promise with timeout
+            const sendWithTimeout = new Promise(async (resolve, reject) => {
+                const timeout = setTimeout(() => {
+                    reject(new Error('Email send timeout after 20 seconds'));
+                }, 20000);
+                
+                try {
+                    const info = await transporter.sendMail(mailOptions);
+                    clearTimeout(timeout);
+                    resolve(info);
+                } catch (err) {
+                    clearTimeout(timeout);
+                    reject(err);
+                }
+            });
+            
+            const info = await sendWithTimeout;
             console.log("✓ Email sent successfully to:", toEmail);
             console.log("✓ Message ID:", info.messageId);
             console.log("===========================\n");
         } catch (err) {
             console.error("\n✗ Email send failed:", err.message);
             console.error("✗ Error code:", err.code);
+            
+            // Specific error messages for common issues
+            if (err.message.includes('timeout')) {
+                console.error("✗ TIMEOUT: SMTP server not responding. Possible causes:");
+                console.error("  - Render may be blocking SMTP port 587");
+                console.error("  - Try using port 465 instead (set SMTP_PORT=465)");
+                console.error("  - Or use SendGrid/Mailgun for cloud hosting");
+            } else if (err.code === 'EAUTH') {
+                console.error("✗ AUTH FAILED: Gmail credentials rejected");
+                console.error("  - Verify SMTP_USER and SMTP_PASS in Render env vars");
+                console.error("  - Generate new App Password at: https://myaccount.google.com/apppasswords");
+            } else if (err.code === 'ECONNECTION' || err.code === 'ETIMEDOUT') {
+                console.error("✗ CONNECTION FAILED: Cannot reach Gmail SMTP");
+                console.error("  - Render free tier may block SMTP ports");
+                console.error("  - Recommended: Use SendGrid or Mailgun instead");
+            }
+            
             console.error("✗ Full error:", err);
             console.log("⚠ Fallback: Use verification link above to verify email");
             console.log("===========================\n");
-            throw err; // Re-throw to be caught by outer catch
+            // Don't throw - allow signup to complete even if email fails
         }
     } else {
         console.error("✗ No transporter configured - email not sent!");
