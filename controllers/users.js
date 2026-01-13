@@ -412,41 +412,127 @@ async function sendVerificationEmail(req, toEmail, token) {
 }
 
 async function sendPasswordResetEmail(req, toEmail, token) {
+    console.log("\n=== Sending Password Reset Email ===");
+    console.log("To:", toEmail);
+    console.log("Token:", token.substring(0, 20) + "...");
+    
     const baseUrl = `${req.protocol}://${req.get("host")}`;
     const resetUrl = `${baseUrl}/reset-password?token=${token}`;
 
-    // Always log the reset link for fallback
-    console.log("[Password reset link]", resetUrl);
+    console.log("\n🔗 Password reset link:", resetUrl);
 
     const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_SECURE } = process.env;
     let transporter;
 
+    console.log("SMTP Config Check:", {
+        host: SMTP_HOST ? "✓" : "✗",
+        port: SMTP_PORT ? "✓" : "✗",
+        user: SMTP_USER ? "✓" : "✗",
+        pass: SMTP_PASS ? "✓" : "✗"
+    });
+
     if (SMTP_HOST && SMTP_PORT && SMTP_USER && SMTP_PASS) {
+        console.log("→ Creating email transporter...");
+        
+        // Use port 2525 for SendGrid cloud compatibility
+        const port = Number(SMTP_PORT);
+        const secure = port === 465 ? true : (SMTP_SECURE === "true");
+        
         transporter = nodemailer.createTransport({
             host: SMTP_HOST,
-            port: Number(SMTP_PORT),
-            secure: SMTP_SECURE === "true",
+            port: port,
+            secure: secure,
             auth: {
                 user: SMTP_USER,
                 pass: SMTP_PASS,
             },
+            connectionTimeout: 10000,
+            greetingTimeout: 5000,
+            socketTimeout: 15000,
+            pool: true,
+            maxConnections: 1,
+            rateDelta: 20000,
+            rateLimit: 5
         });
+        
+        console.log(`→ Transporter config: ${SMTP_HOST}:${port} (secure: ${secure})`);
+    } else {
+        console.error("✗ SMTP configuration incomplete!");
     }
 
     const mailOptions = {
         from: process.env.SMTP_FROM || "no-reply@campus-mart",
         to: toEmail,
-        subject: "Reset your Campus Marketplace password",
-        html: `<p>Hi,</p><p>You requested to reset your password. Click the link below to set a new password:</p><p><a href="${resetUrl}">${resetUrl}</a></p><p>This link expires in 1 hour.</p><p>If you did not request this, please ignore this email.</p><hr><p style="color: #666; font-size: 12px;"><strong>Having trouble?</strong> Contact support at <a href="mailto:23uj1a0504@mrem.ac.in">23uj1a0504@mrem.ac.in</a></p>`,
+        subject: "Reset your CampusMart password",
+        html: `
+            <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; background: #f7f9fb; border: 1px solid #e5e7eb; border-radius: 10px;">
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <div style="font-size: 22px; font-weight: 700; color: #4b5563;">CampusMart</div>
+                    <div style="color: #6b7280; font-size: 14px;">Reset your password</div>
+                </div>
+
+                <p style="color: #374151; font-size: 15px; margin: 16px 0 8px;">Hi there,</p>
+                <p style="color: #4b5563; font-size: 14px; margin: 0 0 16px;">Click the button below to reset your password. This link expires in 1 hour.</p>
+
+                <div style="text-align: center; margin: 20px 0;">
+                    <a href="${resetUrl}" style="display: inline-block; padding: 12px 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700;">Reset password</a>
+                </div>
+
+                <p style="color: #6b7280; font-size: 12px; margin: 0 0 14px;">If the button doesn't work, copy and paste this link:</p>
+                <p style="color: #2563eb; font-size: 12px; word-break: break-all; margin: 0 0 16px;">${resetUrl}</p>
+
+                <p style="color: #6b7280; font-size: 12px; margin: 0 0 6px;">If you didn't request a password reset, you can ignore this email.</p>
+                <p style="color: #6b7280; font-size: 12px; margin: 0 0 16px;">Need help? Contact us at <a href="mailto:23uj1a0504@mrem.ac.in" style="color: #2563eb; text-decoration: none;">23uj1a0504@mrem.ac.in</a></p>
+
+                <div style="text-align: center; color: #9ca3af; font-size: 11px; margin-top: 12px;">© 2026 CampusMart</div>
+            </div>
+        `,
     };
 
     if (transporter) {
         try {
-            await transporter.sendMail(mailOptions);
-            console.log("Password reset email sent successfully to:", toEmail);
+            console.log("→ Sending email...");
+            
+            // Wrap in Promise with timeout
+            const sendWithTimeout = new Promise(async (resolve, reject) => {
+                const timeout = setTimeout(() => {
+                    reject(new Error('Email send timeout after 20 seconds'));
+                }, 20000);
+                
+                try {
+                    const info = await transporter.sendMail(mailOptions);
+                    clearTimeout(timeout);
+                    resolve(info);
+                } catch (err) {
+                    clearTimeout(timeout);
+                    reject(err);
+                }
+            });
+            
+            const info = await sendWithTimeout;
+            console.log("✓ Email sent successfully to:", toEmail);
+            console.log("✓ Message ID:", info.messageId);
+            console.log("===========================\n");
         } catch (err) {
-            console.error("Email send failed:", err.message);
-            console.log("Fallback: Use reset link above to reset password");
+            console.error("\n✗ Email send failed:", err.message);
+            console.error("✗ Error code:", err.code);
+            
+            if (err.message.includes('timeout')) {
+                console.error("✗ TIMEOUT: SMTP server not responding");
+                console.error("  - Check SMTP_PORT setting (should be 2525 for SendGrid)");
+            } else if (err.code === 'EAUTH') {
+                console.error("✗ AUTH FAILED: Check SMTP credentials");
+            } else if (err.code === 'ECONNECTION' || err.code === 'ETIMEDOUT') {
+                console.error("✗ CONNECTION FAILED: Cannot reach email server");
+            }
+            
+            console.error("✗ Full error:", err);
+            console.log("⚠ Fallback: Use password reset link above to reset password");
+            console.log("===========================\n");
         }
+    } else {
+        console.error("✗ No transporter configured - email not sent!");
+        console.log("⚠ Use password reset link above manually");
+        console.log("===========================\n");
     }
 }
