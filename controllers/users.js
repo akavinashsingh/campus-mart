@@ -329,8 +329,30 @@ async function sendVerificationEmail(req, toEmail, token) {
     const mailOptions = {
         from: process.env.SMTP_FROM || "no-reply@campus-mart",
         to: toEmail,
-        subject: "Verify your Campus Marketplace account",
-        html: `<p>Hi,</p><p>Please verify your email by clicking the link below:</p><p><a href="${verifyUrl}">${verifyUrl}</a></p><p>This link expires in 24 hours.</p><hr><p style="color: #666; font-size: 12px;"><strong>Need help?</strong> If you didn't create this account or have any issues, contact us at <a href="mailto:23uj1a0504@mrem.ac.in">23uj1a0504@mrem.ac.in</a></p>`,
+        subject: "Verify your CampusMart account",
+        html: `
+            <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; background: #f7f9fb; border: 1px solid #e5e7eb; border-radius: 10px;">
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <div style="font-size: 22px; font-weight: 700; color: #4b5563;">CampusMart</div>
+                    <div style="color: #6b7280; font-size: 14px;">Verify your email to start buying & selling</div>
+                </div>
+
+                <p style="color: #374151; font-size: 15px; margin: 16px 0 8px;">Hi there,</p>
+                <p style="color: #4b5563; font-size: 14px; margin: 0 0 16px;">Tap the button below to verify your email and activate your CampusMart account.</p>
+
+                <div style="text-align: center; margin: 20px 0;">
+                    <a href="${verifyUrl}" style="display: inline-block; padding: 12px 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 700;">Verify email</a>
+                </div>
+
+                <p style="color: #6b7280; font-size: 12px; margin: 0 0 14px;">Link expires in 24 hours. If the button doesn't work, copy and paste this link:</p>
+                <p style="color: #2563eb; font-size: 12px; word-break: break-all; margin: 0 0 16px;">${verifyUrl}</p>
+
+                <p style="color: #6b7280; font-size: 12px; margin: 0 0 6px;">If you didn’t create this account, you can ignore this email.</p>
+                <p style="color: #6b7280; font-size: 12px; margin: 0 0 16px;">Need help? Contact us at <a href="mailto:23uj1a0504@mrem.ac.in" style="color: #2563eb; text-decoration: none;">23uj1a0504@mrem.ac.in</a></p>
+
+                <div style="text-align: center; color: #9ca3af; font-size: 11px; margin-top: 12px;">© 2026 CampusMart</div>
+            </div>
+        `,
     };
 
     if (transporter) {
