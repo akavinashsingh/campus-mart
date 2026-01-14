@@ -75,14 +75,14 @@
                                     </td>
                                     <td>
                                         <% if(contact.buyer) { %>
-                                            <%= contact.buyer.username %>
+                                            <%= contact.buyer.fullName %>
                                         <% } else { %>
                                             <span class="text-muted">Unknown</span>
                                         <% } %>
                                     </td>
                                     <td>
                                         <% if(contact.seller) { %>
-                                            <%= contact.seller.username %>
+                                            <%= contact.seller.fullName %>
                                         <% } else { %>
                                             <span class="text-muted">Unknown</span>
                                         <% } %>
