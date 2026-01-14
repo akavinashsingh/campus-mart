@@ -75,7 +75,7 @@
                         <form action="/products" method="GET" id="filterFormMobile">
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Category</label>
-                                <select class="form-select" name="category" onchange="this.form.submit()">
+                                <select class="form-select" name="category">
                                     <option value="">All Categories</option>
                                     <option value="Books" <%= filters?.category === 'Books' ? 'selected' : '' %>>Books</option>
                                     <option value="Electronics" <%= filters?.category === 'Electronics' ? 'selected' : '' %>>Electronics</option>
@@ -88,7 +88,7 @@
                             
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Condition</label>
-                                <select class="form-select" name="condition" onchange="this.form.submit()">
+                                <select class="form-select" name="condition">
                                     <option value="">Any Condition</option>
                                     <option value="New" <%= filters?.condition === 'New' ? 'selected' : '' %>>New</option>
                                     <option value="Like New" <%= filters?.condition === 'Like New' ? 'selected' : '' %>>Like New</option>
@@ -154,7 +154,7 @@
                     <form action="/products" method="GET" id="filterFormDesktop">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Category</label>
-                            <select class="form-select" name="category" onchange="this.form.submit()">
+                            <select class="form-select" name="category">
                                 <option value="">All Categories</option>
                                 <option value="Books" <%= filters?.category === 'Books' ? 'selected' : '' %>>Books</option>
                                 <option value="Electronics" <%= filters?.category === 'Electronics' ? 'selected' : '' %>>Electronics</option>
@@ -167,7 +167,7 @@
                         
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Condition</label>
-                            <select class="form-select" name="condition" onchange="this.form.submit()">
+                            <select class="form-select" name="condition">
                                 <option value="">Any Condition</option>
                                 <option value="New" <%= filters?.condition === 'New' ? 'selected' : '' %>>New</option>
                                 <option value="Like New" <%= filters?.condition === 'Like New' ? 'selected' : '' %>>Like New</option>
