@@ -175,35 +175,45 @@
                     <!-- Action Buttons -->
                     <div class="d-grid gap-2">
                         <% if(!product.isSold) { %>
-                            <% if(currUser && product.owner._id.equals(currUser._id)) { %>
-                                <a href="/products/<%= product._id %>/edit" class="btn btn-warning">
-                                    <i class="fas fa-edit me-2"></i>Edit Listing
-                                </a>
-                                <form action="/products/<%= product._id %>/sold" method="POST" class="d-grid">
-                                    <button type="submit" class="btn btn-success">
-                                        <i class="fas fa-check-circle me-2"></i>Mark as Sold
+                            <% if(currUser) { %>
+                                <% if(product.owner._id.equals(currUser._id)) { %>
+                                    <a href="/products/<%= product._id %>/edit" class="btn btn-warning">
+                                        <i class="fas fa-edit me-2"></i>Edit Listing
+                                    </a>
+                                    <form action="/products/<%= product._id %>/sold" method="POST" class="d-grid">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="fas fa-check-circle me-2"></i>Mark as Sold
+                                        </button>
+                                    </form>
+                                    <form action="/products/<%= product._id %>?_method=DELETE" method="POST" class="d-grid">
+                                        <button type="submit" class="btn btn-danger">
+                                            <i class="fas fa-trash me-2"></i>Delete Listing
+                                        </button>
+                                    </form>
+                                <% } else { %>
+                                    <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#contactModal">
+                                        <i class="fas fa-message me-2"></i>Contact Seller
                                     </button>
-                                </form>
-                                <form action="/products/<%= product._id %>?_method=DELETE" method="POST" class="d-grid">
-                                    <button type="submit" class="btn btn-danger">
-                                        <i class="fas fa-trash me-2"></i>Delete Listing
+                                    <% 
+                                        const isSaved = currUser.savedItems && 
+                                                        currUser.savedItems.some(id => id.equals(product._id));
+                                    %>
+                                    <button class="btn <%= isSaved ? 'btn-danger' : 'btn-outline-primary' %>" 
+                                            id="saveBtn" 
+                                            data-product-id="<%= product._id %>"
+                                            data-saved="<%= isSaved %>">
+                                        <i class="fas fa-heart me-2"></i>
+                                        <span id="saveBtnText"><%= isSaved ? 'Unsave' : 'Save Item' %></span>
                                     </button>
-                                </form>
+                                <% } %>
                             <% } else { %>
-                                <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#contactModal">
-                                    <i class="fas fa-message me-2"></i>Contact Seller
-                                </button>
-                                <% 
-                                    const isSaved = currUser && currUser.savedItems && 
-                                                    currUser.savedItems.some(id => id.equals(product._id));
-                                %>
-                                <button class="btn <%= isSaved ? 'btn-danger' : 'btn-outline-primary' %>" 
-                                        id="saveBtn" 
-                                        data-product-id="<%= product._id %>"
-                                        data-saved="<%= isSaved %>">
-                                    <i class="fas fa-heart me-2"></i>
-                                    <span id="saveBtnText"><%= isSaved ? 'Unsave' : 'Save Item' %></span>
-                                </button>
+                                <div class="alert alert-info text-center">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Please login to contact seller or save items
+                                </div>
+                                <a href="/login" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login to Continue
+                                </a>
                             <% } %>
                         <% } else { %>
                             <div class="alert alert-warning text-center">
