@@ -65,7 +65,7 @@ module.exports.login = async (req, res) => {
         req.flash("error", "Please verify your email before logging in.");
         return res.redirect("/login");
     }
-    req.flash("success", `Welcome back, ${req.user.fullName}!`);
+    req.flash("success", `Welcome ${req.user.fullName} to CampusMart!`);
     const redirectUrl = res.locals.redirectUrl || "/products";
     res.redirect(redirectUrl);
 };
@@ -91,6 +91,50 @@ module.exports.renderProfile = async (req, res) => {
     } catch (err) {
         console.error("Error loading profile:", err);
         req.flash("error", "Error loading profile");
+        res.redirect("/products");
+    }
+};
+
+module.exports.saveProduct = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const productId = req.params.id;
+        
+        if (!user.savedItems.includes(productId)) {
+            user.savedItems.push(productId);
+            await user.save();
+        }
+        
+        res.json({ success: true, saved: true });
+    } catch (err) {
+        console.error("Error saving product:", err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+module.exports.unsaveProduct = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const productId = req.params.id;
+        
+        user.savedItems = user.savedItems.filter(id => !id.equals(productId));
+        await user.save();
+        
+        res.json({ success: true, saved: false });
+    } catch (err) {
+        console.error("Error unsaving product:", err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+module.exports.getSavedItems = async (req, res) => {
+    try {
+        const Product = require("../models/Product");
+        const user = await User.findById(req.user._id).populate('savedItems');
+        res.render("users/saved-items.ejs", { savedItems: user.savedItems });
+    } catch (err) {
+        console.error("Error loading saved items:", err);
+        req.flash("error", "Error loading saved items");
         res.redirect("/products");
     }
 };

@@ -44,4 +44,9 @@ router.put("/profile/:id", isLoggedIn, upload.single('profileImage'), wrapAsync(
 // API endpoint for fetching user's products
 router.get("/api/my-products", isLoggedIn, wrapAsync(userController.getMyProducts));
 
+// Save/unsave product routes
+router.post("/api/products/:id/save", isLoggedIn, wrapAsync(userController.saveProduct));
+router.delete("/api/products/:id/save", isLoggedIn, wrapAsync(userController.unsaveProduct));
+router.get("/saved-items", isLoggedIn, wrapAsync(userController.getSavedItems));
+
 module.exports = router;

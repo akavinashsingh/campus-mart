@@ -191,8 +191,16 @@
                                 <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#contactModal">
                                     <i class="fas fa-message me-2"></i>Contact Seller
                                 </button>
-                                <button class="btn btn-outline-primary">
-                                    <i class="fas fa-heart me-2"></i>Save Item
+                                <% 
+                                    const isSaved = currUser && currUser.savedItems && 
+                                                    currUser.savedItems.some(id => id.equals(product._id));
+                                %>
+                                <button class="btn <%= isSaved ? 'btn-danger' : 'btn-outline-primary' %>" 
+                                        id="saveBtn" 
+                                        data-product-id="<%= product._id %>"
+                                        data-saved="<%= isSaved %>">
+                                    <i class="fas fa-heart me-2"></i>
+                                    <span id="saveBtnText"><%= isSaved ? 'Unsave' : 'Save Item' %></span>
                                 </button>
                             <% } %>
                         <% } else { %>

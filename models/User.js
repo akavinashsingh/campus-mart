@@ -44,6 +44,10 @@ const userSchema = new Schema({
     verificationTokenExpires: Date,
     passwordResetToken: String,
     passwordResetTokenExpires: Date,
+    savedItems: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Product'
+    }],
     createdAt: {
         type: Date,
         default: Date.now
