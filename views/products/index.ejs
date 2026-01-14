@@ -908,16 +908,11 @@
     
     // Sort functionality
     function sortProducts(sortValue) {
-        const form = document.getElementById('filterForm');
-        const sortInput = form.querySelector('input[name="sort"]');
-        sortInput.value = sortValue;
-        form.submit();
+        // Get current URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.set('sort', sortValue);
+        
+        // Redirect with new sort parameter
+        window.location.href = '/products?' + urlParams.toString();
     }
-    
-    // Auto-submit on filter change (optional enhancement)
-    document.querySelectorAll('#filterForm select[name="category"], #filterForm select[name="condition"]').forEach(select => {
-        select.addEventListener('change', function() {
-            document.getElementById('filterForm').submit();
-        });
-    });
 </script>
