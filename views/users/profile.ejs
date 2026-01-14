@@ -33,11 +33,8 @@
                         <i class="fas fa-university me-2"></i><%= user.college %>
                     </p>
                     <div class="mt-2">
-                        <span class="badge bg-primary me-2">
-                            <i class="fas fa-star"></i> <%= user.rating.toFixed(1) %> Rating
-                        </span>
                         <span class="badge bg-info">
-                            <%= user.totalComments %> Comments
+                            <i class="fas fa-comments"></i> <%= user.totalComments %> Comments
                         </span>
                         <% if(user.isVerified) { %>
                             <span class="badge bg-success">

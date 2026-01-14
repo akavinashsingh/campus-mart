@@ -163,9 +163,8 @@
                                         <h6 class="mb-1 text-dark"><%= product.owner.fullName %></h6>
                                     </a>
                                     <small class="text-muted">
-                                        <i class="fas fa-star text-warning"></i>
-                                        <%= product.owner.rating.toFixed(1) %> 
-                                        (<%= product.owner.totalComments %> comments)
+                                        <i class="fas fa-comments"></i>
+                                        <%= product.owner.totalComments %> <%= product.owner.totalComments === 1 ? 'comment' : 'comments' %>
                                     </small>
                                 </div>
                             </div>
