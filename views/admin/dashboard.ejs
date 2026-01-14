@@ -71,7 +71,7 @@
                             <% recentContacts.forEach(contact => { %>
                                 <tr>
                                     <td>
-                                        <small><%= new Date(contact.createdAt).toLocaleString() %></small>
+                                        <small><%= new Date(contact.createdAt).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) %></small>
                                     </td>
                                     <td>
                                         <% if(contact.buyer) { %>

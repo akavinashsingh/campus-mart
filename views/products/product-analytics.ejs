@@ -88,7 +88,7 @@
                         
                         <dt class="col-sm-6">Posted:</dt>
                         <dd class="col-sm-6">
-                            <small><%= new Date(product.createdAt).toLocaleDateString() %></small>
+                            <small><%= new Date(product.createdAt).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' }) %></small>
                         </dd>
                     </dl>
                 </div>

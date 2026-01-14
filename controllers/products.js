@@ -95,6 +95,22 @@ module.exports.showProduct = async (req, res) => {
 
 module.exports.createProduct = async (req, res, next) => {
     try {
+        const { title, price, category } = req.body.product;
+        
+        // Check for duplicate product from same owner with same title and price
+        const existingProduct = await Product.findOne({
+            owner: req.user._id,
+            title: title,
+            price: price,
+            category: category,
+            isSold: false
+        });
+        
+        if (existingProduct) {
+            req.flash("error", "You already have an active listing with this title and price. Please use a different title or price.");
+            return res.redirect("/products/new");
+        }
+        
         const newProduct = new Product(req.body.product);
         newProduct.owner = req.user._id;
         newProduct.college = req.user.college;

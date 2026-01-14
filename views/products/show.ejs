@@ -240,7 +240,7 @@
                                         <strong><%= review.author.fullName %></strong>
                                     </div>
                                     <small class="text-muted">
-                                        <%= new Date(review.createdAt).toLocaleDateString() %>
+                                        <%= new Date(review.createdAt).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' }) %>
                                     </small>
                                 </div>
                                 <p class="mb-0"><%= review.comment %></p>
