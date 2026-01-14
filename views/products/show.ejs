@@ -159,7 +159,9 @@
                                 <% } %>
                                 
                                 <div>
-                                    <h6 class="mb-1"><%= product.owner.fullName %></h6>
+                                    <a href="/user/<%= product.owner._id %>" class="text-decoration-none">
+                                        <h6 class="mb-1 text-dark"><%= product.owner.fullName %></h6>
+                                    </a>
                                     <small class="text-muted">
                                         <i class="fas fa-star text-warning"></i>
                                         <%= product.owner.rating.toFixed(1) %> 

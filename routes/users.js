@@ -39,6 +39,7 @@ router.get("/verify", wrapAsync(userController.verifyEmail));
 
 router.get("/logout", userController.logout);
 router.get("/profile", isLoggedIn, wrapAsync(userController.renderProfile));
+router.get("/user/:id", wrapAsync(userController.viewUserProfile));
 router.put("/profile/:id", isLoggedIn, upload.single('profileImage'), wrapAsync(userController.updateProfile));
 
 // API endpoint for fetching user's products

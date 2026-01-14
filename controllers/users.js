@@ -95,6 +95,27 @@ module.exports.renderProfile = async (req, res) => {
     }
 };
 
+module.exports.viewUserProfile = async (req, res) => {
+    try {
+        const Product = require("../models/Product");
+        const user = await User.findById(req.params.id);
+        
+        if (!user) {
+            req.flash("error", "User not found");
+            return res.redirect("/products");
+        }
+        
+        // Get user's products
+        const products = await Product.find({ owner: user._id }).sort({ createdAt: -1 });
+        
+        res.render("users/public-profile.ejs", { profileUser: user, products });
+    } catch (err) {
+        console.error("Error loading user profile:", err);
+        req.flash("error", "Error loading profile");
+        res.redirect("/products");
+    }
+};
+
 module.exports.saveProduct = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);

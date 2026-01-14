@@ -1,0 +1,144 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4">
+    <!-- User Profile Header -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <% if(profileUser.profileImage && profileUser.profileImage.url) { %>
+                        <img src="<%= profileUser.profileImage.url %>" 
+                             class="rounded-circle border" 
+                             width="100" height="100" 
+                             style="object-fit: cover;"
+                             alt="<%= profileUser.fullName %>">
+                    <% } else { %>
+                        <div class="rounded-circle d-flex align-items-center justify-content-center border" 
+                             style="width: 100px; height: 100px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <span class="text-white fw-bold" style="font-size: 48px;">
+                                <%= profileUser.fullName.charAt(0).toUpperCase() %>
+                            </span>
+                        </div>
+                    <% } %>
+                </div>
+                <div class="col">
+                    <h3 class="mb-1"><%= profileUser.fullName %></h3>
+                    <p class="text-muted mb-2">
+                        <i class="fas fa-university me-2"></i><%= profileUser.college %>
+                    </p>
+                    <p class="text-muted mb-2">
+                        <i class="fas fa-calendar me-2"></i>Member since <%= new Date(profileUser.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) %>
+                    </p>
+                    <div class="mt-2">
+                        <span class="badge bg-primary me-2">
+                            <i class="fas fa-star"></i> <%= profileUser.rating.toFixed(1) %> Rating
+                        </span>
+                        <span class="badge bg-info">
+                            <%= profileUser.totalComments %> Comments
+                        </span>
+                        <% if(profileUser.isVerified) { %>
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle"></i> Verified
+                            </span>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User's Products -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3">
+                <i class="fas fa-box me-2"></i>Listings by <%= profileUser.fullName %>
+                <span class="badge bg-secondary"><%= products.length %></span>
+            </h5>
+            
+            <% if(products.length > 0) { %>
+                <div class="row g-3">
+                    <% products.forEach(product => { %>
+                        <div class="col-md-4 col-sm-6">
+                            <div class="card h-100 product-card">
+                                <% if(product.isSold) { %>
+                                    <div class="sold-overlay">
+                                        <div class="sold-text">SOLD</div>
+                                    </div>
+                                <% } %>
+                                
+                                <% if(product.images && product.images.length > 0) { %>
+                                    <img src="<%= product.images[0].url %>" 
+                                         class="card-img-top" 
+                                         style="height: 200px; object-fit: cover;"
+                                         alt="<%= product.title %>">
+                                <% } %>
+                                
+                                <div class="card-body">
+                                    <h6 class="card-title"><%= product.title %></h6>
+                                    <p class="card-text text-muted small">
+                                        <%= product.description.substring(0, 80) %><%= product.description.length > 80 ? '...' : '' %>
+                                    </p>
+                                    <div class="mb-2">
+                                        <span class="badge bg-primary"><%= product.category %></span>
+                                        <span class="badge bg-info"><%= product.condition %></span>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="text-primary mb-0">₹<%= product.price.toLocaleString("en-IN") %></h5>
+                                        <small class="text-muted">
+                                            <i class="fas fa-eye"></i> <%= product.viewCount %>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <a href="/products/<%= product._id %>" class="btn btn-sm btn-outline-primary w-100">
+                                        <i class="fas fa-eye me-2"></i>View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="text-center py-4">
+                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No listings yet</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<style>
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.sold-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sold-text {
+    background: #dc3545;
+    color: white;
+    padding: 10px 30px;
+    font-size: 2rem;
+    font-weight: bold;
+    transform: rotate(-15deg);
+    border: 3px solid white;
+}
+</style>
