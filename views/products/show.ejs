@@ -76,7 +76,7 @@
                         <% if(product.isNegotiable) { %>
                             <span class="badge bg-warning me-2">Negotiable</span>
                         <% } %>
-                        <span class="badge bg-light text-dark">
+                        <span class="badge bg-light text-dark" style="max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             <i class="fas fa-university me-1"></i><%= product.college %>
                         </span>
                     </div>
