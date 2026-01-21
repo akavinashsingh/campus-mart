@@ -37,7 +37,7 @@ module.exports.signup = async (req, res) => {
             console.error("✗ Full error:", err);
         });
 
-        req.flash("success", "Account created! Check your email to verify before logging in.");
+        req.flash("success", "Account created! Check your inbox (and spam) for the verification email before logging in.");
         res.redirect("/login");
     } catch (e) {
         console.error("Signup error:", e);
