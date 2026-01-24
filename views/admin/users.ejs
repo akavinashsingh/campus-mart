@@ -17,6 +17,7 @@
                         <th>Email</th>
                         <th>College</th>
                         <th>Role</th>
+                        <th>Status</th>
                         <th>Joined</th>
                         <th class="text-end">Actions</th>
                     </tr>
@@ -32,6 +33,13 @@
                                     <span class="badge bg-danger">Admin</span>
                                 <% } else { %>
                                     <span class="badge bg-primary">Student</span>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if (user.isVerified) { %>
+                                    <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Verified</span>
+                                <% } else { %>
+                                    <span class="badge bg-warning text-dark"><i class="fas fa-exclamation-circle me-1"></i>Unverified</span>
                                 <% } %>
                             </td>
                             <td><%= new Date(user.createdAt).toLocaleDateString() %></td>

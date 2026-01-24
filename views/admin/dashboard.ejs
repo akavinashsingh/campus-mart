@@ -42,6 +42,28 @@
         </div>
     </div>
 
+    <!-- User Verification Statistics -->
+    <div class="row g-3 mt-3">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100 border-success">
+                <div class="card-body">
+                    <p class="text-muted mb-1"><i class="fas fa-check-circle text-success me-1"></i>Verified Users</p>
+                    <h3 class="mb-0 text-success"><%= stats.verifiedUsers %></h3>
+                    <small class="text-muted"><%= ((stats.verifiedUsers / stats.totalUsers) * 100).toFixed(1) %>% of total users</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100 border-warning">
+                <div class="card-body">
+                    <p class="text-muted mb-1"><i class="fas fa-exclamation-circle text-warning me-1"></i>Unverified Users</p>
+                    <h3 class="mb-0 text-warning"><%= stats.unverifiedUsers %></h3>
+                    <small class="text-muted"><%= ((stats.unverifiedUsers / stats.totalUsers) * 100).toFixed(1) %>% of total users</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="mt-4 d-flex gap-2">
         <a href="/admin/users" class="btn btn-primary"><i class="fas fa-users me-1"></i>Manage Users</a>
         <a href="/admin/products" class="btn btn-secondary"><i class="fas fa-boxes me-1"></i>Manage Products</a>

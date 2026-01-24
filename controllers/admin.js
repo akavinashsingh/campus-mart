@@ -31,6 +31,8 @@ module.exports.logout = (req, res, next) => {
 module.exports.dashboard = async (req, res) => {
     try {
         const totalUsers = await User.countDocuments();
+        const verifiedUsers = await User.countDocuments({ isVerified: true });
+        const unverifiedUsers = await User.countDocuments({ isVerified: false });
         const totalProducts = await Product.countDocuments();
         const activeProducts = await Product.countDocuments({ isSold: false });
         const recentContacts = await ContactLog.find({})
@@ -41,7 +43,7 @@ module.exports.dashboard = async (req, res) => {
             .limit(10);
         
         res.render("admin/dashboard.ejs", { 
-            stats: { totalUsers, totalProducts, activeProducts }, 
+            stats: { totalUsers, verifiedUsers, unverifiedUsers, totalProducts, activeProducts }, 
             recentContacts 
         });
     } catch (err) {
