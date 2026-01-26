@@ -151,7 +151,7 @@
                                          alt="<%= product.owner.fullName %>">
                                 <% } else { %>
                                     <div class="rounded-circle d-flex align-items-center justify-content-center me-3 border" 
-                                         style="width: 60px; height: 60px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                         style="width: 60px; height: 60px; background: <%= product.owner.profileColor || '#667eea' %>;">
                                         <span class="text-white fw-bold" style="font-size: 24px;">
                                             <%= product.owner.fullName.charAt(0).toUpperCase() %>
                                         </span>

@@ -28,6 +28,10 @@ const userSchema = new Schema({
         url: String,
         filename: String
     },
+    profileColor: {
+        type: String,
+        default: null
+    },
     rating: {
         type: Number,
         default: 0

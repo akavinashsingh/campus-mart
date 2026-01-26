@@ -320,7 +320,7 @@
                                                  alt="<%= product.owner.fullName %>">
                                         <% } else if(product.owner && product.owner.fullName) { %>
                                             <div class="rounded-circle d-inline-flex align-items-center justify-content-center me-1" 
-                                                 style="width: 20px; height: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); font-size: 9px; color: white;">
+                                                 style="width: 20px; height: 20px; background: <%= product.owner.profileColor || '#667eea' %>; font-size: 9px; color: white;">
                                                 <%= product.owner.fullName.charAt(0).toUpperCase() %>
                                             </div>
                                         <% } %>

@@ -2,6 +2,17 @@ const User = require("../models/User");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
+// Generate a unique color for user avatar
+const generateProfileColor = () => {
+    const colors = [
+        '#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8',
+        '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B88B', '#ABEBC6',
+        '#F5B041', '#D7BDE2', '#82E0AA', '#F5B7B1', '#85C1E2',
+        '#F9E79F', '#D5F4E6', '#FADBD8', '#D5F4E6', '#A9DFBF'
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
+};
+
 module.exports.renderSignupForm = (req, res) => {
     res.render("users/signup.ejs");
 };
@@ -26,6 +37,7 @@ module.exports.signup = async (req, res) => {
             verificationToken,
             verificationTokenExpires,
             isVerified: false,
+            profileColor: generateProfileColor(),
         });
         await User.register(newUser, password);
         console.log("✓ User registered successfully:", email);
