@@ -33,7 +33,22 @@ module.exports.index = async (req, res) => {
             .populate("owner")
             .sort(sortOptions);
         
-        res.render("products/index.ejs", { allProducts, filters: req.query });
+        // Build SEO data
+        let pageTitle = 'CampusMart - Browse Student Marketplace';
+        let pageDescription = 'Find amazing deals on books, electronics, sports equipment and more from fellow students. CampusMart is your campus marketplace.';
+        
+        if (category) {
+            pageTitle = `${category} - CampusMart Student Marketplace`;
+            pageDescription = `Browse ${category.toLowerCase()} items for sale by college students. Buy used ${category.toLowerCase()} at great prices on CampusMart.`;
+        }
+        
+        res.render("products/index.ejs", { 
+            allProducts, 
+            filters: req.query,
+            pageTitle,
+            pageDescription,
+            currentPath: req.path
+        });
     } catch (err) {
         console.error("Error fetching products:", err);
         req.flash("error", "Error loading products");
@@ -42,7 +57,11 @@ module.exports.index = async (req, res) => {
 };
 
 module.exports.renderNewForm = (req, res) => {
-    res.render("products/new.ejs");
+    res.render("products/new.ejs", {
+        pageTitle: 'Sell an Item - CampusMart',
+        pageDescription: 'List your item for sale on CampusMart. Reach thousands of students on your campus.',
+        currentPath: req.path
+    });
 };
 
 module.exports.showProduct = async (req, res) => {
@@ -85,7 +104,51 @@ module.exports.showProduct = async (req, res) => {
         
         await product.save();
         
-        res.render("products/show.ejs", { product });
+        // Build SEO data for product page
+        const pageTitle = `${product.title} - ${product.category} | CampusMart`;
+        const pageDescription = `${product.description ? product.description.substring(0, 155) : product.title + ' for sale on CampusMart'}. Price: $${product.price}. Condition: ${product.condition}.`;
+        const ogImage = product.images && product.images.length > 0 ? product.images[0].url : '';
+        
+        // Structured data for product
+        const structuredData = {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": product.title,
+            "description": product.description || product.title,
+            "image": product.images.map(img => img.url),
+            "offers": {
+                "@type": "Offer",
+                "price": product.price,
+                "priceCurrency": "USD",
+                "availability": product.isSold ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+                "itemCondition": `https://schema.org/${product.condition === 'New' ? 'NewCondition' : 'UsedCondition'}`,
+                "seller": {
+                    "@type": "Person",
+                    "name": product.owner.fullName || product.owner.username
+                }
+            },
+            "category": product.category,
+            "brand": product.brand || "Generic"
+        };
+        
+        if (product.reviews && product.reviews.length > 0) {
+            const avgRating = product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length;
+            structuredData.aggregateRating = {
+                "@type": "AggregateRating",
+                "ratingValue": avgRating.toFixed(1),
+                "reviewCount": product.reviews.length
+            };
+        }
+        
+        res.render("products/show.ejs", { 
+            product,
+            pageTitle,
+            pageDescription,
+            ogImage,
+            ogType: 'product',
+            structuredData,
+            currentPath: req.path
+        });
     } catch (err) {
         console.error("Error showing product:", err);
         req.flash("error", "Error loading product");
@@ -140,7 +203,12 @@ module.exports.renderEditForm = async (req, res) => {
             return res.redirect("/products");
         }
         
-        res.render("products/edit.ejs", { product });
+        res.render("products/edit.ejs", { 
+            product,
+            pageTitle: `Edit ${product.title} - CampusMart`,
+            pageDescription: 'Edit your product listing on CampusMart.',
+            currentPath: req.path
+        });
     } catch (err) {
         console.error("Error loading edit form:", err);
         req.flash("error", "Error loading product");
@@ -231,7 +299,13 @@ module.exports.searchProducts = async (req, res) => {
             isSold: false
         }).populate("owner");
         
-        res.render("products/index.ejs", { allProducts: products, filters: req.query });
+        res.render("products/index.ejs", { 
+            allProducts: products, 
+            filters: req.query,
+            pageTitle: `Search Results for "${q}" - CampusMart`,
+            pageDescription: `Find ${q} on CampusMart student marketplace. Browse products from fellow students.`,
+            currentPath: req.path
+        });
     } catch (err) {
         console.error("Error searching products:", err);
         req.flash("error", "Error searching products");
@@ -274,7 +348,13 @@ module.exports.getSellerAnalytics = async (req, res) => {
             .sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
             .slice(0, 5);
         
-        res.render("products/analytics.ejs", { products, analytics });
+        res.render("products/analytics.ejs", { 
+            products, 
+            analytics,
+            pageTitle: 'My Listings Analytics - CampusMart',
+            pageDescription: 'View analytics for your product listings on CampusMart.',
+            currentPath: req.path
+        });
     } catch (err) {
         req.flash("error", "Error loading analytics");
         res.redirect("/profile");
@@ -319,7 +399,10 @@ module.exports.getProductAnalytics = async (req, res) => {
             product, 
             viewsByDay,
             uniqueViewers,
-            totalViews: product.viewCount || 0
+            totalViews: product.viewCount || 0,
+            pageTitle: `Analytics for ${product.title} - CampusMart`,
+            pageDescription: 'View detailed analytics for your product listing.',
+            currentPath: req.path
         });
     } catch (err) {
         req.flash("error", "Error loading product analytics");

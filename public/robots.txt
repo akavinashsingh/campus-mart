@@ -1,0 +1,17 @@
+# robots.txt for CampusMart
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /login
+Disallow: /signup
+Disallow: /profile
+Disallow: /analytics/
+Disallow: /users/saved-items
+Disallow: /*/edit
+
+# Sitemap location
+Sitemap: https://campusmart.com/sitemap.xml
+
+# Crawl delay (be nice to our server)
+Crawl-delay: 1

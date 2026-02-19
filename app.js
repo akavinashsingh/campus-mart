@@ -167,6 +167,54 @@ app.get("/", (req, res) => {
     res.redirect("/products");
 });
 
+// Sitemap route for SEO
+app.get("/sitemap.xml", async (req, res) => {
+    try {
+        const Product = require("./models/Product");
+        const products = await Product.find({ isSold: false }).select('_id updatedAt').lean();
+        
+        const baseUrl = process.env.BASE_URL || 'https://campusmart.com';
+        
+        let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+        xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+        
+        // Homepage
+        xml += '  <url>\n';
+        xml += `    <loc>${baseUrl}/products</loc>\n`;
+        xml += '    <changefreq>daily</changefreq>\n';
+        xml += '    <priority>1.0</priority>\n';
+        xml += '  </url>\n';
+        
+        // Category pages
+        const categories = ['Books', 'Electronics', 'Sports', 'Furniture', 'Clothing', 'Other'];
+        categories.forEach(category => {
+            xml += '  <url>\n';
+            xml += `    <loc>${baseUrl}/products?category=${encodeURIComponent(category)}</loc>\n`;
+            xml += '    <changefreq>daily</changefreq>\n';
+            xml += '    <priority>0.8</priority>\n';
+            xml += '  </url>\n';
+        });
+        
+        // Product pages
+        products.forEach(product => {
+            xml += '  <url>\n';
+            xml += `    <loc>${baseUrl}/products/${product._id}</loc>\n`;
+            xml += `    <lastmod>${product.updatedAt.toISOString().split('T')[0]}</lastmod>\n`;
+            xml += '    <changefreq>weekly</changefreq>\n';
+            xml += '    <priority>0.6</priority>\n';
+            xml += '  </url>\n';
+        });
+        
+        xml += '</urlset>';
+        
+        res.header('Content-Type', 'application/xml');
+        res.send(xml);
+    } catch (err) {
+        console.error('Sitemap generation error:', err);
+        res.status(500).send('Error generating sitemap');
+    }
+});
+
 // Favicon handler - prevent 500 errors
 app.get("/favicon.ico", (req, res) => {
     res.status(204).end();

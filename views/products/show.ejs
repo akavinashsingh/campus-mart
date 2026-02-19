@@ -25,7 +25,7 @@
                     <div class="carousel-inner">
                         <% product.images.forEach((image, index) => { %>
                             <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                <img src="<%= image.url %>" class="d-block w-100 product-main-image" alt="Product image">
+                                <img src="<%= image.url %>" class="d-block w-100 product-main-image" alt="<%= product.title %> - <%= product.category %> - Image <%= index + 1 %>">
                             </div>
                         <% }) %>
                     </div>
@@ -48,7 +48,7 @@
                         <% product.images.forEach((image, index) => { %>
                             <div class="col-3">
                                 <a href="#" class="thumbnail <%= index === 0 ? 'active' : '' %>" data-bs-target="#productCarousel" data-bs-slide-to="<%= index %>">
-                                    <img src="<%= image.url %>" class="img-thumbnail" style="height: 80px; width: 100%; object-fit: cover;">
+                                    <img src="<%= image.url %>" class="img-thumbnail" style="height: 80px; width: 100%; object-fit: cover;" alt="<%= product.title %> thumbnail <%= index + 1 %>">
                                 </a>
                             </div>
                         <% }) %>

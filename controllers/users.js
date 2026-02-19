@@ -14,7 +14,11 @@ const generateProfileColor = () => {
 };
 
 module.exports.renderSignupForm = (req, res) => {
-    res.render("users/signup.ejs");
+    res.render("users/signup.ejs", {
+        pageTitle: 'Sign Up - Join CampusMart Student Marketplace',
+        pageDescription: 'Create your free CampusMart account and start buying and selling items with fellow students on your campus today.',
+        currentPath: req.path
+    });
 };
 
 module.exports.signup = async (req, res) => {
@@ -59,7 +63,11 @@ module.exports.signup = async (req, res) => {
 };
 
 module.exports.renderLoginForm = (req, res) => {
-    res.render("users/login.ejs");
+    res.render("users/login.ejs", {
+        pageTitle: 'Login - CampusMart Student Marketplace',
+        pageDescription: 'Login to your CampusMart account to buy and sell items with students on your campus.',
+        currentPath: req.path
+    });
 };
 
 module.exports.login = async (req, res) => {
@@ -99,7 +107,12 @@ module.exports.renderProfile = async (req, res) => {
             return res.redirect("/products");
         }
         
-        res.render("users/profile.ejs", { user });
+        res.render("users/profile.ejs", { 
+            user,
+            pageTitle: 'My Profile - CampusMart',
+            pageDescription: 'Manage your CampusMart profile and view your listings.',
+            currentPath: req.path
+        });
     } catch (err) {
         console.error("Error loading profile:", err);
         req.flash("error", "Error loading profile");
@@ -120,7 +133,13 @@ module.exports.viewUserProfile = async (req, res) => {
         // Get user's products
         const products = await Product.find({ owner: user._id }).sort({ createdAt: -1 });
         
-        res.render("users/public-profile.ejs", { profileUser: user, products });
+        res.render("users/public-profile.ejs", { 
+            profileUser: user, 
+            products,
+            pageTitle: `${user.fullName} - CampusMart Seller Profile`,
+            pageDescription: `View ${user.fullName}'s listings on CampusMart. ${products.length} items for sale from ${user.college || 'campus'}.`,
+            currentPath: req.path
+        });
     } catch (err) {
         console.error("Error loading user profile:", err);
         req.flash("error", "Error loading profile");
@@ -164,7 +183,12 @@ module.exports.getSavedItems = async (req, res) => {
     try {
         const Product = require("../models/Product");
         const user = await User.findById(req.user._id).populate('savedItems');
-        res.render("users/saved-items.ejs", { savedItems: user.savedItems });
+        res.render("users/saved-items.ejs", { 
+            savedItems: user.savedItems,
+            pageTitle: 'Saved Items - CampusMart',
+            pageDescription: 'View your saved items on CampusMart.',
+            currentPath: req.path
+        });
     } catch (err) {
         console.error("Error loading saved items:", err);
         req.flash("error", "Error loading saved items");
