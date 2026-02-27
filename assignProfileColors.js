@@ -9,7 +9,7 @@ const colors = [
     '#F9E79F', '#D5F4E6', '#FADBD8', '#D5F4E6', '#A9DFBF'
 ];
 
-// Generate a random color
+// Generate a random color..
 const generateProfileColor = () => {
     return colors[Math.floor(Math.random() * colors.length)];
 };
