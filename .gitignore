@@ -1,5 +1,10 @@
 .env
 node_modules/
 
+# Local MCP/TestSprite artifacts
+.vscode/mcp.json
+testsprite_tests/
+TESTSPRITE_PRD.md
+
 todo.txt
 TEST_CREDENTIALS.md
