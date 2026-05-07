@@ -139,27 +139,31 @@
         padding: 4px 4px 4px 14px;
         transition: border-color .2s, box-shadow .2s;
     }
-    /* Desktop search visible only ≥ 768px (own breakpoint, no Tailwind .hidden conflict) */
-    .cm-search--desktop { display: none; }
+    /* Mobile-only utility — hidden ≥ 768px */
     .cm-mobile-only { display: inline-flex; }
     @media (min-width: 768px) {
-        .cm-search--desktop { display: flex; }
         .cm-mobile-only { display: none !important; }
     }
-    .cm-icon-link {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.85);
-        border: 1px solid var(--cm-border);
-        color: var(--cm-text);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        text-decoration: none;
-        transition: background .2s, border-color .2s, color .2s;
+
+    /* Search button: text on desktop, arrow icon on mobile */
+    .cm-search-btn-icon { display: none; }
+    @media (max-width: 767px) {
+        .cm-search-btn { padding: 8px 10px !important; min-width: 36px; }
+        .cm-search-btn-text { display: none; }
+        .cm-search-btn-icon { display: inline-block; }
     }
-    .cm-icon-link:hover { background: white; border-color: var(--cm-primary); color: var(--cm-primary); }
+
+    /* Compact navbar on small phones — hide brand text, keep logo mark */
+    @media (max-width: 480px) {
+        .cm-nav-bar a[aria-label="CampusMart home"] > span:last-child { display: none; }
+        .cm-search { padding: 4px 4px 4px 10px !important; }
+        .cm-search-icon { margin-right: 4px; }
+        .cm-search input { font-size: 14px !important; padding: 7px 4px !important; }
+    }
+    @media (max-width: 380px) {
+        .cm-search-icon { display: none; }
+        .cm-search { padding: 4px 4px 4px 12px !important; }
+    }
     .cm-search:focus-within {
         border-color: var(--cm-primary);
         box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
