@@ -691,5 +691,58 @@ main {
     .cm-bento-tile .cm-bento-meta span:last-child { display: none; }
 }
 
+/* ================================================================ */
+/* Global action buttons — used on every page, define once          */
+/* ================================================================ */
+.cm-btn-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: 12px;
+    font-family: 'Rubik', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none !important;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all .2s;
+    min-height: 44px;
+    line-height: 1;
+    white-space: nowrap;
+}
+.cm-btn-action.w-full { width: 100%; }
+.cm-btn-action-primary { background: var(--cm-primary); color: white !important; box-shadow: 0 6px 20px -8px rgba(124,58,237,0.5); }
+.cm-btn-action-primary:hover { background: #6D28D9; color: white !important; transform: translateY(-1px); }
+.cm-btn-action-cta { background: var(--cm-cta); color: white !important; box-shadow: 0 6px 20px -8px rgba(34,197,94,0.5); }
+.cm-btn-action-cta:hover { background: #16A34A; color: white !important; transform: translateY(-1px); }
+.cm-btn-action-success { background: var(--cm-cta); color: white !important; }
+.cm-btn-action-success:hover { background: #16A34A; color: white !important; }
+.cm-btn-action-edit { background: #F59E0B; color: white !important; }
+.cm-btn-action-edit:hover { background: #D97706; color: white !important; }
+.cm-btn-action-danger { background: white; color: #DC2626 !important; border-color: #FECACA; }
+.cm-btn-action-danger:hover { background: #FEF2F2; color: #B91C1C !important; }
+.cm-btn-action-ghost { background: white; color: var(--cm-text) !important; border-color: var(--cm-border); }
+.cm-btn-action-ghost:hover { border-color: var(--cm-primary); color: var(--cm-primary) !important; }
+
+/* ================================================================ */
+/* Hero alignment — center text on mobile/tablet, left on desktop   */
+/* ================================================================ */
+@media (max-width: 1023.98px) {
+    .cm-hero .lg\:col-span-7 { text-align: center; }
+    .cm-hero .lg\:col-span-7 .cm-pill,
+    .cm-hero .lg\:col-span-7 .cm-pill-sm { display: inline-flex; }
+    .cm-hero .lg\:col-span-7 p { margin-left: auto; margin-right: auto; }
+    .cm-hero .cm-hero-cta { justify-content: center; }
+    .cm-hero .cm-popular-chips { justify-content: center; }
+}
+@media (max-width: 640px) {
+    /* Chips stay left so the horizontal scroll affordance is obvious */
+    .cm-hero .cm-popular-chips { justify-content: flex-start; }
+    .cm-hero .cm-hero-cta { gap: 10px; }
+    .cm-hero .cm-hero-cta .cm-btn-action { flex: 1 1 auto; min-width: 0; padding: 12px 14px; }
+}
+
 
 }
