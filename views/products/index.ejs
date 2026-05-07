@@ -6,9 +6,9 @@
     <div class="cm-blob absolute" style="top:120px; right:-120px; width:480px; height:480px; border-radius:50%; background:#22C55E;"></div>
     <div class="cm-blob absolute" style="bottom:-180px; left:30%; width:420px; height:420px; border-radius:50%; background:#7C3AED;"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-10 sm:pt-10 sm:pb-12 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-8 sm:pt-10 sm:pb-12 relative">
         <div class="grid lg:grid-cols-12 gap-6 items-center">
-            <div class="lg:col-span-7">
+            <div class="lg:col-span-7 cm-hero-text">
                 <span class="cm-pill cm-pill-sm">
                     <span class="cm-dot"></span>
                     <span class="cm-pill-text"><strong><%= allProducts.length %></strong> items live on your campus</span>
@@ -17,23 +17,23 @@
                     Buy &amp; sell on campus.<br/>
                     <span class="cm-grad-text">From students, for students.</span>
                 </h1>
-                <p class="mt-4 text-sm sm:text-lg text-cm-text/75 max-w-xl">
+                <p class="cm-mobile-hide mt-4 text-sm sm:text-lg text-cm-text/75 max-w-xl">
                     Verified students. Pay safely. Meet on campus. Use the search up top to find anything.
                 </p>
 
-                <div class="cm-hero-cta mt-6 flex flex-wrap gap-3">
+                <div class="cm-hero-cta mt-5 sm:mt-6 flex flex-wrap gap-2 sm:gap-3">
                     <% if (currUser) { %>
-                        <a href="/products/new" class="cm-btn-action cm-btn-action-cta cm-focus" style="text-decoration:none;">
+                        <a href="/products/new" class="cm-btn-action cm-btn-action-cta cm-focus">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
                             List your item
                         </a>
                     <% } else { %>
-                        <a href="/signup" class="cm-btn-action cm-btn-action-cta cm-focus" style="text-decoration:none;">Join your campus</a>
-                        <a href="/login" class="cm-btn-action cm-btn-action-ghost cm-focus" style="text-decoration:none;border:1px solid var(--cm-border);">Login</a>
+                        <a href="/signup" class="cm-btn-action cm-btn-action-cta cm-focus">Join your campus</a>
+                        <a href="/login" class="cm-btn-action cm-btn-action-ghost cm-focus">Login</a>
                     <% } %>
                 </div>
 
-                <div class="cm-popular-chips mt-5">
+                <div class="cm-popular-chips cm-mobile-hide mt-5">
                     <span class="cm-popular-label">Popular:</span>
                     <a href="/products?category=Books" class="cm-chip">Books</a>
                     <a href="/products?category=Electronics" class="cm-chip">Electronics</a>
@@ -43,8 +43,8 @@
                 </div>
             </div>
 
-            <!-- Bento right: category tiles -->
-            <div class="lg:col-span-5">
+            <!-- Bento right (becomes horizontal scroll on mobile) -->
+            <div class="lg:col-span-5 cm-hero-bento">
                 <div class="grid grid-cols-2 gap-3">
                     <a href="/products?category=Books" class="cm-bento-tile" style="background:linear-gradient(135deg,#FDF4FF,#FAE8FF);">
                         <div class="cm-bento-img">

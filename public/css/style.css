@@ -21,6 +21,18 @@ body {
     flex-direction: column;
 }
 
+/* Make media responsive and prevent horizontal scroll on small devices */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+img, picture, video, svg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
 main {
     flex: 1 0 auto;
 }
@@ -742,6 +754,67 @@ main {
     .cm-hero .cm-popular-chips { justify-content: flex-start; }
     .cm-hero .cm-hero-cta { gap: 10px; }
     .cm-hero .cm-hero-cta .cm-btn-action { flex: 1 1 auto; min-width: 0; padding: 12px 14px; }
+}
+
+/* ================================================================ */
+/* Mobile-only utility: hide on phones                              */
+/* ================================================================ */
+@media (max-width: 640px) {
+    .cm-mobile-hide { display: none !important; }
+}
+
+/* ================================================================ */
+/* Mobile hero refinements: tight spacing, horizontal-scroll bento  */
+/* ================================================================ */
+@media (max-width: 640px) {
+    /* Tighter section padding so products surface faster */
+    .cm-hero .max-w-7xl { padding-top: 16px !important; padding-bottom: 18px !important; }
+    .cm-hero h1 { font-size: 1.7rem !important; line-height: 1.15 !important; margin-top: 10px !important; }
+    .cm-hero .cm-hero-text > .cm-pill,
+    .cm-hero .cm-hero-text > .cm-pill-sm { display: inline-flex; }
+
+    /* CTAs: auto-width, centered, comfortable tap targets */
+    .cm-hero .cm-hero-cta {
+        flex: 0 0 auto;
+        gap: 10px !important;
+        margin-top: 18px !important;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .cm-hero .cm-hero-cta .cm-btn-action {
+        flex: 0 0 auto !important;
+        min-width: 130px;
+        padding: 11px 18px !important;
+    }
+
+    /* Bento → horizontal scrolling row */
+    .cm-hero-bento { margin-top: 18px; }
+    .cm-hero-bento .grid {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        gap: 10px !important;
+        margin-left: -16px;
+        margin-right: -16px;
+        padding: 4px 16px 6px !important;
+        scrollbar-width: none;
+        align-items: stretch !important;
+    }
+    .cm-hero-bento .grid::-webkit-scrollbar { display: none; }
+    .cm-hero-bento .cm-bento-tile {
+        flex: 0 0 138px !important;
+        aspect-ratio: 1 / 1 !important;
+        margin-top: 0 !important;
+        border-radius: 14px;
+    }
+    .cm-hero-bento .cm-bento-meta {
+        padding: 5px 9px;
+        bottom: 8px;
+        left: 8px;
+    }
+    .cm-hero-bento .cm-bento-meta span:first-child { font-size: 12px !important; }
+    .cm-hero-bento .cm-bento-meta span:last-child { display: none; }
 }
 
 
