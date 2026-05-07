@@ -8,7 +8,7 @@ module.exports.index = async (req, res) => {
     try {
         const { category, college, condition, minPrice, maxPrice, sort } = req.query;
         let query = { isSold: false };
-        
+
         if (category) query.category = category;
         if (college) query.college = college;
         if (condition) query.condition = condition;
@@ -17,10 +17,10 @@ module.exports.index = async (req, res) => {
             if (minPrice) query.price.$gte = Number(minPrice);
             if (maxPrice) query.price.$lte = Number(maxPrice);
         }
-        
+
         // Build sort options
         let sortOptions = { createdAt: -1 }; // Default: newest first
-        
+
         if (sort === 'price-low') {
             sortOptions = { price: 1 };
         } else if (sort === 'price-high') {
@@ -28,25 +28,66 @@ module.exports.index = async (req, res) => {
         } else if (sort === 'oldest') {
             sortOptions = { createdAt: 1 };
         }
-        
+
         const allProducts = await Product.find(query)
             .populate("owner")
             .sort(sortOptions);
-        
+
         // Build SEO data
+        const baseUrl = process.env.BASE_URL || 'https://campusmart.com';
         let pageTitle = 'CampusMart - Browse Student Marketplace';
         let pageDescription = 'Find amazing deals on books, electronics, sports equipment and more from fellow students. CampusMart is your campus marketplace.';
-        
+
+        // Canonical: collapse filter combinations to category-only canonical so faceted-nav
+        // duplicates (?category=Books&condition=Good&sort=price-low) don't dilute the index.
+        let canonicalUrl = `${baseUrl}/products`;
+        let robots = 'index, follow';
+        let structuredData;
+
         if (category) {
             pageTitle = `${category} - CampusMart Student Marketplace`;
             pageDescription = `Browse ${category.toLowerCase()} items for sale by college students. Buy used ${category.toLowerCase()} at great prices on CampusMart.`;
+            canonicalUrl = `${baseUrl}/products?category=${encodeURIComponent(category)}`;
+
+            // CollectionPage + ItemList schema for category landing pages (helps Google
+            // understand the page is a list of items, surfaces sitelinks).
+            structuredData = {
+                "@context": "https://schema.org",
+                "@type": "CollectionPage",
+                "name": pageTitle,
+                "description": pageDescription,
+                "url": canonicalUrl,
+                "mainEntity": {
+                    "@type": "ItemList",
+                    "numberOfItems": allProducts.length,
+                    "itemListElement": allProducts.slice(0, 12).map((p, i) => ({
+                        "@type": "ListItem",
+                        "position": i + 1,
+                        "url": `${baseUrl}/products/${p._id}`,
+                        "name": p.title
+                    }))
+                }
+            };
         }
-        
-        res.render("products/index.ejs", { 
-            allProducts, 
+
+        // Filter combinations beyond `category` should not be separately indexed.
+        if (condition || college || minPrice || maxPrice || sort) {
+            robots = 'noindex, follow';
+        }
+
+        // OG image: first product image if available, else default
+        const firstWithImage = allProducts.find(p => p.images && p.images.length > 0);
+        const ogImage = firstWithImage ? firstWithImage.images[0].url : `${baseUrl}/images/og-image.jpg`;
+
+        res.render("products/index.ejs", {
+            allProducts,
             filters: req.query,
             pageTitle,
             pageDescription,
+            ogImage,
+            canonicalUrl,
+            robots,
+            structuredData,
             currentPath: req.path
         });
     } catch (err) {
