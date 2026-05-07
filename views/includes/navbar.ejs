@@ -14,14 +14,17 @@
                 <span class="font-display font-bold text-lg text-cm-text leading-none">CampusMart</span>
             </a>
 
-            <!-- Desktop search (md+ only — own visibility, not relying on Tailwind hidden) -->
-            <form action="/products/search" method="GET" class="cm-search cm-search--desktop flex-1 mx-2" role="search">
+            <!-- Single global search — visible on all breakpoints, compact on mobile -->
+            <form action="/products/search" method="GET" class="cm-search flex-1 mx-2" role="search">
                 <label for="cm-search-input" class="sr-only">Search items</label>
                 <span class="cm-search-icon" aria-hidden="true">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                 </span>
-                <input id="cm-search-input" type="search" name="q" placeholder="Search textbooks, laptops, cycles…" />
-                <button type="submit" class="cm-search-btn cm-focus" aria-label="Search">Search</button>
+                <input id="cm-search-input" type="search" name="q" placeholder="Search…" />
+                <button type="submit" class="cm-search-btn cm-focus" aria-label="Search">
+                    <span class="cm-search-btn-text">Search</span>
+                    <svg class="cm-search-btn-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 5 7 7-7 7"/><path d="M5 12h14"/></svg>
+                </button>
             </form>
 
             <!-- Desktop nav links -->
