@@ -1,572 +1,861 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="container mt-4">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/products">Browse</a></li>
-            <li class="breadcrumb-item"><a href="/products?category=<%= product.category %>"><%= product.category %></a></li>
-            <li class="breadcrumb-item active" aria-current="page"><%= product.title %></li>
-        </ol>
-    </nav>
-    
-    <!-- Product Details -->
-    <div class="row">
-        <!-- Images -->
-        <div class="col-md-7">
-            <div class="card shadow-sm mb-4">
-                <% if(product.isSold) { %>
-                    <div class="sold-overlay">
-                        <div class="sold-text">SOLD</div>
+<section class="cm-product-detail">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-16">
+        <!-- Breadcrumb -->
+        <nav class="cm-breadcrumb" aria-label="Breadcrumb">
+            <a href="/products">Browse</a>
+            <span aria-hidden="true">/</span>
+            <a href="/products?category=<%= product.category %>"><%= product.category %></a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page" class="cm-breadcrumb-current"><%= product.title %></span>
+        </nav>
+
+        <div class="grid lg:grid-cols-12 gap-6 mt-6">
+            <!-- Gallery -->
+            <div class="lg:col-span-7">
+                <div class="cm-gallery-card">
+                    <% if (product.isSold) { %>
+                        <div class="cm-sold-overlay" aria-hidden="true">
+                            <span>SOLD</span>
+                        </div>
+                    <% } %>
+
+                    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <% product.images.forEach((image, index) => { %>
+                                <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                    <img src="<%= image.url %>" class="cm-gallery-main d-block w-100" alt="<%= product.title %> — image <%= index + 1 %>" loading="<%= index === 0 ? 'eager' : 'lazy' %>" />
+                                </div>
+                            <% }) %>
+                        </div>
+
+                        <% if (product.images.length > 1) { %>
+                            <button class="cm-gallery-nav cm-gallery-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev" aria-label="Previous image">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                            </button>
+                            <button class="cm-gallery-nav cm-gallery-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next" aria-label="Next image">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                            </button>
+                        <% } %>
                     </div>
-                <% } %>
-                
-                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <% product.images.forEach((image, index) => { %>
-                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
-                                <img src="<%= image.url %>" class="d-block w-100 product-main-image" alt="<%= product.title %> - <%= product.category %> - Image <%= index + 1 %>">
-                            </div>
-                        <% }) %>
-                    </div>
-                    
-                    <% if(product.images.length > 1) { %>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
+
+                    <% if (product.images.length > 1) { %>
+                        <div class="cm-thumb-strip">
+                            <% product.images.forEach((image, index) => { %>
+                                <button type="button" class="cm-thumb <%= index === 0 ? 'is-active' : '' %>" data-bs-target="#productCarousel" data-bs-slide-to="<%= index %>" aria-label="Show image <%= index + 1 %>">
+                                    <img src="<%= image.url %>" alt="" loading="lazy" />
+                                </button>
+                            <% }) %>
+                        </div>
                     <% } %>
                 </div>
-                
-                <!-- Thumbnails -->
-                <% if(product.images.length > 1) { %>
-                    <div class="row mt-3 px-3">
-                        <% product.images.forEach((image, index) => { %>
-                            <div class="col-3">
-                                <a href="#" class="thumbnail <%= index === 0 ? 'active' : '' %>" data-bs-target="#productCarousel" data-bs-slide-to="<%= index %>">
-                                    <img src="<%= image.url %>" class="img-thumbnail" style="height: 80px; width: 100%; object-fit: cover;" alt="<%= product.title %> thumbnail <%= index + 1 %>">
-                                </a>
-                            </div>
-                        <% }) %>
-                    </div>
-                <% } %>
             </div>
-        </div>
-        
-        <!-- Product Info -->
-        <div class="col-md-5">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h2 class="card-title"><%= product.title %></h2>
-                    
-                    <!-- Badges -->
-                    <div class="mb-3">
-                        <span class="badge bg-primary me-2"><%= product.category %></span>
-                        <span class="badge bg-<%= 
-                            product.condition === 'New' ? 'success' : 
-                            product.condition === 'Like New' ? 'info' : 
-                            product.condition === 'Good' ? 'primary' : 'secondary' 
-                        %> me-2">
-                            <%= product.condition %>
-                        </span>
-                        <% if(product.isNegotiable) { %>
-                            <span class="badge bg-warning me-2">Negotiable</span>
+
+            <!-- Info -->
+            <div class="lg:col-span-5">
+                <div class="cm-info-card">
+                    <div class="flex flex-wrap items-center gap-2 mb-3">
+                        <span class="cm-badge cm-badge-primary"><%= product.category %></span>
+                        <span class="cm-badge" data-cond="<%= product.condition %>"><%= product.condition %></span>
+                        <% if (product.isNegotiable) { %>
+                            <span class="cm-badge cm-badge-warning">Negotiable</span>
                         <% } %>
-                        <span class="badge bg-light text-dark" style="max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                            <i class="fas fa-university me-1"></i><%= product.college %>
+                        <span class="cm-badge cm-badge-soft" title="<%= product.college %>">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg>
+                            <span class="cm-badge-text"><%= product.college %></span>
                         </span>
                     </div>
-                    
-                    <!-- Price -->
-                    <div class="mb-4">
-                        <h3 class="text-primary">₹<%= product.price.toLocaleString("en-IN") %></h3>
-                        <p class="text-muted mb-0">
-                            <del>Original: ₹<%= product.originalPrice.toLocaleString("en-IN") %></del>
-                            <span class="text-success ms-2">
-                                (<%= Math.round((1 - product.price/product.originalPrice) * 100) %>% off)
-                            </span>
-                        </p>
-                    </div>
-                    
-                    <!-- View Analytics -->
-                    <div class="mb-4 p-2 bg-light rounded">
-                        <small class="text-muted d-flex align-items-center">
-                            <i class="fas fa-eye me-2"></i>
-                            <strong><%= product.viewCount %></strong>
-                            <span class="ms-1"><%= product.viewCount === 1 ? 'view' : 'views' %></span>
-                        </small>
-                        <small class="text-muted d-block mt-1">
-                            Interest Level: 
-                            <% if(product.viewCount < 5) { %>
-                                <span class="badge bg-danger">Low</span>
-                            <% } else if(product.viewCount < 15) { %>
-                                <span class="badge bg-warning">Medium</span>
-                            <% } else { %>
-                                <span class="badge bg-success">High</span>
+
+                    <h1 class="font-display text-2xl sm:text-3xl font-bold text-cm-text leading-tight m-0"><%= product.title %></h1>
+
+                    <div class="cm-price-block">
+                        <div class="flex items-baseline gap-3 flex-wrap">
+                            <span class="cm-price-main">₹<%= product.price.toLocaleString('en-IN') %></span>
+                            <% if (product.originalPrice && product.originalPrice > product.price) { %>
+                                <span class="cm-price-old">₹<%= product.originalPrice.toLocaleString('en-IN') %></span>
+                                <span class="cm-price-disc"><%= Math.round((1 - product.price/product.originalPrice) * 100) %>% off</span>
                             <% } %>
-                        </small>
+                        </div>
                     </div>
-                    
+
+                    <!-- Stats row -->
+                    <div class="cm-stats-row">
+                        <div class="cm-stat">
+                            <div class="cm-stat-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </div>
+                            <div>
+                                <div class="cm-stat-value"><%= product.viewCount %></div>
+                                <div class="cm-stat-label"><%= product.viewCount === 1 ? 'view' : 'views' %></div>
+                            </div>
+                        </div>
+                        <div class="cm-stat">
+                            <div class="cm-stat-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                            </div>
+                            <div>
+                                <div class="cm-stat-value cm-stat-value-sm"><%= product.location %></div>
+                                <div class="cm-stat-label">Location</div>
+                            </div>
+                        </div>
+                        <div class="cm-stat">
+                            <div class="cm-stat-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
+                            </div>
+                            <div>
+                                <div class="cm-stat-value cm-stat-value-sm"><%= product.contactMethod %></div>
+                                <div class="cm-stat-label">Contact via</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Description -->
-                    <div class="mb-4">
-                        <h5>Description</h5>
-                        <p class="card-text"><%= product.description %></p>
+                    <div class="cm-section">
+                        <h3 class="cm-section-h">Description</h3>
+                        <p class="cm-desc"><%= product.description %></p>
                     </div>
-                    
-                    <!-- Details -->
-                    <div class="row mb-4">
-                        <div class="col-6">
-                            <div class="detail-item">
-                                <small class="text-muted">Location</small>
-                                <p class="mb-0">
-                                    <i class="fas fa-map-marker-alt text-danger me-1"></i>
-                                    <%= product.location %>
-                                </p>
+
+                    <!-- Seller -->
+                    <div class="cm-seller-card">
+                        <% if (product.owner.profileImage && product.owner.profileImage.url) { %>
+                            <img src="<%= product.owner.profileImage.url %>" alt="<%= product.owner.fullName %>" class="cm-seller-avatar" loading="lazy" />
+                        <% } else { %>
+                            <span class="cm-seller-init" style="background: <%= product.owner.profileColor || '#7C3AED' %>;">
+                                <%= product.owner.fullName.charAt(0).toUpperCase() %>
+                            </span>
+                        <% } %>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-1.5">
+                                <a href="/user/<%= product.owner._id %>" class="cm-seller-name"><%= product.owner.fullName %></a>
+                                <span class="cm-verified" title="Verified student" aria-label="Verified student">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 12 2 2 4-4"/><path d="M21 12c0 5.5-9 10-9 10s-9-4.5-9-10a9 9 0 0 1 18 0Z"/></svg>
+                                </span>
+                            </div>
+                            <div class="cm-seller-meta">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
+                                <%= product.owner.totalComments %> <%= product.owner.totalComments === 1 ? 'comment' : 'comments' %>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="detail-item">
-                                <small class="text-muted">Contact via</small>
-                                <p class="mb-0">
-                                    <i class="fas fa-comments text-primary me-1"></i>
-                                    <%= product.contactMethod %>
-                                </p>
-                            </div>
-                        </div>
+                        <a href="/user/<%= product.owner._id %>" class="cm-btn-ghost cm-focus" style="border:1px solid var(--cm-border);font-size:13px;padding:6px 12px;min-height:36px;">Profile</a>
                     </div>
-                    
-                    <!-- Seller Info -->
-                    <div class="card bg-light mb-4">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <% if(product.owner.profileImage && product.owner.profileImage.url) { %>
-                                    <img src="<%= product.owner.profileImage.url %>" 
-                                         class="rounded-circle me-3 border" 
-                                         width="60" height="60" 
-                                         style="object-fit: cover;"
-                                         alt="<%= product.owner.fullName %>">
-                                <% } else { %>
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center me-3 border" 
-                                         style="width: 60px; height: 60px; background: <%= product.owner.profileColor || '#667eea' %>;">
-                                        <span class="text-white fw-bold" style="font-size: 24px;">
-                                            <%= product.owner.fullName.charAt(0).toUpperCase() %>
-                                        </span>
-                                    </div>
-                                <% } %>
-                                
-                                <div>
-                                    <a href="/user/<%= product.owner._id %>" class="text-decoration-none">
-                                        <h6 class="mb-1 text-dark"><%= product.owner.fullName %></h6>
+
+                    <!-- Action buttons -->
+                    <div class="cm-actions">
+                        <% if (!product.isSold) { %>
+                            <% if (currUser) { %>
+                                <% if (product.owner._id.equals(currUser._id)) { %>
+                                    <a href="/products/<%= product._id %>/edit" class="cm-btn-action cm-btn-action-edit cm-focus">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                        Edit listing
                                     </a>
-                                    <small class="text-muted">
-                                        <i class="fas fa-comments"></i>
-                                        <%= product.owner.totalComments %> <%= product.owner.totalComments === 1 ? 'comment' : 'comments' %>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Action Buttons -->
-                    <div class="d-grid gap-2">
-                        <% if(!product.isSold) { %>
-                            <% if(currUser) { %>
-                                <% if(product.owner._id.equals(currUser._id)) { %>
-                                    <a href="/products/<%= product._id %>/edit" class="btn btn-warning">
-                                        <i class="fas fa-edit me-2"></i>Edit Listing
-                                    </a>
-                                    <form action="/products/<%= product._id %>/sold" method="POST" class="d-grid">
-                                        <button type="submit" class="btn btn-success">
-                                            <i class="fas fa-check-circle me-2"></i>Mark as Sold
+                                    <form action="/products/<%= product._id %>/sold" method="POST">
+                                        <button type="submit" class="cm-btn-action cm-btn-action-success cm-focus" style="width:100%;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                                            Mark as sold
                                         </button>
                                     </form>
-                                    <form action="/products/<%= product._id %>?_method=DELETE" method="POST" class="d-grid">
-                                        <button type="submit" class="btn btn-danger">
-                                            <i class="fas fa-trash me-2"></i>Delete Listing
+                                    <form action="/products/<%= product._id %>?_method=DELETE" method="POST">
+                                        <button type="submit" class="cm-btn-action cm-btn-action-danger cm-focus" style="width:100%;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                                            Delete listing
                                         </button>
                                     </form>
                                 <% } else { %>
-                                    <button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#contactModal">
-                                        <i class="fas fa-message me-2"></i>Contact Seller
+                                    <button class="cm-btn-action cm-btn-action-primary cm-focus" data-bs-toggle="modal" data-bs-target="#contactModal">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
+                                        Chat with seller
                                     </button>
-                                    <% 
-                                        const isSaved = currUser.savedItems && 
+                                    <% if (product.isNegotiable) { %>
+                                        <button class="cm-btn-action cm-btn-action-cta cm-focus" data-bs-toggle="modal" data-bs-target="#offerModal">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                            Make an offer
+                                        </button>
+                                    <% } %>
+                                    <%
+                                        const isSaved = currUser.savedItems &&
                                                         currUser.savedItems.some(id => id.equals(product._id));
                                     %>
-                                    <button class="btn <%= isSaved ? 'btn-danger' : 'btn-outline-primary' %>" 
-                                            id="saveBtn" 
-                                            data-product-id="<%= product._id %>"
-                                            data-saved="<%= isSaved %>">
-                                        <i class="fas fa-heart me-2"></i>
-                                        <span id="saveBtnText"><%= isSaved ? 'Unsave' : 'Save Item' %></span>
+                                    <button class="cm-btn-action cm-btn-action-ghost cm-focus <%= isSaved ? 'is-saved' : '' %>" id="saveBtn" data-product-id="<%= product._id %>" data-saved="<%= isSaved %>" type="button">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="<%= isSaved ? 'currentColor' : 'none' %>" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+                                        <span id="saveBtnText"><%= isSaved ? 'Saved' : 'Save item' %></span>
                                     </button>
                                 <% } %>
                             <% } else { %>
-                                <div class="alert alert-info text-center">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    Please login to contact seller or save items
+                                <div class="cm-login-prompt">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                                    <span>Login to chat with seller or save this item.</span>
                                 </div>
-                                <a href="/login" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-sign-in-alt me-2"></i>Login to Continue
+                                <a href="/login" class="cm-btn-action cm-btn-action-primary cm-focus">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>
+                                    Login to continue
                                 </a>
                             <% } %>
                         <% } else { %>
-                            <div class="alert alert-warning text-center">
-                                <i class="fas fa-ban me-2"></i>This item has been sold
+                            <div class="cm-sold-banner">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 14.14 14.14"/></svg>
+                                <span>This item has been sold.</span>
                             </div>
                         <% } %>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
-    <!-- Reviews Section -->
-    <div class="row mt-4">
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h4 class="card-title mb-4">Comments</h4>
-                    
-                    <% if(product.reviews.length > 0) { %>
-                        <% product.reviews.forEach(review => { %>
-                            <div class="review-item mb-3 pb-3 border-bottom">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <strong><%= review.author.fullName %></strong>
-                                    </div>
-                                    <small class="text-muted">
-                                        <%= new Date(review.createdAt).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' }) %>
-                                    </small>
+
+        <!-- Comments -->
+        <div class="cm-info-card mt-8">
+            <div class="flex items-center justify-between mb-5">
+                <h2 class="font-display text-xl sm:text-2xl font-bold text-cm-text m-0">
+                    Comments <span class="text-cm-text/50 font-normal">(<%= product.reviews.length %>)</span>
+                </h2>
+            </div>
+
+            <% if (product.reviews.length > 0) { %>
+                <ul class="cm-review-list">
+                    <% product.reviews.forEach(review => { %>
+                        <li class="cm-review-item">
+                            <span class="cm-review-avatar" style="background:<%= review.author.profileColor || '#A78BFA' %>;">
+                                <%= (review.author.fullName || 'U').charAt(0).toUpperCase() %>
+                            </span>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between flex-wrap gap-2">
+                                    <strong class="text-cm-text font-display"><%= review.author.fullName %></strong>
+                                    <small class="text-cm-text/50"><%= new Date(review.createdAt).toLocaleDateString('en-IN', { timeZone: 'Asia/Kolkata' }) %></small>
                                 </div>
-                                <p class="mb-0"><%= review.comment %></p>
-                                
-                                <% if(currUser && review.author._id.equals(currUser._id)) { %>
-                                    <form action="/products/<%= product._id %>/reviews/<%= review._id %>?_method=DELETE" 
-                                          method="POST" class="mt-2">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                                            Delete Comment
-                                        </button>
+                                <p class="text-cm-text/80 mt-1 mb-2"><%= review.comment %></p>
+                                <% if (currUser && review.author._id.equals(currUser._id)) { %>
+                                    <form action="/products/<%= product._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
+                                        <button type="submit" class="cm-btn-tiny cm-focus">Delete</button>
                                     </form>
                                 <% } %>
                             </div>
-                        <% }) %>
-                    <% } else { %>
-                        <p class="text-muted text-center">No comments yet. Be the first to comment!</p>
-                    <% } %>
-                    
-                    <!-- Add Review Form -->
-                    <% if(currUser && !product.owner._id.equals(currUser._id)) { %>
-                        <div class="mt-4">
-                            <h5>Add a Comment</h5>
-                            <form action="/products/<%= product._id %>/reviews" method="POST">
-                                <div class="mb-3">
-                                    <label class="form-label">Your Comment</label>
-                                    <textarea name="review[comment]" class="form-control" rows="3" 
-                                              placeholder="Share your experience with this seller..." required></textarea>
-                                </div>
-                                
-                                <button type="submit" class="btn btn-primary">Submit Comment</button>
-                            </form>
-                        </div>
-                    <% } else if(currUser && product.owner._id.equals(currUser._id)) { %>
-                        <div class="mt-4 alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            You cannot comment on your own product. Only buyers can leave comments.
-                        </div>
-                    <% } else { %>
-                        <div class="mt-4 alert alert-warning">
-                            <i class="fas fa-sign-in-alt me-2"></i>
-                            <a href="/login" class="alert-link">Log in</a> to leave a comment
-                        </div>
-                    <% } %>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <div class="cm-empty-mini">No comments yet — be the first.</div>
+            <% } %>
+
+            <% if (currUser && !product.owner._id.equals(currUser._id)) { %>
+                <div class="cm-comment-form">
+                    <h3 class="cm-section-h">Add a comment</h3>
+                    <form action="/products/<%= product._id %>/reviews" method="POST">
+                        <textarea name="review[comment]" class="cm-input" rows="3" placeholder="Share your experience with this seller…" required></textarea>
+                        <button type="submit" class="cm-btn-action cm-btn-action-primary cm-focus mt-3">Post comment</button>
+                    </form>
                 </div>
+            <% } else if (currUser && product.owner._id.equals(currUser._id)) { %>
+                <div class="cm-info-banner mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    You can't comment on your own listing — only buyers can.
+                </div>
+            <% } else { %>
+                <div class="cm-info-banner cm-info-banner-warn mt-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/></svg>
+                    <a href="/login" class="text-cm-primary font-semibold hover:underline">Log in</a> to leave a comment.
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Support card -->
+        <div class="cm-support-card mt-6">
+            <div>
+                <h3 class="font-display font-bold text-cm-text mb-1">Issue with this listing?</h3>
+                <p class="text-cm-text/65 text-sm m-0">Email support and we'll take a look.</p>
             </div>
+            <a href="mailto:23uj1a0504@mrem.ac.in?subject=Issue with Product: <%= product.title %>" class="cm-btn-ghost cm-focus" style="border:1px solid var(--cm-border);">
+                Contact support
+            </a>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Contact Modal -->
-<div class="modal fade" id="contactModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Contact Seller</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<!-- Contact modal -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content cm-modal">
+            <div class="modal-header cm-modal-head">
+                <h5 class="modal-title font-display font-bold" id="contactModalLabel">Chat with <%= product.owner.fullName %></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Contact <strong><%= product.owner.fullName %></strong> about "<%= product.title %>"</p>
-                
-                <div class="alert alert-info mb-3">
-                    <i class="fas fa-info-circle me-2"></i>
-                    <strong>Preferred Contact Method: <%= product.contactMethod %></strong>
+                <p class="mb-3 text-cm-text/75">About <strong>"<%= product.title %>"</strong></p>
+                <div class="cm-modal-method-pill">
+                    <span class="cm-dot"></span>
+                    Preferred: <strong class="ml-1"><%= product.contactMethod %></strong>
                 </div>
-                
-                <% if(product.contactMethod === 'Email') { %>
-                    <div class="card bg-light mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title">
-                                <i class="fas fa-envelope me-2 text-primary"></i>Email Address
-                            </h6>
-                            <p class="mb-0">
-                                <a href="mailto:<%= product.owner.email %>?subject=<%= encodeURIComponent('Inquiry about ' + product.title) %>" 
-                                   class="text-decoration-none contact-link" 
-                                   data-contact-method="Email"
-                                   onclick="logContact(event, '<%= product._id %>', 'Email')">
-                                    <%= product.owner.email %>
-                                </a>
-                            </p>
-                            <small class="text-muted">Click to open your email client</small>
-                        </div>
+
+                <% if (product.contactMethod === 'Email') { %>
+                    <div class="cm-modal-method-card">
+                        <h6 class="font-display font-semibold mb-2 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg>
+                            Email
+                        </h6>
+                        <a href="mailto:<%= product.owner.email %>?subject=<%= encodeURIComponent('Inquiry about ' + product.title) %>" class="cm-modal-method-link" data-contact-method="Email" onclick="logContact(event, '<%= product._id %>', 'Email')">
+                            <%= product.owner.email %>
+                        </a>
+                        <small class="cm-text-muted">Click to open your email client</small>
                     </div>
-                <% } else if(product.contactMethod === 'Phone') { %>
-                    <div class="card bg-light mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title">
-                                <i class="fas fa-phone me-2 text-success"></i>Phone Number
-                            </h6>
-                            <p class="mb-0">
-                                <a href="tel:<%= product.owner.phone %>" 
-                                   class="text-decoration-none contact-link"
-                                   data-contact-method="Phone"
-                                   onclick="logContact(event, '<%= product._id %>', 'Phone')">
-                                    <%= product.owner.phone %>
-                                </a>
-                            </p>
-                            <small class="text-muted">Click to call on mobile devices</small>
-                        </div>
+                <% } else if (product.contactMethod === 'Phone') { %>
+                    <div class="cm-modal-method-card">
+                        <h6 class="font-display font-semibold mb-2 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+                            Phone
+                        </h6>
+                        <a href="tel:<%= product.owner.phone %>" class="cm-modal-method-link" data-contact-method="Phone" onclick="logContact(event, '<%= product._id %>', 'Phone')"><%= product.owner.phone %></a>
+                        <small class="cm-text-muted">Click to call on mobile</small>
                     </div>
-                <% } else if(product.contactMethod === 'WhatsApp') { %>
-                    <div class="card bg-light mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title">
-                                <i class="fab fa-whatsapp me-2 text-success"></i>WhatsApp
-                            </h6>
-                            <p class="mb-0">
-                                <a href="https://wa.me/<%= product.owner.phone.replace(/\D/g, '') %>?text=<%= encodeURIComponent('Hi, I\'m interested in your ' + product.title) %>" 
-                                   target="_blank" 
-                                   class="text-decoration-none contact-link"
-                                   data-contact-method="WhatsApp"
-                                   onclick="logContact(event, '<%= product._id %>', 'WhatsApp')">
-                                    <%= product.owner.phone %>
-                                </a>
-                            </p>
-                            <small class="text-muted">Click to chat on WhatsApp</small>
-                        </div>
+                <% } else if (product.contactMethod === 'WhatsApp') { %>
+                    <div class="cm-modal-method-card">
+                        <h6 class="font-display font-semibold mb-2 flex items-center gap-2">
+                            <i class="fab fa-whatsapp" style="color:#25D366;font-size:18px;"></i>
+                            WhatsApp
+                        </h6>
+                        <a href="https://wa.me/<%= product.owner.phone.replace(/\D/g, '') %>?text=<%= encodeURIComponent('Hi, I\'m interested in your ' + product.title) %>" target="_blank" rel="noopener" class="cm-modal-method-link" data-contact-method="WhatsApp" onclick="logContact(event, '<%= product._id %>', 'WhatsApp')">
+                            <%= product.owner.phone %>
+                        </a>
+                        <small class="cm-text-muted">Open chat on WhatsApp</small>
                     </div>
-                <% } else if(product.contactMethod === 'In-person') { %>
-                    <div class="card bg-light mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title">
-                                <i class="fas fa-handshake me-2 text-warning"></i>Meet In-Person
-                            </h6>
-                            <p class="mb-2">
-                                <i class="fas fa-map-marker-alt text-danger me-2"></i>
-                                <strong>Location:</strong> <%= product.location %>
-                            </p>
-                            <p class="mb-0 text-muted">
-                                The seller prefers to meet in person at the campus location mentioned above.
-                            </p>
-                            <button class="btn btn-sm btn-primary mt-2" onclick="logContact(event, '<%= product._id %>', 'In-person')">
-                                <i class="fas fa-bell me-1"></i>Notify Interest
-                            </button>
-                        </div>
+                <% } else if (product.contactMethod === 'In-person') { %>
+                    <div class="cm-modal-method-card">
+                        <h6 class="font-display font-semibold mb-2 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Meet on campus
+                        </h6>
+                        <p class="m-0"><strong>Location:</strong> <%= product.location %></p>
+                        <small class="cm-text-muted">Seller prefers an in-person meet.</small>
+                        <button class="cm-btn-action cm-btn-action-primary mt-3" type="button" onclick="logContact(event, '<%= product._id %>', 'In-person')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                            Notify interest
+                        </button>
                     </div>
                 <% } %>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="cm-btn-ghost" style="border:1px solid var(--cm-border);" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Issue/Support Section -->
-<div class="mt-5 mb-4 p-4 bg-light rounded border mx-auto" style="max-width: 600px;">
-    <h5 class="mb-3"><i class="fas fa-question-circle me-2"></i>Report Issue or Need Support?</h5>
-    <p class="mb-2">If you encounter any issues or have feedback about this product listing:</p>
-    <p class="mb-0">
-        <a href="mailto:23uj1a0504@mrem.ac.in?subject=Issue with Product: <%= product.title %>" class="btn btn-sm btn-outline-danger">
-            <i class="fas fa-envelope me-1"></i>Contact Support
-        </a>
-        <span class="text-muted ms-2">23uj1a0504@mrem.ac.in</span>
-    </p>
+<!-- Make an offer modal -->
+<% if (product.isNegotiable && currUser && !product.isSold && !product.owner._id.equals(currUser._id)) { %>
+<div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content cm-modal">
+            <div class="modal-header cm-modal-head">
+                <h5 class="modal-title font-display font-bold" id="offerModalLabel">Make an offer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-cm-text/75 mb-3">
+                    Listed at <strong>₹<%= product.price.toLocaleString('en-IN') %></strong>. Suggest a fair price and we'll send a message to <strong><%= product.owner.fullName %></strong>.
+                </p>
+                <label class="cm-label" for="offerAmount">Your offer (₹)</label>
+                <input id="offerAmount" type="number" min="1" max="<%= product.price %>" placeholder="e.g. <%= Math.max(1, Math.round(product.price * 0.9)) %>" class="cm-input" />
+                <p class="text-xs text-cm-text/55 mt-2">Tip: Offers within 10% of the asking price are most often accepted.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="cm-btn-ghost" style="border:1px solid var(--cm-border);" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="cm-btn-action cm-btn-action-cta" onclick="sendOffer('<%= product._id %>')">Send offer</button>
+            </div>
+        </div>
+    </div>
 </div>
+<% } %>
 
 <style>
-    body {
-        background: linear-gradient(135deg, #e0e7ff 0%, #fce7f3 50%, #fef3c7 100%);
-        min-height: 100vh;
+    .cm-product-detail { background: var(--cm-bg); min-height: 100vh; }
+    .cm-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--cm-muted);
+        flex-wrap: wrap;
     }
-    
-    .card {
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-        transition: all 0.3s ease;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
+    .cm-breadcrumb a {
+        color: var(--cm-text);
+        text-decoration: none;
+        font-weight: 600;
     }
-    
-    .card:hover {
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
-        background: rgba(255, 255, 255, 0.98);
+    .cm-breadcrumb a:hover { color: var(--cm-primary); }
+    .cm-breadcrumb-current {
+        color: var(--cm-muted);
+        max-width: 280px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
-    
-    .product-main-image {
-        height: 400px;
+
+    .cm-gallery-card {
+        background: white;
+        border: 1px solid var(--cm-border);
+        border-radius: 22px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 8px 28px -16px rgba(124, 58, 237, 0.25);
+    }
+    .cm-gallery-main {
+        height: clamp(300px, 50vh, 520px);
         object-fit: contain;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 12px;
+        background: linear-gradient(135deg, #FAF5FF 0%, #F0FDF4 100%);
     }
-    
-    .thumbnail {
-        cursor: pointer;
-        border: 2px solid transparent;
-        border-radius: 8px;
-        padding: 2px;
-        transition: all 0.3s ease;
-    }
-    
-    .thumbnail.active {
-        border-color: #667eea;
-        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-    }
-    
-    .thumbnail:hover {
-        border-color: #764ba2;
-        transform: scale(1.05);
-    }
-    
-    .sold-overlay {
+    .cm-gallery-nav {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+        top: 50%;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        border: 1px solid var(--cm-border);
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(10px);
+        color: var(--cm-text);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background .2s, transform .2s;
+        z-index: 10;
+    }
+    .cm-gallery-nav:hover { background: white; transform: translateY(-50%) scale(1.05); }
+    .cm-gallery-prev { left: 14px; }
+    .cm-gallery-next { right: 14px; }
+    .cm-thumb-strip {
+        display: flex;
+        gap: 8px;
+        padding: 14px;
+        overflow-x: auto;
+        border-top: 1px solid var(--cm-border);
+        background: rgba(250, 245, 255, 0.5);
+    }
+    .cm-thumb {
+        flex: 0 0 auto;
+        width: 70px;
+        height: 70px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: white;
+        border: 2px solid transparent;
+        cursor: pointer;
+        padding: 0;
+        transition: border-color .2s, transform .2s;
+    }
+    .cm-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cm-thumb:hover { transform: translateY(-2px); border-color: var(--cm-secondary); }
+    .cm-thumb.is-active { border-color: var(--cm-primary); box-shadow: 0 4px 12px rgba(124,58,237,0.25); }
+
+    .cm-sold-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(31, 17, 71, 0.55);
+        backdrop-filter: blur(4px);
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 10;
-        backdrop-filter: blur(4px);
+        z-index: 5;
     }
-    
-    .sold-text {
+    .cm-sold-overlay span {
+        font-family: 'Rubik', sans-serif;
+        font-weight: 800;
         color: white;
-        font-size: 4rem;
-        font-weight: bold;
-        transform: rotate(-30deg);
-        opacity: 0.95;
-        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-    
-    .detail-item {
-        padding: 12px;
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(8px);
-        border-radius: 10px;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        transition: all 0.3s ease;
-    }
-    
-    .detail-item:hover {
-        transform: translateX(5px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        background: rgba(255, 255, 255, 0.85);
-    }
-    
-    .badge {
-        padding: 8px 14px;
-        border-radius: 20px;
-        font-weight: 600;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .btn {
-        border-radius: 10px;
-        padding: 10px 20px;
-        font-weight: 600;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-    
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-    }
-    
-    .btn-success {
-        background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
-        border: none;
-        box-shadow: 0 4px 12px rgba(86, 171, 47, 0.3);
-    }
-    
-    .btn-success:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(86, 171, 47, 0.4);
-    }
-    
-    .btn-danger {
-        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
-    }
-    
-    .btn-danger:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        font-size: 5rem;
+        letter-spacing: 0.1em;
+        transform: rotate(-15deg);
+        text-shadow: 0 4px 20px rgba(0,0,0,0.4);
     }
 
-    
-    .review-item:last-child {
-        border-bottom: none !important;
-        margin-bottom: 0;
-        padding-bottom: 0;
+    .cm-info-card {
+        background: white;
+        border: 1px solid var(--cm-border);
+        border-radius: 22px;
+        padding: 24px sm:28px;
+        padding: 24px;
+        box-shadow: 0 8px 28px -16px rgba(124, 58, 237, 0.18);
+    }
+    @media (min-width: 640px) { .cm-info-card { padding: 28px; } }
+
+    .cm-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    .cm-badge-primary { background: var(--cm-primary); color: white; }
+    .cm-badge-warning { background: #FEF3C7; color: #92400E; }
+    .cm-badge-soft { background: var(--cm-bg); color: var(--cm-text); border: 1px solid var(--cm-border); max-width: 180px; }
+    .cm-badge-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .cm-badge[data-cond="New"]      { background: #DCFCE7; color: #166534; }
+    .cm-badge[data-cond="Like New"] { background: #DBEAFE; color: #1E40AF; }
+    .cm-badge[data-cond="Good"]     { background: #EDE9FE; color: #5B21B6; }
+    .cm-badge[data-cond="Fair"]     { background: #FEF3C7; color: #92400E; }
+    .cm-badge[data-cond="Poor"]     { background: #F3F4F6; color: #374151; }
+
+    .cm-price-block {
+        margin-top: 20px;
+        padding: 16px 20px;
+        background: linear-gradient(135deg, #FAF5FF 0%, #F0FDF4 100%);
+        border-radius: 14px;
+        border: 1px solid var(--cm-border);
+    }
+    .cm-price-main {
+        font-family: 'Rubik', sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--cm-primary);
+    }
+    .cm-price-old {
+        font-size: 1rem;
+        color: var(--cm-muted);
+        text-decoration: line-through;
+    }
+    .cm-price-disc {
+        background: var(--cm-cta);
+        color: white;
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .cm-stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin-top: 20px;
+    }
+    .cm-stat {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px;
+        background: var(--cm-bg);
+        border-radius: 12px;
+        border: 1px solid var(--cm-border);
+        min-width: 0;
+    }
+    .cm-stat-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--cm-primary);
+        flex-shrink: 0;
+    }
+    .cm-stat-value {
+        font-family: 'Rubik', sans-serif;
+        font-weight: 700;
+        color: var(--cm-text);
+        font-size: 15px;
+        line-height: 1.1;
+    }
+    .cm-stat-value-sm { font-size: 12px; }
+    .cm-stat-label {
+        font-size: 11px;
+        color: var(--cm-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .cm-section { margin-top: 22px; }
+    .cm-section-h {
+        font-family: 'Rubik', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--cm-muted);
+        margin: 0 0 8px;
+    }
+    .cm-desc {
+        color: var(--cm-ink);
+        font-size: 15px;
+        line-height: 1.65;
+        margin: 0;
+        white-space: pre-wrap;
+    }
+
+    .cm-seller-card {
+        margin-top: 22px;
+        padding: 14px;
+        background: linear-gradient(135deg, #FAF5FF 0%, #FFFFFF 100%);
+        border: 1px solid var(--cm-border);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .cm-seller-avatar, .cm-seller-init {
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        flex-shrink: 0;
+    }
+    .cm-seller-avatar { object-fit: cover; }
+    .cm-seller-init {
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+    }
+    .cm-seller-name {
+        font-family: 'Rubik', sans-serif;
+        font-weight: 700;
+        color: var(--cm-text);
+        text-decoration: none;
+        font-size: 15px;
+    }
+    .cm-seller-name:hover { color: var(--cm-primary); text-decoration: underline; }
+    .cm-verified {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--cm-cta);
+    }
+    .cm-seller-meta {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 2px;
+        font-size: 12px;
+        color: var(--cm-muted);
+    }
+
+    .cm-actions {
+        margin-top: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .cm-btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all .2s;
+        min-height: 48px;
+    }
+    .cm-btn-action-primary { background: var(--cm-primary); color: white; box-shadow: 0 6px 20px -8px rgba(124,58,237,0.5); }
+    .cm-btn-action-primary:hover { background: #6D28D9; color: white; transform: translateY(-1px); box-shadow: 0 10px 28px -10px rgba(124,58,237,0.6); }
+    .cm-btn-action-cta { background: var(--cm-cta); color: white; box-shadow: 0 6px 20px -8px rgba(34,197,94,0.5); }
+    .cm-btn-action-cta:hover { background: #16A34A; color: white; transform: translateY(-1px); }
+    .cm-btn-action-success { background: var(--cm-cta); color: white; }
+    .cm-btn-action-success:hover { background: #16A34A; color: white; }
+    .cm-btn-action-edit { background: #F59E0B; color: white; }
+    .cm-btn-action-edit:hover { background: #D97706; color: white; }
+    .cm-btn-action-danger { background: white; color: #DC2626; border-color: #FECACA; }
+    .cm-btn-action-danger:hover { background: #FEF2F2; color: #B91C1C; }
+    .cm-btn-action-ghost { background: white; color: var(--cm-text); border-color: var(--cm-border); }
+    .cm-btn-action-ghost:hover { border-color: var(--cm-primary); color: var(--cm-primary); }
+    .cm-btn-action-ghost.is-saved { background: #FEE2E2; color: #DC2626; border-color: #FCA5A5; }
+    .cm-btn-action-ghost.is-saved svg { color: #DC2626; }
+
+    .cm-login-prompt {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 14px;
+        background: linear-gradient(135deg, #DBEAFE, #EDE9FE);
+        color: #1E40AF;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .cm-sold-banner {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px;
+        background: #FEE2E2;
+        color: #991B1B;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    /* Reviews */
+    .cm-review-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 16px; }
+    .cm-review-item { display: flex; gap: 12px; padding: 14px; background: var(--cm-bg); border-radius: 14px; border: 1px solid var(--cm-border); }
+    .cm-review-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+    .cm-empty-mini { padding: 24px; text-align: center; color: var(--cm-muted); background: var(--cm-bg); border-radius: 12px; }
+    .cm-comment-form { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--cm-border); }
+    .cm-btn-tiny { background: white; border: 1px solid #FECACA; color: #DC2626; padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background .2s; }
+    .cm-btn-tiny:hover { background: #FEF2F2; }
+
+    .cm-info-banner {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 14px;
+        background: #DBEAFE;
+        color: #1E40AF;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .cm-info-banner-warn { background: #FEF3C7; color: #92400E; }
+
+    .cm-support-card {
+        background: white;
+        border: 1px solid var(--cm-border);
+        border-radius: 18px;
+        padding: 18px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    /* Modal */
+    .cm-modal {
+        border: 1px solid var(--cm-border);
+        border-radius: 22px;
+        overflow: hidden;
+    }
+    .cm-modal-head {
+        background: linear-gradient(135deg, #FAF5FF, #F0FDF4);
+        border-bottom: 1px solid var(--cm-border);
+    }
+    .cm-modal-method-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: var(--cm-bg);
+        border: 1px solid var(--cm-border);
+        font-size: 13px;
+        color: var(--cm-text);
+    }
+    .cm-modal-method-card {
+        margin-top: 16px;
+        padding: 16px;
+        background: var(--cm-bg);
+        border: 1px solid var(--cm-border);
+        border-radius: 14px;
+    }
+    .cm-modal-method-link {
+        color: var(--cm-primary);
+        font-family: 'Rubik', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 4px;
+        word-break: break-all;
+    }
+    .cm-modal-method-link:hover { color: #6D28D9; text-decoration: underline; }
+    .cm-text-muted { color: var(--cm-muted); font-size: 12px; }
+
+    @media (max-width: 575.98px) {
+        .cm-stats-row { grid-template-columns: 1fr; }
+        .cm-price-main { font-size: 1.5rem; }
     }
 </style>
 
 <script>
-    // Initialize carousel thumbnail selection
-    document.querySelectorAll('.thumbnail').forEach(thumb => {
-        thumb.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
+    // Thumbnail active sync
+    document.querySelectorAll('.cm-thumb').forEach(function (thumb) {
+        thumb.addEventListener('click', function () {
+            document.querySelectorAll('.cm-thumb').forEach(function (t) { t.classList.remove('is-active'); });
+            this.classList.add('is-active');
         });
     });
 
-    // Log contact attempt to server and notify admin
+    // Save toggle
+    (function () {
+        var btn = document.getElementById('saveBtn');
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+            var pid = btn.getAttribute('data-product-id');
+            var saved = btn.getAttribute('data-saved') === 'true';
+            fetch('/products/' + pid + '/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: saved ? 'unsave' : 'save' })
+            })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data && data.success) {
+                    var nowSaved = !saved;
+                    btn.setAttribute('data-saved', nowSaved);
+                    btn.classList.toggle('is-saved', nowSaved);
+                    var txt = document.getElementById('saveBtnText');
+                    if (txt) txt.textContent = nowSaved ? 'Saved' : 'Save item';
+                    var svg = btn.querySelector('svg');
+                    if (svg) svg.setAttribute('fill', nowSaved ? 'currentColor' : 'none');
+                } else {
+                    window.location.href = '/login';
+                }
+            })
+            .catch(function () { window.location.href = '/login'; });
+        });
+    })();
+
+    // Contact log
     function logContact(event, productId, method) {
-        // For In-person, prevent default and just log
-        if (method === 'In-person') {
-            event.preventDefault();
-        }
-        
-        // Send log to server
-        fetch(`/products/${productId}/contact`, {
+        if (method === 'In-person') event.preventDefault();
+        fetch('/products/' + productId + '/contact', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contactMethod: method })
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && method === 'In-person') {
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            if (data && data.success && method === 'In-person') {
                 alert('Your interest has been noted! The seller will be notified.');
             }
         })
-        .catch(err => console.error('Error logging contact:', err));
-        
-        // For email/phone/whatsapp, allow default action (opening mail/call/whatsapp)
-        // For in-person, we prevented default and show alert instead
+        .catch(function (err) { console.error('Error logging contact:', err); });
+    }
+
+    // Send offer (lightweight: opens contact channel with pre-filled message)
+    function sendOffer(productId) {
+        var input = document.getElementById('offerAmount');
+        if (!input || !input.value) { alert('Please enter an offer amount.'); return; }
+        var amount = Number(input.value);
+        if (!amount || amount < 1) { alert('Enter a valid amount.'); return; }
+        fetch('/products/' + productId + '/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contactMethod: 'Offer', offerAmount: amount })
+        }).finally(function () {
+            alert('Offer of ₹' + amount.toLocaleString('en-IN') + ' sent to the seller.');
+            var modal = bootstrap.Modal.getInstance(document.getElementById('offerModal'));
+            if (modal) modal.hide();
+        });
     }
 </script>

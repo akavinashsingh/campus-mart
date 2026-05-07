@@ -10,25 +10,25 @@
 
             gtag('config', 'G-VS0WHL981K');
         </script>
-        
+
         <!-- Basic Meta Tags -->
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        
+
         <!-- Dynamic Title -->
         <title><%= typeof pageTitle !== 'undefined' ? pageTitle : 'CampusMart - College Marketplace for Students | Buy & Sell Used Items' %></title>
-        
+
         <!-- SEO Meta Tags -->
         <meta name="description" content="<%= typeof pageDescription !== 'undefined' ? pageDescription : 'CampusMart is the ultimate college marketplace where students can buy and sell used books, electronics, sports equipment, and more. Join your campus community today!' %>">
         <meta name="keywords" content="<%= typeof pageKeywords !== 'undefined' ? pageKeywords : 'college marketplace, student marketplace, buy sell books, used electronics, campus trading, student community, secondhand items, college textbooks, used sports equipment' %>">
         <meta name="author" content="CampusMart">
         <meta name="robots" content="index, follow">
-        <meta name="theme-color" content="#6366f1">
-        
+        <meta name="theme-color" content="#7C3AED">
+
         <!-- Canonical URL -->
         <link rel="canonical" href="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://campusmart.com' + (typeof currentPath !== 'undefined' ? currentPath : '') %>">
-        
+
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="<%= typeof ogType !== 'undefined' ? ogType : 'website' %>">
         <meta property="og:url" content="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://campusmart.com' + (typeof currentPath !== 'undefined' ? currentPath : '') %>">
@@ -37,14 +37,14 @@
         <meta property="og:image" content="<%= typeof ogImage !== 'undefined' ? ogImage : 'https://campusmart.com/images/og-image.jpg' %>">
         <meta property="og:site_name" content="CampusMart">
         <meta property="og:locale" content="en_US">
-        
+
         <!-- Twitter Card -->
         <meta name="twitter:card" content="<%= typeof twitterCard !== 'undefined' ? twitterCard : 'summary_large_image' %>">
         <meta name="twitter:url" content="<%= typeof canonicalUrl !== 'undefined' ? canonicalUrl : 'https://campusmart.com' + (typeof currentPath !== 'undefined' ? currentPath : '') %>">
         <meta name="twitter:title" content="<%= typeof twitterTitle !== 'undefined' ? twitterTitle : (typeof pageTitle !== 'undefined' ? pageTitle : 'CampusMart - College Marketplace for Students') %>">
         <meta name="twitter:description" content="<%= typeof twitterDescription !== 'undefined' ? twitterDescription : (typeof pageDescription !== 'undefined' ? pageDescription : 'CampusMart is the ultimate college marketplace where students can buy and sell used books, electronics, sports equipment, and more.') %>">
         <meta name="twitter:image" content="<%= typeof twitterImage !== 'undefined' ? twitterImage : 'https://campusmart.com/images/twitter-image.jpg' %>">
-        
+
         <!-- Structured Data (JSON-LD) -->
         <% if (typeof structuredData !== 'undefined') { %>
             <script type="application/ld+json">
@@ -66,26 +66,109 @@
             }
             </script>
         <% } %>
-        
+
         <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    
+
+    <!-- Preconnects -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Tailwind CDN (no build step) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        if (window.tailwind) {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            'cm-primary':   '#7C3AED',
+                            'cm-secondary': '#A78BFA',
+                            'cm-cta':       '#22C55E',
+                            'cm-bg':        '#FAF5FF',
+                            'cm-text':      '#4C1D95',
+                            'cm-ink':       '#1F1147'
+                        },
+                        fontFamily: {
+                            'display': ['Rubik', 'system-ui', 'sans-serif'],
+                            'body':    ['"Nunito Sans"', 'system-ui', 'sans-serif']
+                        },
+                        boxShadow: {
+                            'cm-glow': '0 8px 32px -8px rgba(124, 58, 237, 0.35)'
+                        }
+                    }
+                }
+            };
+        }
+    </script>
+
     <!-- Stylesheets -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Nunito+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- CampusMart design tokens & global polish -->
+    <style>
+        :root {
+            --cm-primary:   #7C3AED;
+            --cm-secondary: #A78BFA;
+            --cm-cta:       #22C55E;
+            --cm-bg:        #FAF5FF;
+            --cm-text:      #4C1D95;
+            --cm-ink:       #1F1147;
+            --cm-muted:     #6B5B95;
+            --cm-border:    #E9D5FF;
+            --cm-shadow:    0 10px 30px -12px rgba(124, 58, 237, 0.25);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Nunito Sans', system-ui, sans-serif;
+            background: var(--cm-bg);
+            color: var(--cm-ink);
+        }
+        h1, h2, h3, h4, h5, h6, .font-display {
+            font-family: 'Rubik', system-ui, sans-serif;
+            letter-spacing: -0.01em;
+        }
+        .cm-gradient {
+            background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 50%, #22C55E 100%);
+        }
+        .cm-gradient-soft {
+            background: linear-gradient(135deg, #F5F3FF 0%, #FDF4FF 50%, #ECFDF5 100%);
+        }
+        .cm-glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+        .cm-blob { filter: blur(80px); opacity: 0.5; pointer-events: none; }
+        .cm-focus:focus-visible {
+            outline: 2px solid var(--cm-primary);
+            outline-offset: 2px;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+        /* Force Tailwind to win over Bootstrap when both are present on a node */
+        .tw-reset { all: revert; }
+    </style>
 </head>
-<body>
+<body class="font-body antialiased">
     <%- include("../includes/navbar.ejs") %>
     <main>
         <%- include("../includes/flash.ejs") %>
         <%- body %>
     </main>
     <%- include("../includes/footer.ejs") %>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/script.js"></script>
 </body>

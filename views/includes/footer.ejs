@@ -1,19 +1,87 @@
-<footer id="main-footer" class="bg-light border-top py-1">
-    <div class="container-fluid px-3">
-        <div class="row align-items-center">
-            <div class="col-md-5">
-                <p class="text-muted mb-0" style="font-size: 0.75rem;">
-                    <strong>CampusMart</strong> &copy; 2026
+<!-- CampusMart footer -->
+<footer id="main-footer" class="cm-footer mt-16">
+    <div class="cm-footer-glow" aria-hidden="true"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 relative">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
+            <div class="md:col-span-2">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="cm-brand-mark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M22 10 12 5 2 10l10 5 10-5Z"/>
+                            <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>
+                        </svg>
+                    </span>
+                    <span class="font-display font-bold text-xl text-cm-text">CampusMart</span>
+                </div>
+                <p class="text-sm text-cm-text/70 max-w-md leading-relaxed">
+                    A peer-to-peer marketplace for college students. Buy and sell books, electronics,
+                    sports gear and more — verified students only, meet on campus.
                 </p>
+                <form class="mt-5 flex max-w-sm cm-search" onsubmit="event.preventDefault();">
+                    <span class="cm-search-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg>
+                    </span>
+                    <label for="cm-newsletter" class="sr-only">Email address</label>
+                    <input id="cm-newsletter" type="email" placeholder="you@college.edu" />
+                    <button type="submit" class="cm-search-btn">Subscribe</button>
+                </form>
+                <p class="mt-2 text-xs text-cm-text/50">Get weekly deals from your campus. No spam.</p>
             </div>
-            <div class="col-md-7 text-end">
-                <p class="mb-0" style="font-size: 0.7rem;">
-                    <span class="text-muted">Queries: </span>
-                    <a href="mailto:23uj1a0504@mrem.ac.in" class="text-primary text-decoration-none">
-                        <i class="fas fa-envelope"></i> 23uj1a0504@mrem.ac.in
-                    </a>
-                </p>
+
+            <div>
+                <h3 class="font-display font-semibold text-cm-text mb-3 text-sm uppercase tracking-wider">Marketplace</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="/products" class="cm-footer-link">Browse Items</a></li>
+                    <li><a href="/products/new" class="cm-footer-link">Sell an Item</a></li>
+                    <li><a href="/products?category=Books" class="cm-footer-link">Books</a></li>
+                    <li><a href="/products?category=Electronics" class="cm-footer-link">Electronics</a></li>
+                    <li><a href="/products?category=Sports" class="cm-footer-link">Sports & Fitness</a></li>
+                </ul>
             </div>
+
+            <div>
+                <h3 class="font-display font-semibold text-cm-text mb-3 text-sm uppercase tracking-wider">Help</h3>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="/login" class="cm-footer-link">Login</a></li>
+                    <li><a href="/signup" class="cm-footer-link">Create account</a></li>
+                    <li><a href="/forgot-password" class="cm-footer-link">Forgot password</a></li>
+                    <li><a href="mailto:23uj1a0504@mrem.ac.in" class="cm-footer-link">Contact support</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border-t border-cm-text/10 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-cm-text/60">
+            <p>&copy; <%= new Date().getFullYear() %> CampusMart. Built for students, by students.</p>
+            <p class="flex items-center gap-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="m4 7 8 6 8-6"/></svg>
+                <a href="mailto:23uj1a0504@mrem.ac.in" class="cm-footer-link">23uj1a0504@mrem.ac.in</a>
+            </p>
         </div>
     </div>
 </footer>
+
+<style>
+    .cm-footer {
+        position: relative;
+        background: linear-gradient(180deg, rgba(245, 243, 255, 0) 0%, #F5F3FF 50%, #EDE9FE 100%);
+        border-top: 1px solid var(--cm-border);
+        overflow: hidden;
+    }
+    .cm-footer-glow {
+        position: absolute;
+        top: -150px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 300px;
+        background: radial-gradient(closest-side, rgba(124, 58, 237, 0.18), transparent);
+        pointer-events: none;
+    }
+    .cm-footer-link {
+        color: var(--cm-text);
+        text-decoration: none;
+        opacity: 0.75;
+        transition: opacity .2s, color .2s;
+    }
+    .cm-footer-link:hover { opacity: 1; color: var(--cm-primary); }
+</style>

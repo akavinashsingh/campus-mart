@@ -1,99 +1,129 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="container mt-5">
-    <h1 class="mb-4">
-        <i class="fas fa-heart text-danger me-2"></i>
-        My Saved Items
-    </h1>
-    
-    <% if(savedItems && savedItems.length > 0) { %>
-        <div class="row">
-            <% savedItems.forEach(product => { %>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow-sm product-card">
-                        <% if(product.isSold) { %>
-                            <div class="sold-overlay">
-                                <div class="sold-text">SOLD</div>
-                            </div>
-                        <% } %>
-                        
-                        <% if(product.images && product.images.length > 0) { %>
-                            <img src="<%= product.images[0].url %>" class="card-img-top" 
-                                 style="height: 200px; object-fit: cover;" 
-                                 alt="<%= product.title %>">
-                        <% } %>
-                        
-                        <div class="card-body">
-                            <h5 class="card-title"><%= product.title %></h5>
-                            <p class="card-text text-muted">
-                                <small><%= product.description.substring(0, 100) %>...</small>
-                            </p>
-                            
-                            <div class="mb-2">
-                                <span class="badge bg-primary"><%= product.category %></span>
-                                <span class="badge bg-info"><%= product.condition %></span>
-                            </div>
-                            
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="text-primary mb-0">₹<%= product.price.toLocaleString("en-IN") %></h5>
-                                <small class="text-muted">
-                                    <i class="fas fa-university me-1"></i><%= product.college %>
-                                </small>
-                            </div>
-                        </div>
-                        
-                        <div class="card-footer bg-white">
-                            <a href="/products/<%= product._id %>" class="btn btn-primary btn-sm w-100">
-                                <i class="fas fa-eye me-2"></i>View Details
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            <% }) %>
-        </div>
-    <% } else { %>
-        <div class="alert alert-info text-center py-5">
-            <i class="fas fa-heart-broken fa-3x mb-3"></i>
-            <h4>No saved items yet</h4>
-            <p class="text-muted">Browse products and save items you're interested in!</p>
-            <a href="/products" class="btn btn-primary mt-3">
-                <i class="fas fa-search me-2"></i>Browse Products
+<section class="cm-dashboard">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+        <div class="flex flex-wrap items-end justify-between gap-3 mb-6">
+            <div>
+                <span class="cm-pill"><span class="cm-dot"></span><%= savedItems ? savedItems.length : 0 %> saved</span>
+                <h1 class="font-display text-3xl sm:text-4xl font-bold text-cm-text mt-3 m-0">Saved items</h1>
+                <p class="text-cm-text/65 mt-1 m-0">Your private watchlist of items you're interested in.</p>
+            </div>
+            <a href="/products" class="cm-btn-action cm-btn-action-ghost" style="text-decoration:none;">
+                Browse marketplace
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
             </a>
         </div>
-    <% } %>
-</div>
+
+        <% if (savedItems && savedItems.length > 0) { %>
+            <div class="cm-grid">
+                <% savedItems.forEach(function (product) { %>
+                    <a href="/products/<%= product._id %>" class="cm-card">
+                        <div class="cm-card-img">
+                            <% if (product.images && product.images.length > 0) { %>
+                                <img src="<%= product.images[0].url %>" alt="<%= product.title %>" loading="lazy" />
+                            <% } else { %>
+                                <img src="/images/default-product.jpg" alt="<%= product.title %>" loading="lazy" />
+                            <% } %>
+                            <% if (product.isSold) { %>
+                                <span class="cm-sold-tag">SOLD</span>
+                            <% } %>
+                            <span class="cm-cond-tag" data-cond="<%= product.condition %>"><%= product.condition %></span>
+                        </div>
+                        <div class="cm-card-body">
+                            <h3 class="cm-card-title" title="<%= product.title %>"><%= product.title %></h3>
+                            <span class="cm-card-cat"><%= product.category %></span>
+                            <div class="cm-card-price-row">
+                                <span class="cm-card-price">₹<%= product.price.toLocaleString('en-IN') %></span>
+                                <span class="cm-card-disc">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="0"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+                                    Saved
+                                </span>
+                            </div>
+                            <div class="text-xs text-cm-text/55" style="display:flex;align-items:center;gap:4px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg>
+                                <%= product.college %>
+                            </div>
+                        </div>
+                    </a>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="cm-empty-state">
+                <div class="cm-empty-art" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+                </div>
+                <h3 class="font-display text-xl font-bold text-cm-text mt-4">No saved items yet</h3>
+                <p class="text-cm-text/60 mt-2 mb-4">Tap the heart icon on any item to add it here.</p>
+                <a href="/products" class="cm-btn-action cm-btn-action-primary cm-focus" style="text-decoration:none;">Browse marketplace</a>
+            </div>
+        <% } %>
+    </div>
+</section>
 
 <style>
-.product-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-}
+    .cm-dashboard { background: var(--cm-bg); min-height: 100vh; }
+    .cm-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: white;
+        border: 1px solid var(--cm-border);
+        color: var(--cm-text);
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .cm-dot { width: 8px; height: 8px; border-radius: 50%; background: #22C55E; box-shadow: 0 0 0 3px rgba(34,197,94,0.2); }
 
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
+    .cm-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+    @media (min-width: 768px) { .cm-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 1280px) { .cm-grid { grid-template-columns: repeat(4, 1fr); } }
+    .cm-card {
+        background: white;
+        border: 1px solid var(--cm-border);
+        border-radius: 18px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        transition: transform .25s ease, border-color .2s, box-shadow .25s;
+    }
+    .cm-card:hover { transform: translateY(-4px); border-color: var(--cm-primary); box-shadow: 0 16px 40px -16px rgba(124,58,237,0.35); }
+    .cm-card-img { position: relative; aspect-ratio: 1 / 1; background: var(--cm-bg); overflow: hidden; }
+    .cm-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
+    .cm-card:hover .cm-card-img img { transform: scale(1.06); }
+    .cm-card-body { padding: 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .cm-card-title { font-family: 'Rubik', sans-serif; font-size: 14px; font-weight: 600; color: var(--cm-ink); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cm-card-cat { font-size: 11px; font-weight: 600; color: var(--cm-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .cm-card-price-row { display: flex; align-items: baseline; gap: 6px; padding: 8px 10px; background: linear-gradient(135deg,#FAF5FF,#F0FDF4); border-radius: 10px; }
+    .cm-card-price { font-family: 'Rubik', sans-serif; font-size: 16px; font-weight: 800; color: var(--cm-primary); }
+    .cm-card-disc { font-size: 11px; font-weight: 700; color: #DC2626; margin-left: auto; display: inline-flex; align-items: center; gap: 4px; }
+    .cm-cond-tag { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: 999px; font-size: 10px; font-weight: 700; }
+    .cm-cond-tag[data-cond="New"] { background: #DCFCE7; color: #166534; }
+    .cm-cond-tag[data-cond="Like New"] { background: #DBEAFE; color: #1E40AF; }
+    .cm-cond-tag[data-cond="Good"] { background: #EDE9FE; color: #5B21B6; }
+    .cm-cond-tag[data-cond="Fair"] { background: #FEF3C7; color: #92400E; }
+    .cm-cond-tag[data-cond="Poor"] { background: #F3F4F6; color: #374151; }
+    .cm-sold-tag { position: absolute; top: 10px; right: 10px; background: #DC2626; color: white; padding: 4px 10px; border-radius: 999px; font-size: 10px; font-weight: 800; }
 
-.sold-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    .cm-empty-state {
+        background: white;
+        border: 2px dashed var(--cm-border);
+        border-radius: 22px;
+        padding: 56px 24px;
+        text-align: center;
+    }
+    .cm-empty-art { color: #F43F5E; display: inline-block; }
 
-.sold-text {
-    background: #dc3545;
-    color: white;
-    padding: 10px 30px;
-    font-size: 2rem;
-    font-weight: bold;
-    transform: rotate(-15deg);
-    border: 3px solid white;
-}
+    .cm-btn-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: 12px; font-family: 'Rubik', sans-serif; font-weight: 600; font-size: 14px; text-decoration: none; cursor: pointer; border: 1px solid transparent; transition: all .2s; min-height: 42px; }
+    .cm-btn-action-primary { background: var(--cm-primary); color: white; }
+    .cm-btn-action-primary:hover { background: #6D28D9; color: white; }
+    .cm-btn-action-ghost { background: white; color: var(--cm-text); border-color: var(--cm-border); }
+    .cm-btn-action-ghost:hover { border-color: var(--cm-primary); color: var(--cm-primary); }
 </style>

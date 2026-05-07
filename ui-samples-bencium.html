@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CampusMart — 10 Bencium UI Samples</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600;700&family=Rozha+One&family=Crimson+Pro:wght@400;500;600;700&family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Major+Mono+Display&family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Spectral:wght@300;400;500;600;700&family=Bowlby+One+SC&family=Quicksand:wght@400;500;600;700&family=Cinzel:wght@500;700;900&family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800;9..144,900&family=Karla:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/></svg>");
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Sora', system-ui, sans-serif; background: #faf7f2; color: #111; }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+
+  /* Section index strip */
+  .index-strip a { transition: color .2s, background .2s; }
+  .index-strip a:hover { background: #111; color: #fff; }
+
+  /* ============================================================ */
+  /* SAMPLE 01 — EDITORIAL / MAGAZINE                              */
+  /* ============================================================ */
+  .s01 { background: #f4ede1; color: #1a1a1a; }
+  .s01 .display { font-family: 'Playfair Display', serif; font-weight: 900; letter-spacing: -0.02em; }
+  .s01 .body { font-family: 'Lora', serif; }
+  .s01 .rule { background: #1a1a1a; }
+  .s01 .accent { color: #c84b30; }
+  .s01 .accent-bg { background: #c84b30; color: #f4ede1; }
+  .s01 .pull-quote::before { content: "“"; font-family: 'Playfair Display', serif; font-style: italic; font-size: 6rem; line-height: 0.6; color: #c84b30; display: block; margin-bottom: -1rem; }
+
+  /* ============================================================ */
+  /* SAMPLE 02 — BRUTALIST RAW                                     */
+  /* ============================================================ */
+  .s02 { background: #ececea; color: #050505; font-family: 'IBM Plex Mono', monospace; }
+  .s02 .display { font-family: 'Archivo Black', sans-serif; letter-spacing: -0.04em; line-height: 0.9; text-transform: uppercase; }
+  .s02 .brut-card { background: #fff; border: 2px solid #050505; box-shadow: 8px 8px 0 0 #050505; transition: transform .15s, box-shadow .15s; }
+  .s02 .brut-card:hover { transform: translate(-3px,-3px); box-shadow: 11px 11px 0 0 #050505; }
+  .s02 .brut-btn { background: #f2ff00; color: #050505; border: 2px solid #050505; box-shadow: 6px 6px 0 0 #050505; padding: .85rem 1.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; transition: transform .12s, box-shadow .12s; }
+  .s02 .brut-btn:hover { transform: translate(-2px,-2px); box-shadow: 8px 8px 0 0 #050505; }
+  .s02 .brut-btn:active { transform: translate(3px,3px); box-shadow: 2px 2px 0 0 #050505; }
+  .s02 .tag { border: 1.5px solid #050505; padding: .25rem .6rem; font-size: .68rem; text-transform: uppercase; letter-spacing: .12em; }
+
+  /* ============================================================ */
+  /* SAMPLE 03 — RISOGRAPH PRINT                                   */
+  /* ============================================================ */
+  .s03 { background: #f5ecd9; color: #2a1d2c; position: relative; }
+  .s03::before { content: ""; position: absolute; inset: 0; background-image: var(--paper-grain); opacity: .35; mix-blend-mode: multiply; pointer-events: none; }
+  .s03 > * { position: relative; }
+  .s03 .display { font-family: 'Rozha One', serif; letter-spacing: -0.01em; }
+  .s03 .body { font-family: 'Crimson Pro', serif; }
+  .s03 .ink-pink { color: #ff4d6d; }
+  .s03 .ink-blue { color: #2536d1; }
+  .s03 .ink-pink-bg { background: #ff4d6d; color: #fff8e7; }
+  .s03 .ink-blue-bg { background: #2536d1; color: #fff8e7; }
+  .s03 .duotone { background: #ff4d6d; mix-blend-mode: multiply; }
+  .s03 .miscolor { position: relative; }
+  .s03 .miscolor::after { content: attr(data-text); position: absolute; left: 2px; top: 1px; color: #ff4d6d; mix-blend-mode: multiply; pointer-events: none; }
+
+  /* ============================================================ */
+  /* SAMPLE 04 — NEO-SWISS GRID                                    */
+  /* ============================================================ */
+  .s04 { background: #fff; color: #050505; }
+  .s04 .display { font-family: 'Sora', sans-serif; font-weight: 800; letter-spacing: -0.04em; }
+  .s04 .mono { font-family: 'JetBrains Mono', monospace; }
+  .s04 .swiss-rule { height: 1px; background: #050505; }
+  .s04 .swiss-num { font-family: 'JetBrains Mono', monospace; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: #777; }
+  .s04 .swiss-card { border-top: 1px solid #050505; }
+  .s04 .swiss-pill { display: inline-flex; align-items: center; gap: .4rem; padding: .35rem .8rem; border: 1px solid #050505; border-radius: 999px; font-family: 'JetBrains Mono', monospace; font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; }
+  .s04 .swiss-accent { color: #ff2d20; }
+
+  /* ============================================================ */
+  /* SAMPLE 05 — SYNTHWAVE NIGHT DRIVE                             */
+  /* ============================================================ */
+  .s05 { background: radial-gradient(ellipse at 50% 110%, #ff2e97 0%, #6b1f6e 25%, #1a0f3a 55%, #07061a 100%); color: #f4f1ff; position: relative; overflow: hidden; }
+  .s05::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 3px); pointer-events: none; }
+  .s05 .display { font-family: 'Major Mono Display', monospace; letter-spacing: 0.04em; text-transform: lowercase; }
+  .s05 .body { font-family: 'Outfit', sans-serif; }
+  .s05 .neon-magenta { color: #ff2e97; text-shadow: 0 0 12px rgba(255,46,151,.65), 0 0 32px rgba(255,46,151,.35); }
+  .s05 .neon-cyan { color: #22e8f4; text-shadow: 0 0 12px rgba(34,232,244,.6), 0 0 32px rgba(34,232,244,.3); }
+  .s05 .grid-horizon { background-image: linear-gradient(to right, rgba(255,46,151,.5) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,46,151,.4) 1px, transparent 1px); background-size: 36px 36px; transform: perspective(400px) rotateX(60deg); transform-origin: 50% 100%; height: 200px; opacity: .55; }
+  .s05 .neon-card { background: rgba(20,12,40,.55); border: 1px solid rgba(255,46,151,.35); box-shadow: 0 0 0 1px rgba(255,46,151,.2), 0 18px 40px -10px rgba(255,46,151,.45); backdrop-filter: blur(2px); }
+  .s05 .neon-btn { background: linear-gradient(135deg, #ff2e97, #22e8f4); color: #07061a; font-weight: 700; }
+
+  /* ============================================================ */
+  /* SAMPLE 06 — BOTANICAL APOTHECARY                              */
+  /* ============================================================ */
+  .s06 { background: #f1ece2; color: #2c2a22; position: relative; }
+  .s06::before { content: ""; position: absolute; inset: 0; background-image: var(--paper-grain); opacity: .25; mix-blend-mode: multiply; pointer-events: none; }
+  .s06 > * { position: relative; }
+  .s06 .display { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-style: italic; letter-spacing: -0.01em; }
+  .s06 .label { font-family: 'Cormorant Garamond', serif; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; font-size: .72rem; }
+  .s06 .body { font-family: 'Spectral', serif; }
+  .s06 .sage { color: #6b7d4c; }
+  .s06 .sage-bg { background: #6b7d4c; color: #f1ece2; }
+  .s06 .terracotta { color: #b6543a; }
+  .s06 .apothecary-card { background: #faf6ec; border: 1px solid #2c2a22; box-shadow: 0 0 0 4px #faf6ec, 0 0 0 5px #2c2a22; padding: 1.5rem; }
+  .s06 .specimen-no { font-family: 'JetBrains Mono', monospace; font-size: .65rem; letter-spacing: .2em; }
+
+  /* ============================================================ */
+  /* SAMPLE 07 — MEMPHIS PLAYFUL                                   */
+  /* ============================================================ */
+  .s07 { background: #fff8ef; color: #18181b; position: relative; overflow: hidden; }
+  .s07 .display { font-family: 'Bowlby One SC', sans-serif; letter-spacing: -0.01em; }
+  .s07 .body { font-family: 'Quicksand', sans-serif; }
+  .s07 .memphis-card { background: #fff; border: 3px solid #18181b; border-radius: 24px; box-shadow: 8px 8px 0 0 #18181b; }
+  .s07 .memphis-btn { background: #ff3ca0; color: #fff; border: 3px solid #18181b; border-radius: 999px; box-shadow: 5px 5px 0 0 #18181b; padding: .85rem 1.6rem; font-weight: 700; transition: transform .15s, box-shadow .15s; font-family: 'Quicksand', sans-serif; }
+  .s07 .memphis-btn:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 0 #18181b; }
+  .s07 .squiggle { stroke: #18181b; stroke-width: 3; fill: none; }
+  .s07 .blob1 { background: #1fbfb8; }
+  .s07 .blob2 { background: #f4c84a; }
+  .s07 .dot-pattern { background-image: radial-gradient(#18181b 1.5px, transparent 1.6px); background-size: 14px 14px; }
+
+  /* ============================================================ */
+  /* SAMPLE 08 — CINEMATIC NOIR                                    */
+  /* ============================================================ */
+  .s08 { background: #0c0b09; color: #efe7d6; position: relative; overflow: hidden; }
+  .s08::before { content: ""; position: absolute; inset: 0; background-image: var(--paper-grain); opacity: .55; mix-blend-mode: overlay; pointer-events: none; }
+  .s08::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 700px 500px at 30% 20%, rgba(255,228,170,.18), transparent 60%), radial-gradient(ellipse 500px 400px at 80% 80%, rgba(200,163,90,.12), transparent 60%); pointer-events: none; }
+  .s08 > * { position: relative; z-index: 1; }
+  .s08 .display { font-family: 'Cinzel', serif; font-weight: 900; letter-spacing: 0.02em; }
+  .s08 .body { font-family: 'Cormorant Garamond', serif; }
+  .s08 .brass { color: #c8a35a; }
+  .s08 .brass-rule { height: 1px; background: linear-gradient(to right, transparent, #c8a35a, transparent); }
+  .s08 .noir-card { background: rgba(20,18,14,.7); border: 1px solid rgba(200,163,90,.28); }
+  .s08 .noir-btn { background: #c8a35a; color: #0c0b09; font-family: 'Cinzel', serif; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; padding: .85rem 1.6rem; transition: background .2s; }
+  .s08 .noir-btn:hover { background: #e1bc6f; }
+  .s08 .small-caps { font-family: 'Cinzel', serif; letter-spacing: .26em; text-transform: uppercase; font-size: .7rem; }
+
+  /* ============================================================ */
+  /* SAMPLE 09 — ARCHITECTURAL BLUEPRINT                           */
+  /* ============================================================ */
+  .s09 { background: #0e2a4a; color: #e6f0ff; font-family: 'IBM Plex Mono', monospace; position: relative; }
+  .s09::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(230,240,255,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(230,240,255,.06) 1px, transparent 1px); background-size: 24px 24px; pointer-events: none; }
+  .s09 > * { position: relative; }
+  .s09 .display { font-family: 'Major Mono Display', monospace; text-transform: lowercase; letter-spacing: 0.06em; }
+  .s09 .blue-rule { background: #e6f0ff; height: 1px; }
+  .s09 .bp-card { border: 1px dashed rgba(230,240,255,.5); background: rgba(8,22,40,.5); padding: 1rem; }
+  .s09 .bp-tag { border: 1px solid #e6f0ff; padding: .15rem .5rem; font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; }
+  .s09 .bp-marker { display: inline-flex; align-items: center; gap: .35rem; }
+  .s09 .bp-marker::before { content: "+"; color: #ffd166; font-weight: 700; }
+  .s09 .measure { display: flex; align-items: center; gap: .5rem; font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; opacity: .8; }
+  .s09 .measure::before, .s09 .measure::after { content: ""; flex: 1; height: 1px; background: rgba(230,240,255,.4); }
+
+  /* ============================================================ */
+  /* SAMPLE 10 — DESERT MODERN                                     */
+  /* ============================================================ */
+  .s10 { background: #f1e3cc; color: #3a2f24; position: relative; overflow: hidden; }
+  .s10 .display { font-family: 'Fraunces', serif; font-weight: 800; letter-spacing: -0.03em; }
+  .s10 .body { font-family: 'Karla', sans-serif; }
+  .s10 .clay { color: #c47148; }
+  .s10 .clay-bg { background: #c47148; color: #f1e3cc; }
+  .s10 .terracotta-bg { background: #e6a075; }
+  .s10 .desert-card { background: #faf0dc; border: 1px solid #3a2f24; }
+  .s10 .desert-btn { background: #3a2f24; color: #f1e3cc; padding: .85rem 1.6rem; font-family: 'Karla', sans-serif; font-weight: 600; letter-spacing: .04em; transition: background .2s; }
+  .s10 .desert-btn:hover { background: #c47148; }
+  .s10 .sun { background: radial-gradient(circle at 30% 40%, #f4b860, #c47148); }
+  .s10 .horizon-rule { background: linear-gradient(to right, transparent, #3a2f24, transparent); height: 1px; }
+
+  /* shared dummy product image gradient sets */
+  .ph-1 { background: linear-gradient(135deg,#7c5cff,#22d3ee); }
+  .ph-2 { background: linear-gradient(135deg,#ff6b6b,#feca57); }
+  .ph-3 { background: linear-gradient(135deg,#10b981,#34d399); }
+  .ph-4 { background: linear-gradient(135deg,#f59e0b,#fde68a); }
+  .ph-5 { background: linear-gradient(135deg,#8b5cf6,#ec4899); }
+  .ph-6 { background: linear-gradient(135deg,#0f766e,#a7f3d0); }
+</style>
+</head>
+<body>
+
+<!-- ====================================================================== -->
+<!-- INDEX / TABLE OF CONTENTS                                                -->
+<!-- ====================================================================== -->
+<header class="bg-[#111] text-[#faf7f2] sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-5 py-4 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-baseline gap-3">
+      <span style="font-family:'Playfair Display',serif;" class="text-2xl font-black italic">CampusMart</span>
+      <span style="font-family:'JetBrains Mono',monospace;" class="text-[10px] tracking-[0.25em] uppercase opacity-60">10 surfaces · bencium</span>
+    </div>
+    <nav class="index-strip flex flex-wrap items-center gap-1 text-[11px]" style="font-family:'JetBrains Mono',monospace; letter-spacing:.12em; text-transform:uppercase;">
+      <a href="#s01" class="px-2 py-1.5">01 Editorial</a>
+      <a href="#s02" class="px-2 py-1.5">02 Brutalist</a>
+      <a href="#s03" class="px-2 py-1.5">03 Riso</a>
+      <a href="#s04" class="px-2 py-1.5">04 Swiss</a>
+      <a href="#s05" class="px-2 py-1.5">05 Synthwave</a>
+      <a href="#s06" class="px-2 py-1.5">06 Apothecary</a>
+      <a href="#s07" class="px-2 py-1.5">07 Memphis</a>
+      <a href="#s08" class="px-2 py-1.5">08 Noir</a>
+      <a href="#s09" class="px-2 py-1.5">09 Blueprint</a>
+      <a href="#s10" class="px-2 py-1.5">10 Desert</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ====================================================================== -->
+<!-- SAMPLE 01 — EDITORIAL / MAGAZINE  (Featured listings)                   -->
+<!-- ====================================================================== -->
+<section id="s01" class="s01">
+  <div class="max-w-7xl mx-auto px-6 py-24">
+    <div class="flex items-center gap-4 mb-10">
+      <span class="body text-xs tracking-[0.32em] uppercase">Issue 01 · Autumn ’26</span>
+      <span class="rule h-px flex-1"></span>
+      <span class="body text-xs tracking-[0.32em] uppercase accent">Editorial</span>
+    </div>
+
+    <div class="grid lg:grid-cols-12 gap-10 items-end">
+      <div class="lg:col-span-7">
+        <p class="body italic text-base mb-6">— A weekly dispatch from the dorm-room economy.</p>
+        <h1 class="display text-[clamp(3rem,7vw,6.5rem)] leading-[0.95]">
+          The quiet<br/><span class="accent italic">marketplace</span><br/>between classes.
+        </h1>
+        <div class="rule h-px w-24 mt-10 mb-6"></div>
+        <p class="body text-lg leading-relaxed max-w-xl">
+          Eight hundred listings circulate through campus this week — calculus textbooks marked in three colors, a desk lamp from a graduating senior, the bicycle that survived four winters. Each one a small story trading hands.
+        </p>
+        <div class="mt-10 flex items-center gap-6">
+          <a href="#" class="accent-bg px-7 py-4 body font-semibold tracking-wide">Read the listings →</a>
+          <a href="#" class="body italic underline underline-offset-4 decoration-1">Subscribe weekly</a>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5">
+        <div class="aspect-[4/5] ph-2 relative">
+          <div class="absolute inset-0 bg-[#1a1a1a]/10"></div>
+          <span class="absolute bottom-4 left-4 text-xs body italic text-[#f4ede1]">Photograph · K. Mendez · Quad, 11:14am</span>
+        </div>
+        <div class="mt-6 pull-quote">
+          <p class="display italic text-3xl leading-tight">A used calculator can outlast an entire degree — and three roommates.</p>
+          <p class="body text-sm mt-3">— Senior, Mechanical Engineering</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured listings strip -->
+    <div class="rule h-px mt-20 mb-8"></div>
+    <div class="flex items-baseline justify-between mb-8">
+      <h2 class="display text-3xl">This week, on the quad</h2>
+      <span class="body text-xs uppercase tracking-[0.3em]">Items 001 — 003</span>
+    </div>
+    <div class="grid md:grid-cols-3 gap-10">
+      <article>
+        <div class="aspect-[4/3] ph-3 mb-4"></div>
+        <p class="body text-xs uppercase tracking-[0.25em] accent mb-2">Textbooks · 01</p>
+        <h3 class="display text-2xl mb-2">Calculus, Stewart 9e — heavily annotated.</h3>
+        <p class="body text-sm leading-relaxed">Survived three semesters. Margins contain a complete proof of the chain rule. <span class="font-semibold">$32</span> · Maya R., Eng II</p>
+      </article>
+      <article>
+        <div class="aspect-[4/3] ph-4 mb-4"></div>
+        <p class="body text-xs uppercase tracking-[0.25em] accent mb-2">Furniture · 02</p>
+        <h3 class="display text-2xl mb-2">Brass desk lamp, gentle dent.</h3>
+        <p class="body text-sm leading-relaxed">Throws warm light onto thesis pages. The dent is structural character. <span class="font-semibold">$18</span> · Theo K., Lit IV</p>
+      </article>
+      <article>
+        <div class="aspect-[4/3] ph-1 mb-4"></div>
+        <p class="body text-xs uppercase tracking-[0.25em] accent mb-2">Electronics · 03</p>
+        <h3 class="display text-2xl mb-2">iPad Air — 64GB, with stylus.</h3>
+        <p class="body text-sm leading-relaxed">Notebooks digitized for two years, every lecture annotated. <span class="font-semibold">$340</span> · Aria L., Med I</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- SAMPLE 02 — BRUTALIST RAW  (Listings grid + filters)                    -->
+<!-- ====================================================================== -->
+<section id="s02" class="s02">
+  <div class="max-w-7xl mx-auto px-6 py-24">
+    <div class="flex items-center justify-between gap-4 mb-10 text-xs uppercase tracking-[0.18em]">
+      <span>// Sample_02 / brutalist_raw</span>
+      <span>System.OK · 2026-05-07 · 14:02</span>
+    </div>
+
+    <h1 class="display text-[clamp(3.5rem,9vw,8rem)]">
+      Buy/sell.<br/>No filler.<br/><span style="-webkit-text-stroke:2px #050505; color:transparent;">Just gear.</span>
+    </h1>
+
+    <div class="mt-10 flex flex-wrap gap-3">
+      <span class="tag bg-[#f2ff00]">All</span>
+      <span class="tag">Books</span>
+      <span class="tag">Electronics</span>
+      <span class="tag">Furniture</span>
+      <span class="tag">Sports</span>
+      <span class="tag">Bikes</span>
+      <span class="tag">Lab gear</span>
+      <span class="tag">Tickets</span>
+    </div>
+
+    <div class="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <article class="brut-card p-5">
+        <div class="aspect-square ph-5 mb-4 border-2 border-[#050505]"></div>
+        <div class="flex items-baseline justify-between gap-3">
+          <h3 class="display text-2xl">DELL XPS 13</h3>
+          <span class="display text-2xl">$420</span>
+        </div>
+        <p class="text-xs mt-3 leading-relaxed">i7 · 16GB RAM · 512SSD. Used 2 yrs. Batt 86%. CS major upgrading.</p>
+        <div class="mt-4 flex items-center justify-between">
+          <span class="tag">CS Quad</span>
+          <button class="brut-btn">Bid →</button>
+        </div>
+      </article>
+
+      <article class="brut-card p-5">
+        <div class="aspect-square ph-3 mb-4 border-2 border-[#050505]"></div>
+        <div class="flex items-baseline justify-between gap-3">
+          <h3 class="display text-2xl">ROAD BIKE</h3>
+          <span class="display text-2xl">$185</span>
+        </div>
+        <p class="text-xs mt-3 leading-relaxed">Trek 7.2FX · 56cm · steel frame · scratched but solid. Lock incl.</p>
+        <div class="mt-4 flex items-center justify-between">
+          <span class="tag">North dorms</span>
+          <button class="brut-btn">Bid →</button>
+        </div>
+      </article>
+
+      <article class="brut-card p-5">
+        <div class="aspect-square ph-2 mb-4 border-2 border-[#050505]"></div>
+        <div class="flex items-baseline justify-between gap-3">
+          <h3 class="display text-2xl">MINI FRIDGE</h3>
+          <span class="display text-2xl">$45</span>
+        </div>
+        <p class="text-xs mt-3 leading-relaxed">2.7 cu ft · cools fine · gentle hum. Graduating, must go this week.</p>
+        <div class="mt-4 flex items-center justify-between">
+          <span class="tag">Hill Hall</span>
+          <button class="brut-btn">Bid →</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="mt-16 border-t-2 border-[#050505] pt-6 flex items-center justify-between text-xs uppercase tracking-[0.18em]">
+      <span>Page 01 / 47</span>
+      <span>1,284 active · 38 new today</span>
+      <button class="brut-btn">Load 24 more →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- SAMPLE 03 — RISOGRAPH PRINT  (Seller profile)                           -->
+<!-- ====================================================================== -->
+<section id="s03" class="s03">
+  <div class="max-w-6xl mx-auto px-6 py-24">
+    <div class="flex items-center gap-4 mb-12">
+      <span class="body text-xs tracking-[0.3em] uppercase ink-blue">Vol. III · Issue 12</span>
+      <span class="h-px flex-1 ink-pink-bg"></span>
+      <span class="body text-xs tracking-[0.3em] uppercase ink-pink">Sample 03 — Riso</span>
+    </div>
+
+    <div class="grid md:grid-cols-12 gap-10">
+      <aside class="md:col-span-4">
+        <div class="aspect-square ph-2 duotone mb-6"></div>
+        <h1 class="display text-5xl leading-[0.95]" data-text="Maya Rivera" >Maya<br/><span class="ink-pink">Rivera.</span></h1>
+        <p class="body text-base mt-4 italic leading-snug">Engineering II. Sells well-loved textbooks &amp; the occasional bicycle.</p>
+        <div class="mt-6 flex flex-col gap-2 body text-sm">
+          <span><span class="ink-blue font-bold">42</span> items sold</span>
+          <span><span class="ink-blue font-bold">4.9★</span> across 38 reviews</span>
+          <span>On campus since <span class="ink-blue font-bold">Sep ’24</span></span>
+        </div>
+        <button class="ink-pink-bg mt-8 px-6 py-3 body font-semibold tracking-wide">Message Maya →</button>
+      </aside>
+
+      <div class="md:col-span-8">
+        <h2 class="display text-3xl mb-2 ink-blue">Currently on the shelf</h2>
+        <p class="body text-base italic mb-8">Six items. All meet at the library, weekday afternoons.</p>
+
+        <div class="grid grid-cols-2 gap-6">
+          <article class="ink-blue-bg p-5">
+            <div class="aspect-[4/3] bg-[#fff8e7] mb-4 ph-3 mix-blend-multiply"></div>
+            <h3 class="display text-xl">Stewart Calc 9e</h3>
+            <p class="body text-sm">Annotated. $32.</p>
+          </article>
+          <article class="ink-pink-bg p-5">
+            <div class="aspect-[4/3] bg-[#fff8e7] mb-4 ph-4 mix-blend-multiply"></div>
+            <h3 class="display text-xl">Linear Algebra</h3>
+            <p class="body text-sm">Lay 5e · $28.</p>
+          </article>
+          <article class="bg-[#fff8e7] p-5 border border-[#2a1d2c]">
+            <div class="aspect-[4/3] mb-4 ph-1 mix-blend-multiply"></div>
+            <h3 class="display text-xl ink-blue">TI-Nspire CX II</h3>
+            <p class="body text-sm">Loved. $58.</p>
+          </article>
+          <article class="bg-[#fff8e7] p-5 border border-[#2a1d2c]">
+            <div class="aspect-[4/3] mb-4 ph-2 mix-blend-multiply"></div>
+            <h3 class="display text-xl ink-pink">Bike helmet</h3>
+            <p class="body text-sm">Bell, M · $14.</p>
+          </article>
+        </div>
+
+        <div class="mt-8 p-5 border border-[#2a1d2c] flex items-center gap-4">
+          <span class="display text-3xl ink-blue">★ 4.9</span>
+          <p class="body italic text-base">“She walked to North dorms in the rain to drop off a book. I’m a customer for life.” — Theo, Lit IV</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- SAMPLE 04 — NEO-SWISS GRID  (Search results)                            -->
+<!-- ====================================================================== -->
+<section id="s04" class="s04">
+  <div class="max-w-7xl mx-auto px-6 py-24">
+    <div class="grid grid-cols-12 gap-6 items-start">
+      <div class="col-span-12 md:col-span-3">
+        <div class="swiss-num mb-3">04 / Search</div>
+        <div class="swiss-rule mb-6"></div>
+        <h1 class="display text-6xl leading-[0.92]">Search<br/>results.</h1>
+      </div>
+      <div class="col-span-12 md:col-span-9">
+        <p class="text-xl leading-relaxed max-w-2xl">Query <span class="mono swiss-accent">“calculus textbook”</span> returned <span class="mono">128 items</span> across <span class="mono">6 campuses</span>, sorted by proximity and freshness.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="swiss-pill">Sort · Nearest</span>
+          <span class="swiss-pill">Under $50</span>
+          <span class="swiss-pill">Posted ≤ 7d</span>
+          <span class="swiss-pill">+ Add filter</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-16">
+      <div class="grid grid-cols-12 gap-6 swiss-num pb-3 border-b border-[#050505]">
+        <span class="col-span-1">#</span>
+        <span class="col-span-5">Item</span>
+        <span class="col-span-2">Seller</span>
+        <span class="col-span-2">Distance</span>
+        <span class="col-span-1">Posted</span>
+        <span class="col-span-1 text-right">Price</span>
+      </div>
+
+      <a href="#" class="swiss-card grid grid-cols-12 gap-6 py-6 items-center group hover:bg-black hover:text-white transition-colors">
+        <span class="col-span-1 mono text-sm">001</span>
+        <div class="col-span-5">
+          <h3 class="display text-2xl">Stewart Calculus, 9e</h3>
+          <p class="text-sm opacity-70 mt-1">Hardcover · annotated · solution manual incl.</p>
+        </div>
+        <span class="col-span-2 mono text-sm">@maya_r</span>
+        <span class="col-span-2 mono text-sm">0.2 km · Quad</span>
+        <span class="col-span-1 mono text-sm">2d</span>
+        <span class="col-span-1 text-right display text-2xl swiss-accent">$32</span>
+      </a>
+
+      <a href="#" class="swiss-card grid grid-cols-12 gap-6 py-6 items-center group hover:bg-black hover:text-white transition-colors">
+        <span class="col-span-1 mono text-sm">002</span>
+        <div class="col-span-5">
+          <h3 class="display text-2xl">Thomas’ Calculus, 14e</h3>
+          <p class="text-sm opacity-70 mt-1">Paperback · clean · MyMathLab access used.</p>
+        </div>
+        <span class="col-span-2 mono text-sm">@theo_k</span>
+        <span class="col-span-2 mono text-sm">0.6 km · Hill Hall</span>
+        <span class="col-span-1 mono text-sm">5d</span>
+        <span class="col-span-1 text-right display text-2xl swiss-accent">$24</span>
+      </a>
+
+      <a href="#" class="swiss-card grid grid-cols-12 gap-6 py-6 items-center group hover:bg-black hover:text-white transition-colors">
+        <span class="col-span-1 mono text-sm">003</span>
+        <div class="col-span-5">
+          <h3 class="display text-2xl">Calc Early Transcendentals, 8e</h3>
+          <p class="text-sm opacity-70 mt-1">Bundle: textbook + study guide + flashcards.</p>
+        </div>
+        <span class="col-span-2 mono text-sm">@aria_l</span>
+        <span class="col-span-2 mono text-sm">1.1 km · Med campus</span>
+        <span class="col-span-1 mono text-sm">12h</span>
+        <span class="col-span-1 text-right display text-2xl swiss-accent">$45</span>
+      </a>
+
+      <a href="#" class="swiss-card grid grid-cols-12 gap-6 py-6 items-center border-b border-[#050505] hover:bg-black hover:text-white transition-colors">
+        <span class="col-span-1 mono text-sm">004</span>
+        <div class="col-span-5">
+          <h3 class="display text-2xl">Calculus, Spivak (4e)</h3>
+          <p class="text-sm opacity-70 mt-1">Hardcover · pristine · honors-track text.</p>
+        </div>
+        <span class="col-span-2 mono text-sm">@jin_h</span>
+        <span class="col-span-2 mono text-sm">0.4 km · Library</span>
+        <span class="col-span-1 mono text-sm">1d</span>
+        <span class="col-span-1 text-right display text-2xl swiss-accent">$72</span>
+      </a>
+    </div>
+
+    <div class="mt-10 flex items-center justify-between swiss-num">
+      <span>Showing 1–4 of 128</span>
+      <span class="flex gap-3"><span>← Prev</span><span class="swiss-accent">Page 01</span><span>Next →</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- SAMPLE 05 — SYNTHWAVE NIGHT DRIVE  (Saved items / wishlist)             -->
+<!-- ====================================================================== -->
+<section id="s05" class="s05">
+  <div class="max-w-7xl mx-auto px-6 pt-24 pb-32 relative">
+    <div class="grid-horizon absolute bottom-0 left-0 right-0 z-0"></div>
+    <div class="relative z-10">
+      <p class="body text-xs tracking-[0.4em] uppercase neon-cyan mb-6">// 05 · saved.items</p>
+      <h1 class="display text-[clamp(3rem,8vw,7rem)] leading-[0.95]">
+        <span class="neon-magenta">your</span><br/>
+        <span class="neon-cyan">wishlist</span><br/>
+        <span class="opacity-90">— after midnight.</span>
+      </h1>
+      <p class="body mt-6 max-w-xl text-lg opacity-90">12 items. 4 sellers. Average distance: <span class="neon-cyan font-semibold">0.7 km</span>. Average vibe: <span class="neon-magenta font-semibold">unhinged</span>.</p>
+
+      <div class="mt-14 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <article class="neon-card p-5 rounded-sm">
+          <div class="aspect-[4/3] ph-5 mb-5 rounded-sm"></div>
+          <p class="body text-[10px] tracking-[0.32em] uppercase neon-cyan mb-1">Electronics · 14 watching</p>
+          <h3 class="display text-2xl mb-2">macbook.air.m1</h3>
+          <p class="body text-sm opacity-85 leading-relaxed">2020 · 8GB · Space Gray · scuff on lid</p>
+          <div class="mt-5 flex items-center justify-between">
+            <span class="display text-3xl neon-magenta">$540</span>
+            <button class="neon-btn px-4 py-2 rounded-sm body text-sm">Notify ↗</button>
+          </div>
+        </article>
+
+        <article class="neon-card p-5 rounded-sm">
+          <div class="aspect-[4/3] ph-1 mb-5 rounded-sm"></div>
+          <p class="body text-[10px] tracking-[0.32em] uppercase neon-cyan mb-1">Audio · 6 watching</p>
+          <h3 class="display text-2xl mb-2">sony.wh-1000xm4</h3>
+          <p class="body text-sm opacity-85 leading-relaxed">noise cancelling · case incl · 92% batt</p>
+          <div class="mt-5 flex items-center justify-between">
+            <span class="display text-3xl neon-magenta">$148</span>
+            <button class="neon-btn px-4 py-2 rounded-sm body text-sm">Notify ↗</button>
+          </div>
+        </article>
+
+        <article class="neon-card p-5 rounded-sm">
+          <div class="aspect-[4/3] ph-2 mb-5 rounded-sm"></div>
+          <p class="body text-[10px] tracking-[0.32em] uppercase neon-cyan mb-1">Furniture · 2 watching</p>
+          <h3 class="display text-2xl mb-2">neon.desk.lamp</h3>
+          <p class="body text-sm opacity-85 leading-relaxed">retro chrome · warm bulb · works late</p>
+          <div class="mt-5 flex items-center justify-between">
+            <span class="display text-3xl neon-magenta">$38</span>
+            <button class="neon-btn px-4 py-2 rounded-sm body text-sm">Notify ↗</button>
+          </div>
+        </article>
+      </div>
+
+      <div class="mt-14 flex items-center justify-between body text-sm opacity-80">
+        <span>// auto-bid enabled on 3 items</span>
+        <span class="neon-cyan">drive.safe ↘</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- SAMPLE 06 — BOTANICAL APOTHECARY  (Categories)                          -->
+<!-- ====================================================================== -->
+<section id="s06" class="s06">
+  <div class="max-w-6xl mx-auto px-6 py-24">
+    <div class="text-center mb-16">
+      <p class="label sage mb-4">Vol. VI · A Compendium · Sample 06</p>
+      <h1 class="display text-[clamp(3rem,7vw,6rem)] leading-[1]">Categories of the<br/><span class="terracotta">Campus Apothecary</span></h1>
+      <div class="flex items-center justify-center gap-3 mt-6">
+        <span class="h-px w-16 bg-[#2c2a22]"></span>
+        <span class="specimen-no sage">Specimen index — established autumn ’26</span>
+        <span class="h-px w-16 bg-[#2c2a22]"></span>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-10">
+      <article class="apothecary-card text-center">
+        <p class="specimen-no sage mb-3">Spec. № 001</p>
+        <div class="display text-5xl mb-1 sage">Libri</div>
+        <p class="label terracotta mb-5">— Books &amp; Texts —</p>
+        <div class="aspect-square ph-4 mb-5 mix-blend-multiply"></div>
+        <p class="body italic text-base leading-relaxed">A collection of well-thumbed volumes. Calculus, philosophy, Russian poetry. Each margin a small confession.</p>
+        <p class="body text-sm mt-4 sage">312 specimens currently catalogued.</p>
+      </article>
+
+      <article class="apothecary-card text-center">
+        <p class="specimen-no sage mb-3">Spec. № 002</p>
+        <div class="display text-5xl mb-1 sage">Machinæ</div>
+        <p class="label terracotta mb-5">— Electronics —</p>
+        <div class="aspect-square ph-1 mb-5 mix-blend-multiply"></div>
+        <p class="body italic text-base leading-relaxed">Devices entrusted to second hands. Tablets, calculators, the dependable lamp. Some still warm from a previous owner.</p>
+        <p class="body text-sm mt-4 sage">198 specimens currently catalogued.</p>
+      </article>
+
+      <article class="apothecary-card text-center">
+        <p class="specimen-no sage mb-3">Spec. № 003</p>
+        <div class="display text-5xl mb-1 sage">Vehicula</div>
+        <p class="label terracotta mb-5">— Bicycles &amp; Movement —</p>
+        <div class="aspect-square ph-3 mb-5 mix-blend-multiply"></div>
+        <p class="body italic text-base leading-relaxed">Wheels, frames, helmets. Companions to early classes and late returns. Patina honestly earned.</p>
+        <p class="body text-sm mt-4 sage">87 specimens currently catalogued.</p>
+      </article>
+    </div>
+
+    <div class="mt-16 text-center">
+      <a href="#" class="sage-bg inline-block px-8 py-4 label">Browse the full compendium →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- SAMPLE 07 — MEMPHIS PLAYFUL  (Onboarding)                               -->
+<!-- ====================================================================== -->
+<section id="s07" class="s07">
+  <!-- decorative shapes -->
+  <div class="absolute top-20 right-10 w-32 h-32 blob1 rounded-full opacity-90"></div>
+  <div class="absolute bottom-32 left-10 w-24 h-24 blob2" style="clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);"></div>
+  <svg class="absolute top-1/3 right-1/4 w-32 opacity-90" viewBox="0 0 100 30"><path class="squiggle" d="M2 15 Q 12 2, 22 15 T 42 15 T 62 15 T 82 15 T 98 15"/></svg>
+  <div class="absolute top-40 left-1/3 w-12 h-12 dot-pattern"></div>
+  <div class="absolute bottom-20 right-1/4 w-20 h-20" style="background:#18181b; clip-path:polygon(50% 0,100% 100%,0 100%);"></div>
+
+  <div class="max-w-6xl mx-auto px-6 py-24 relative z-10">
+    <p class="body text-sm uppercase font-bold tracking-[0.18em] mb-6">→ 07 · sign me up!</p>
+    <h1 class="display text-[clamp(3.5rem,8vw,7rem)] leading-[0.92]">
+      Hey<br/>new<br/><span style="color:#ff3ca0;">friend.</span>
+    </h1>
+    <p class="body text-xl mt-6 max-w-md leading-relaxed">Three things and you’re in. Nobody’s gatekeeping the dorm-room economy.</p>
+
+    <div class="mt-14 grid lg:grid-cols-2 gap-10">
+      <div class="memphis-card p-8">
+        <div class="flex items-center justify-between mb-6">
+          <span class="display text-2xl">Step 1 / 3</span>
+          <span class="flex gap-1.5">
+            <span class="w-3 h-3 rounded-full" style="background:#ff3ca0;"></span>
+            <span class="w-3 h-3 rounded-full bg-[#18181b]/15"></span>
+            <span class="w-3 h-3 rounded-full bg-[#18181b]/15"></span>
+          </span>
+        </div>
+        <h2 class="display text-3xl mb-2">What do they call you?</h2>
+        <p class="body text-base mb-6">Real name or nickname — your sellers see this.</p>
+
+        <label class="block body font-semibold mb-2">First name</label>
+        <input class="w-full border-3 border-[#18181b] rounded-2xl px-5 py-3 body text-lg mb-5 focus:outline-none focus:translate-x-[-2px] focus:translate-y-[-2px] transition-transform" placeholder="Maya" style="border-width:3px;" />
+
+        <label class="block body font-semibold mb-2">Campus email</label>
+        <input class="w-full border-3 border-[#18181b] rounded-2xl px-5 py-3 body text-lg mb-7 focus:outline-none focus:translate-x-[-2px] focus:translate-y-[-2px] transition-transform" placeholder="maya@university.edu" style="border-width:3px;" />
+
+        <div class="flex items-center justify-between">
+          <a href="#" class="body underline underline-offset-4 font-semibold">← Back</a>
+          <button class="memphis-btn">Next step →</button>
+        </div>
+      </div>
+
+      <div class="memphis-card p-8 lg:translate-y-8" style="background:#1fbfb8; color:#18181b;">
+        <span class="display text-2xl">Why bother?</span>
+        <ul class="body text-lg space-y-4 mt-6 leading-snug">
+          <li>★ Free for students with a campus email.</li>
+          <li>★ Meet at the library — no shipping nightmares.</li>
+          <li>★ Average response under 11 minutes.</li>
+          <li>★ 0% commission. Seriously.</li>
+        </ul>
+        <div class="memphis-card p-4 mt-8" style="background:#fff8ef;">
+          <p class="body italic">“I sold a calc textbook before lunch.” <span class="font-bold">— Maya R.</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- SAMPLE 08 — CINEMATIC NOIR  (Item detail)                               -->
+<!-- ====================================================================== -->
+<section id="s08" class="s08">
+  <div class="max-w-6xl mx-auto px-6 py-24">
+    <p class="small-caps brass mb-6">— Sample 08 · The Item File —</p>
+
+    <div class="grid lg:grid-cols-12 gap-12 items-start">
+      <div class="lg:col-span-7">
+        <div class="aspect-[4/5] ph-5 mb-6 noir-card overflow-hidden relative">
+          <div class="absolute inset-0" style="background: radial-gradient(circle at 30% 30%, transparent 30%, rgba(0,0,0,0.55) 80%);"></div>
+        </div>
+        <div class="flex gap-3">
+          <div class="w-20 h-20 ph-2 noir-card"></div>
+          <div class="w-20 h-20 ph-3 noir-card"></div>
+          <div class="w-20 h-20 ph-1 noir-card"></div>
+          <div class="w-20 h-20 ph-4 noir-card"></div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-5">
+        <p class="small-caps brass">Listing № 0742 · Filed 2 days ago</p>
+        <h1 class="display text-[clamp(2.5rem,5vw,4.5rem)] leading-[1.05] mt-3">The MacBook<br/>Air, M1.</h1>
+        <p class="body italic text-xl mt-4 opacity-90">— A laptop with stories it will never tell you about.</p>
+
+        <div class="brass-rule my-8"></div>
+
+        <p class="body text-lg leading-relaxed">Two-year veteran of late-night essays, four moves between dormitories, and one questionable cup of coffee that left no permanent damage. Battery health, <span class="brass">87%</span>. Lid scuff, <span class="brass">honest</span>. Charger included.</p>
+
+        <dl class="grid grid-cols-2 gap-y-4 mt-8 body">
+          <dt class="small-caps brass">Year</dt><dd class="text-lg">2020</dd>
+          <dt class="small-caps brass">Storage</dt><dd class="text-lg">256 GB · SSD</dd>
+          <dt class="small-caps brass">Memory</dt><dd class="text-lg">8 GB</dd>
+          <dt class="small-caps brass">Seller</dt><dd class="text-lg">@theo_k · Lit IV</dd>
+        </dl>
+
+        <div class="brass-rule my-8"></div>
+
+        <div class="flex items-baseline justify-between">
+          <div>
+            <p class="small-caps brass">Asking</p>
+            <p class="display text-5xl mt-1 brass">$540</p>
+          </div>
+          <button class="noir-btn">Begin offer</button>
+        </div>
+
+        <p class="body italic text-sm mt-6 opacity-75">— Available for collection at the library, weekday afternoons. The seller does not negotiate by message after dark.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- SAMPLE 09 — ARCHITECTURAL BLUEPRINT  (Order tracking)                   -->
+<!-- ====================================================================== -->
+<section id="s09" class="s09">
+  <div class="max-w-6xl mx-auto px-6 py-24">
+    <div class="flex items-center gap-4 mb-12 text-xs tracking-[0.18em] uppercase opacity-80">
+      <span>09 · order_state.bp</span>
+      <span class="blue-rule h-px flex-1"></span>
+      <span>Rev. 2026-05-07</span>
+    </div>
+
+    <h1 class="display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95]">order_<br/>0742.<br/><span style="color:#ffd166;">in_transit</span></h1>
+    <p class="text-base mt-6 opacity-85 max-w-xl">Tracking specification for transaction between buyer <span class="bp-tag">@aria_l</span> and seller <span class="bp-tag">@theo_k</span> — all measurements approximate, all deadlines firm.</p>
+
+    <!-- Blueprint diagram -->
+    <div class="mt-14 grid grid-cols-4 gap-6 relative">
+      <div class="bp-card text-center">
+        <div class="bp-marker text-xs uppercase tracking-[0.18em] mb-3 justify-center">Step.01</div>
+        <div class="display text-2xl mb-2">listed</div>
+        <p class="text-xs opacity-80 leading-relaxed">Posted to marketplace · 2026-05-04 09:12</p>
+        <p class="bp-tag mt-4 inline-block" style="border-color:#ffd166; color:#ffd166;">DONE</p>
+      </div>
+      <div class="bp-card text-center">
+        <div class="bp-marker text-xs uppercase tracking-[0.18em] mb-3 justify-center">Step.02</div>
+        <div class="display text-2xl mb-2">offer.accepted</div>
+        <p class="text-xs opacity-80 leading-relaxed">Buyer signed · escrow held · 2026-05-05 18:44</p>
+        <p class="bp-tag mt-4 inline-block" style="border-color:#ffd166; color:#ffd166;">DONE</p>
+      </div>
+      <div class="bp-card text-center" style="border-style:solid; border-color:#ffd166;">
+        <div class="bp-marker text-xs uppercase tracking-[0.18em] mb-3 justify-center" style="color:#ffd166;">Step.03</div>
+        <div class="display text-2xl mb-2" style="color:#ffd166;">handoff</div>
+        <p class="text-xs opacity-90 leading-relaxed">Library · Floor 02 · table by the window. Tomorrow, 16:00.</p>
+        <p class="bp-tag mt-4 inline-block" style="border-color:#ffd166; color:#ffd166;">ACTIVE</p>
+      </div>
+      <div class="bp-card text-center opacity-50">
+        <div class="bp-marker text-xs uppercase tracking-[0.18em] mb-3 justify-center">Step.04</div>
+        <div class="display text-2xl mb-2">complete</div>
+        <p class="text-xs opacity-80 leading-relaxed">Both parties confirm · escrow releases.</p>
+        <p class="bp-tag mt-4 inline-block">QUEUED</p>
+      </div>
+    </div>
+
+    <div class="measure mt-10">handoff window — t-minus 22h 41m</div>
+
+    <!-- Spec sheet -->
+    <div class="mt-14 grid md:grid-cols-2 gap-6">
+      <div class="bp-card">
+        <p class="text-xs uppercase tracking-[0.2em] opacity-75 mb-3">// item.spec</p>
+        <ul class="text-sm space-y-2 leading-relaxed">
+          <li><span class="opacity-60">item________________</span> macbook.air.m1</li>
+          <li><span class="opacity-60">condition___________</span> 87%_battery / lid_scuff</li>
+          <li><span class="opacity-60">price_______________</span> $540.00 · escrow_held</li>
+          <li><span class="opacity-60">incl________________</span> charger / sleeve</li>
+        </ul>
+      </div>
+      <div class="bp-card">
+        <p class="text-xs uppercase tracking-[0.2em] opacity-75 mb-3">// rendezvous</p>
+        <ul class="text-sm space-y-2 leading-relaxed">
+          <li><span class="opacity-60">location____________</span> library / floor 02</li>
+          <li><span class="opacity-60">coords______________</span> 41.31°N · 72.92°W</li>
+          <li><span class="opacity-60">date________________</span> 2026-05-08 16:00</li>
+          <li><span class="opacity-60">passphrase__________</span> “stewart, ninth edition”</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-10 flex items-center gap-4">
+      <button class="bp-tag" style="border-color:#ffd166; color:#ffd166; padding:.5rem 1rem;">Confirm pickup →</button>
+      <button class="bp-tag" style="padding:.5rem 1rem;">Reschedule</button>
+      <button class="bp-tag" style="padding:.5rem 1rem;">Open chat</button>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- SAMPLE 10 — DESERT MODERN  (Messages / chat)                            -->
+<!-- ====================================================================== -->
+<section id="s10" class="s10">
+  <div class="absolute top-12 right-12 w-48 h-48 sun rounded-full opacity-90"></div>
+
+  <div class="max-w-6xl mx-auto px-6 py-24 relative">
+    <p class="body text-xs tracking-[0.32em] uppercase clay mb-6">10 · Messages</p>
+    <h1 class="display text-[clamp(3rem,7vw,6rem)] leading-[0.95]">Slow mornings,<br/><span class="clay italic">fast deals.</span></h1>
+    <p class="body text-lg mt-5 max-w-xl leading-relaxed">Six conversations open. Sun is in the window. Coffee is cooling. A textbook is meeting its second owner at 4pm.</p>
+
+    <div class="horizon-rule mt-12 mb-12"></div>
+
+    <div class="grid md:grid-cols-12 gap-6">
+      <!-- Chat list -->
+      <aside class="md:col-span-4 desert-card p-6">
+        <div class="flex items-center justify-between mb-5">
+          <span class="display text-xl">Inbox</span>
+          <span class="body text-xs uppercase tracking-[0.2em] clay">6 open</span>
+        </div>
+        <ul class="space-y-1">
+          <li class="p-3 clay-bg flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full ph-2 border border-[#3a2f24]"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-baseline">
+                <span class="body font-semibold">Theo K.</span>
+                <span class="body text-xs opacity-80">14:02</span>
+              </div>
+              <p class="body text-sm truncate opacity-90">Library, 4pm works for me — see you by the window.</p>
+            </div>
+          </li>
+          <li class="p-3 hover:bg-[#e6a075]/40 transition-colors flex items-center gap-3 rounded-sm">
+            <div class="w-10 h-10 rounded-full ph-3 border border-[#3a2f24]"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-baseline">
+                <span class="body font-semibold">Maya R.</span>
+                <span class="body text-xs opacity-60">12:48</span>
+              </div>
+              <p class="body text-sm truncate opacity-80">Calc bundle still available?</p>
+            </div>
+          </li>
+          <li class="p-3 hover:bg-[#e6a075]/40 transition-colors flex items-center gap-3 rounded-sm">
+            <div class="w-10 h-10 rounded-full ph-1 border border-[#3a2f24]"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-baseline">
+                <span class="body font-semibold">Aria L.</span>
+                <span class="body text-xs opacity-60">11:21</span>
+              </div>
+              <p class="body text-sm truncate opacity-80">Could you ship to the med campus?</p>
+            </div>
+          </li>
+          <li class="p-3 hover:bg-[#e6a075]/40 transition-colors flex items-center gap-3 rounded-sm">
+            <div class="w-10 h-10 rounded-full ph-4 border border-[#3a2f24]"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-baseline">
+                <span class="body font-semibold">Jin H.</span>
+                <span class="body text-xs opacity-60">Yesterday</span>
+              </div>
+              <p class="body text-sm truncate opacity-80">Spivak — would $65 work?</p>
+            </div>
+          </li>
+        </ul>
+      </aside>
+
+      <!-- Chat thread -->
+      <article class="md:col-span-8 desert-card p-8">
+        <div class="flex items-center gap-4 pb-4 border-b border-[#3a2f24]/30">
+          <div class="w-12 h-12 rounded-full ph-2 border border-[#3a2f24]"></div>
+          <div>
+            <p class="display text-2xl">Theo K.</p>
+            <p class="body text-xs uppercase tracking-[0.2em] clay">— MacBook Air · $540 · in escrow</p>
+          </div>
+          <div class="ml-auto flex gap-2">
+            <button class="desert-btn text-xs">Confirm pickup</button>
+          </div>
+        </div>
+
+        <div class="py-6 space-y-5">
+          <div class="text-center body text-xs uppercase tracking-[0.32em] opacity-60">— Today —</div>
+
+          <div class="max-w-[75%]">
+            <div class="terracotta-bg p-4 rounded-md rounded-tl-none body">Hi! Is the MacBook still available? I’m on the lit campus.</div>
+            <p class="body text-xs opacity-60 mt-1">Aria · 13:42</p>
+          </div>
+
+          <div class="max-w-[75%] ml-auto text-right">
+            <div class="clay-bg p-4 rounded-md rounded-tr-none body inline-block text-left">Yep. I can meet at the library — Floor 2, table by the window. 4pm tomorrow?</div>
+            <p class="body text-xs opacity-60 mt-1">Theo · 13:51</p>
+          </div>
+
+          <div class="max-w-[75%]">
+            <div class="terracotta-bg p-4 rounded-md rounded-tl-none body">Library, 4pm works for me — see you by the window. Bringing cash.</div>
+            <p class="body text-xs opacity-60 mt-1">Aria · 14:02</p>
+          </div>
+        </div>
+
+        <form class="pt-4 border-t border-[#3a2f24]/30 flex gap-3 items-center">
+          <input class="flex-1 bg-transparent border border-[#3a2f24] rounded-full px-5 py-3 body focus:outline-none focus:border-[#c47148]" placeholder="Write something kind…" />
+          <button class="desert-btn rounded-full">Send →</button>
+        </form>
+      </article>
+    </div>
+
+    <div class="horizon-rule mt-16"></div>
+    <p class="body text-center text-sm mt-6 italic opacity-80">— end of the marketplace, for now —</p>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- FOOTER                                                                   -->
+<!-- ====================================================================== -->
+<footer class="bg-[#111] text-[#faf7f2] py-10">
+  <div class="max-w-7xl mx-auto px-6 flex flex-wrap items-center justify-between gap-4">
+    <span style="font-family:'Playfair Display',serif;" class="text-xl italic">CampusMart · 10 surfaces explored</span>
+    <span style="font-family:'JetBrains Mono',monospace;" class="text-xs tracking-[0.2em] uppercase opacity-60">Designed with bencium · 2026</span>
+  </div>
+</footer>
+
+</body>
+</html>

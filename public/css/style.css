@@ -237,3 +237,138 @@ main {
         font-size: 1.25rem;
     }
 }
+
+/* ============================================================== */
+/* CampusMart 2026 design tokens — admin & legacy polish           */
+/* Layered on top of Bootstrap. Scoped to old Bootstrap atoms only. */
+/* New components use .cm-* selectors and are not affected here.   */
+/* ============================================================== */
+:root {
+    --cm-primary:   #7C3AED;
+    --cm-secondary: #A78BFA;
+    --cm-cta:       #22C55E;
+    --cm-bg:        #FAF5FF;
+    --cm-text:      #4C1D95;
+    --cm-ink:       #1F1147;
+    --cm-muted:     #6B5B95;
+    --cm-border:    #E9D5FF;
+}
+
+/* Admin / legacy Bootstrap card polish — scoped to .card not having .cm-card-* on it */
+.card:not([class*="cm-"]) {
+    border: 1px solid var(--cm-border);
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px -10px rgba(124, 58, 237, 0.12);
+}
+.card:not([class*="cm-"]):hover {
+    transform: none;
+    box-shadow: 0 8px 28px -14px rgba(124, 58, 237, 0.22) !important;
+    border-color: rgba(124, 58, 237, 0.25);
+}
+.card-header.bg-primary  { background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%) !important; border-bottom: none; }
+.card-header.bg-success  { background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%) !important; border-bottom: none; }
+.card-header.bg-warning  { background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important; border-bottom: none; color: #fff !important; }
+.card-header.bg-dark     { background: linear-gradient(135deg, #1F1147 0%, #4C1D95 100%) !important; border-bottom: none; }
+
+/* Buttons — keep Bootstrap behaviour, retune palette */
+.btn-primary  { background: var(--cm-primary) !important; border-color: var(--cm-primary) !important; }
+.btn-primary:hover, .btn-primary:focus { background: #6D28D9 !important; border-color: #6D28D9 !important; }
+.btn-success  { background: var(--cm-cta) !important; border-color: var(--cm-cta) !important; }
+.btn-success:hover, .btn-success:focus { background: #16A34A !important; border-color: #16A34A !important; }
+.btn-outline-primary { color: var(--cm-primary) !important; border-color: var(--cm-primary) !important; }
+.btn-outline-primary:hover { background: var(--cm-primary) !important; color: white !important; border-color: var(--cm-primary) !important; }
+
+/* Tables — quieter zebra, rounded corners on the wrapper */
+.table thead.table-light th {
+    background: var(--cm-bg) !important;
+    color: var(--cm-text) !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 12px;
+    border-bottom: 1px solid var(--cm-border) !important;
+}
+.table th, .table td {
+    padding: 12px 14px !important;
+    border-color: var(--cm-border) !important;
+    vertical-align: middle;
+}
+.table-responsive { border-radius: 14px; overflow: hidden; }
+
+/* Bootstrap badges → use new accents */
+.badge.bg-primary { background-color: var(--cm-primary) !important; }
+.badge.bg-success { background-color: var(--cm-cta) !important; }
+.badge.bg-info    { background-color: #3B82F6 !important; }
+
+/* Dropdown menu skin (used in navbar) */
+.dropdown-menu {
+    border: 1px solid var(--cm-border) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 12px 32px -12px rgba(124, 58, 237, 0.25) !important;
+    padding: 8px !important;
+}
+.dropdown-item {
+    border-radius: 10px !important;
+    padding: 9px 12px !important;
+    font-weight: 500;
+    color: var(--cm-text) !important;
+}
+.dropdown-item:hover, .dropdown-item:focus {
+    background: var(--cm-bg) !important;
+    color: var(--cm-primary) !important;
+}
+.dropdown-divider { border-color: var(--cm-border) !important; }
+
+/* Bootstrap alerts → softer corners + brand colour */
+.alert { border-radius: 14px !important; border: 1px solid transparent; }
+.alert-info {
+    background: linear-gradient(90deg, #DBEAFE, #EDE9FE) !important;
+    color: #1E40AF !important;
+    border-color: rgba(59, 130, 246, 0.2) !important;
+}
+.alert-warning {
+    background: linear-gradient(90deg, #FEF3C7, #FFFBEB) !important;
+    color: #92400E !important;
+    border-color: rgba(245, 158, 11, 0.2) !important;
+}
+
+/* Modal polish (legacy Bootstrap modals) */
+.modal-content { border-radius: 22px !important; border: 1px solid var(--cm-border) !important; overflow: hidden; }
+.modal-header { background: linear-gradient(135deg, #FAF5FF, #F0FDF4); border-bottom: 1px solid var(--cm-border) !important; }
+
+/* Re-tune the legacy navbar gradient out so the new glass nav owns it */
+.navbar { background: transparent !important; box-shadow: none !important; backdrop-filter: none !important; }
+.navbar-brand { color: var(--cm-text) !important; }
+
+/* Bootstrap form-control polish (used in admin / legacy modals) */
+.form-control, .form-select {
+    border-color: var(--cm-border) !important;
+    border-radius: 12px !important;
+    transition: border-color .2s, box-shadow .2s;
+}
+.form-control:focus, .form-select:focus {
+    border-color: var(--cm-primary) !important;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12) !important;
+}
+.form-label { font-weight: 600; color: var(--cm-text); }
+
+/* Pills nav (admin tabs) */
+.nav-pills .nav-link {
+    color: var(--cm-text) !important;
+    border-radius: 10px !important;
+    font-weight: 600;
+}
+.nav-pills .nav-link.active {
+    background: var(--cm-primary) !important;
+    color: white !important;
+}
+
+/* Reduced motion: respect user preference */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+    }
+}
+
+}

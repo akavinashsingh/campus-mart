@@ -1,56 +1,76 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card shadow-lg border-0">
-                <div class="card-header bg-primary text-white text-center py-3">
-                    <h3 class="mb-0"><i class="fas fa-user-plus me-2"></i>Join CampusMart</h3>
+<%- include("../includes/_auth-styles") %>
+
+<section class="cm-auth">
+    <div class="cm-auth-grid">
+        <aside class="cm-auth-brand" aria-hidden="true">
+            <div class="cm-blob absolute" style="top:-100px; left:-60px; width:340px; height:340px; border-radius:50%; background:#22C55E;"></div>
+            <div class="cm-blob absolute" style="bottom:-80px; right:-40px; width:300px; height:300px; border-radius:50%; background:#A78BFA;"></div>
+            <div class="cm-auth-brand-inner">
+                <a href="/products" class="cm-auth-brand-logo">
+                    <span class="cm-brand-mark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg>
+                    </span>
+                    <span>CampusMart</span>
+                </a>
+                <h2 class="cm-auth-tagline">Join the campus marketplace.</h2>
+                <p class="cm-auth-subtagline">It takes 30 seconds. List your first item the same day.</p>
+                <ul class="cm-auth-bullets">
+                    <li><span>Free forever — no commissions</span></li>
+                    <li><span>Verified students only</span></li>
+                    <li><span>Built-in chat &amp; offers</span></li>
+                </ul>
+            </div>
+        </aside>
+
+        <div class="cm-auth-form-wrap">
+            <div class="cm-auth-card">
+                <div class="cm-auth-card-head">
+                    <h1 class="font-display text-3xl font-bold text-cm-text">Create account</h1>
+                    <p class="text-cm-text/65 mt-1">Sign up with your college email.</p>
                 </div>
-                <div class="card-body p-4">
-                    <form action="/signup" method="POST" class="needs-validation" novalidate>
-                        <div class="mb-3">
-                            <label for="fullName" class="form-label">Full Name</label>
-                            <input name="fullName" type="text" id="fullName" class="form-control" placeholder="e.g. John Doe" required />
-                            <div class="invalid-feedback">Please enter your full name.</div>
-                        </div>
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">College Email</label>
-                            <input name="email" type="email" id="email" class="form-control" placeholder="name@college.edu" required />
-                        </div>
+                <form action="/signup" method="POST" class="space-y-4 needs-validation" novalidate>
+                    <div>
+                        <label class="cm-label" for="fullName">Full name</label>
+                        <input id="fullName" name="fullName" type="text" class="cm-input" placeholder="e.g. John Doe" autocomplete="name" required />
+                    </div>
+                    <div>
+                        <label class="cm-label" for="email">College email</label>
+                        <input id="email" name="email" type="email" class="cm-input" placeholder="name@college.edu" autocomplete="email" required />
+                    </div>
+                    <div>
+                        <label class="cm-label" for="college">College / University</label>
+                        <input id="college" name="college" type="text" class="cm-input" placeholder="Your college name" required />
+                    </div>
+                    <div>
+                        <label class="cm-label" for="phone">Phone</label>
+                        <input id="phone" name="phone" type="tel" class="cm-input" placeholder="So buyers can reach you" autocomplete="tel" required />
+                    </div>
+                    <div>
+                        <label class="cm-label" for="password">Password</label>
+                        <input id="password" name="password" type="password" class="cm-input" autocomplete="new-password" minlength="6" required />
+                        <p class="text-xs text-cm-text/55 mt-1">At least 6 characters.</p>
+                    </div>
+                    <button class="cm-btn-action cm-btn-action-primary w-full">
+                        Create account
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 5 7 7-7 7"/><path d="M5 12h14"/></svg>
+                    </button>
+                </form>
 
-                        <div class="mb-3">
-                            <label for="college" class="form-label">College/University</label>
-                            <input name="college" type="text" id="college" class="form-control" placeholder="Enter your college name" required />
-                        </div>
+                <div class="cm-auth-divider"><span>or</span></div>
 
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone Number</label>
-                            <input name="phone" type="text" id="phone" class="form-control" placeholder="For buyers to contact you" required />
-                        </div>
+                <p class="text-center text-sm text-cm-text/70">
+                    Already a member?
+                    <a href="/login" class="font-semibold text-cm-primary hover:underline">Login</a>
+                </p>
 
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input name="password" type="password" id="password" class="form-control" required />
-                        </div>
-
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-primary btn-lg">Sign Up</button>
-                        </div>
-                    </form>
-                    <hr>
-                    <p class="text-center mb-0">Already have an account? <a href="/login" class="text-decoration-none">Login</a></p>
-                </div>
-                <div class="card-footer bg-light p-3">
-                    <small class="d-block text-center text-muted mb-2">Questions about signing up?</small>
-                    <p class="text-center mb-0">
-                        <a href="mailto:23uj1a0504@mrem.ac.in?subject=Signup Help" class="text-decoration-none btn btn-sm btn-outline-primary w-100">
-                            <i class="fas fa-envelope me-1"></i>Contact Support
-                        </a>
-                    </p>
+                <div class="cm-auth-support">
+                    <span>Need help?</span>
+                    <a href="mailto:23uj1a0504@mrem.ac.in?subject=Signup Help">Contact support</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>

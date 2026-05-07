@@ -1,32 +1,61 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6 col-lg-5">
-        <div class="card shadow">
-            <div class="card-header bg-dark text-white">
-                <h4 class="mb-0"><i class="fas fa-shield-alt me-2"></i>Admin Login</h4>
+<%- include("../includes/_auth-styles") %>
+
+<section class="cm-auth">
+    <div class="cm-auth-grid">
+        <aside class="cm-auth-brand cm-auth-brand-admin" aria-hidden="true">
+            <div class="cm-blob absolute" style="top:-100px; left:-60px; width:340px; height:340px; border-radius:50%; background:#1F1147;"></div>
+            <div class="cm-blob absolute" style="bottom:-80px; right:-40px; width:300px; height:300px; border-radius:50%; background:#7C3AED;"></div>
+            <div class="cm-auth-brand-inner">
+                <a href="/admin" class="cm-auth-brand-logo">
+                    <span class="cm-brand-mark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+                    </span>
+                    <span>Admin Console</span>
+                </a>
+                <h2 class="cm-auth-tagline">Restricted area.</h2>
+                <p class="cm-auth-subtagline">Sign in with your administrator credentials to manage users, listings and contact activity.</p>
+                <ul class="cm-auth-bullets">
+                    <li><span>All actions are audit-logged</span></li>
+                    <li><span>Live notifications on new contacts</span></li>
+                </ul>
             </div>
-            <div class="card-body">
-                <form action="/admin/login" method="POST">
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" required>
+        </aside>
+
+        <div class="cm-auth-form-wrap">
+            <div class="cm-auth-card">
+                <div class="cm-auth-card-head">
+                    <h1 class="font-display text-3xl font-bold text-cm-text">Admin login</h1>
+                    <p class="text-cm-text/65 mt-1">Authorized personnel only.</p>
+                </div>
+
+                <form action="/admin/login" method="POST" class="space-y-4">
+                    <div>
+                        <label class="cm-label" for="email">Email</label>
+                        <input id="email" name="email" type="email" class="cm-input" required autocomplete="email" />
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" required>
+                    <div>
+                        <label class="cm-label" for="password">Password</label>
+                        <input id="password" name="password" type="password" class="cm-input" required autocomplete="current-password" />
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">Sign in</button>
+                    <button type="submit" class="cm-btn-action cm-btn-action-primary w-full">
+                        Sign in
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg>
+                    </button>
                 </form>
-            </div>
-            <div class="card-footer bg-light p-3">
-                <small class="d-block text-center text-muted mb-2">Admin access issue?</small>
-                <p class="text-center mb-0">
-                    <a href="mailto:23uj1a0504@mrem.ac.in?subject=Admin Access Issue" class="text-decoration-none btn btn-sm btn-outline-secondary w-100">
-                        <i class="fas fa-envelope me-1"></i>Contact Support
-                    </a>
-                </p>
+
+                <div class="cm-auth-support">
+                    <span>Access issue?</span>
+                    <a href="mailto:23uj1a0504@mrem.ac.in?subject=Admin Access Issue">Contact support</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<style>
+    .cm-auth-brand-admin {
+        background: linear-gradient(135deg, #0F0729 0%, #1F1147 50%, #4C1D95 100%) !important;
+    }
+</style>

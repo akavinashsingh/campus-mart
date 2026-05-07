@@ -1,141 +1,131 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="container mt-4">
-    <!-- User Profile Header -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-auto">
-                    <% if(profileUser.profileImage && profileUser.profileImage.url) { %>
-                        <img src="<%= profileUser.profileImage.url %>" 
-                             class="rounded-circle border" 
-                             width="100" height="100" 
-                             style="object-fit: cover;"
-                             alt="<%= profileUser.fullName %>">
-                    <% } else { %>
-                        <div class="rounded-circle d-flex align-items-center justify-content-center border" 
-                             style="width: 100px; height: 100px; background: <%= profileUser.profileColor || '#667eea' %>;">
-                            <span class="text-white fw-bold" style="font-size: 48px;">
-                                <%= profileUser.fullName.charAt(0).toUpperCase() %>
-                            </span>
-                        </div>
-                    <% } %>
-                </div>
-                <div class="col">
-                    <h3 class="mb-1"><%= profileUser.fullName %></h3>
-                    <p class="text-muted mb-2">
-                        <i class="fas fa-university me-2"></i><%= profileUser.college %>
-                    </p>
-                    <p class="text-muted mb-2">
-                        <i class="fas fa-calendar me-2"></i>Member since <%= new Date(profileUser.createdAt).toLocaleDateString('en-IN', { month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' }) %>
-                    </p>
-                    <div class="mt-2">
-                        <span class="badge bg-info">
-                            <i class="fas fa-comments"></i> <%= profileUser.totalComments %> Comments
-                        </span>
-                        <% if(profileUser.isVerified) { %>
-                            <span class="badge bg-success">
-                                <i class="fas fa-check-circle"></i> Verified
+<section class="cm-dashboard">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+
+        <!-- Header card -->
+        <div class="cm-info-card cm-profile-header">
+            <div class="cm-profile-bg" aria-hidden="true">
+                <div class="cm-blob absolute" style="top:-80px; right:-40px; width:280px; height:280px; border-radius:50%; background:#A78BFA;"></div>
+                <div class="cm-blob absolute" style="bottom:-80px; left:-40px; width:240px; height:240px; border-radius:50%; background:#22C55E;"></div>
+            </div>
+            <div class="cm-profile-row">
+                <% if (profileUser.profileImage && profileUser.profileImage.url) { %>
+                    <img src="<%= profileUser.profileImage.url %>" alt="<%= profileUser.fullName %>" class="cm-profile-avatar" loading="lazy" />
+                <% } else { %>
+                    <span class="cm-profile-avatar cm-profile-avatar-init" style="background:<%= profileUser.profileColor || '#7C3AED' %>;">
+                        <%= profileUser.fullName.charAt(0).toUpperCase() %>
+                    </span>
+                <% } %>
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h1 class="font-display text-2xl sm:text-3xl font-bold text-cm-text m-0"><%= profileUser.fullName %></h1>
+                        <% if (profileUser.isVerified) { %>
+                            <span class="cm-badge-verified">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 12 2 2 4-4"/><path d="M21 12c0 5.5-9 10-9 10s-9-4.5-9-10a9 9 0 0 1 18 0Z"/></svg>
+                                Verified
                             </span>
                         <% } %>
                     </div>
+                    <ul class="cm-profile-meta">
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/></svg>
+                            <%= profileUser.college %>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                            Member since <%= new Date(profileUser.createdAt).toLocaleDateString('en-IN', { month: 'long', year: 'numeric', timeZone: 'Asia/Kolkata' }) %>
+                        </li>
+                        <li>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
+                            <%= profileUser.totalComments %> comments
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- User's Products -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h5 class="card-title mb-3">
-                <i class="fas fa-box me-2"></i>Listings by <%= profileUser.fullName %>
-                <span class="badge bg-secondary"><%= products.length %></span>
-            </h5>
-            
-            <% if(products.length > 0) { %>
-                <div class="row g-3">
-                    <% products.forEach(product => { %>
-                        <div class="col-md-4 col-sm-6">
-                            <div class="card h-100 product-card">
-                                <% if(product.isSold) { %>
-                                    <div class="sold-overlay">
-                                        <div class="sold-text">SOLD</div>
-                                    </div>
+        <!-- Listings -->
+        <div class="cm-info-card mt-6">
+            <h2 class="font-display text-xl font-bold text-cm-text m-0 mb-5">
+                Listings by <%= profileUser.fullName %>
+                <span class="text-cm-text/50 font-normal">(<%= products.length %>)</span>
+            </h2>
+
+            <% if (products.length > 0) { %>
+                <div class="cm-grid">
+                    <% products.forEach(function (product) { %>
+                        <a href="/products/<%= product._id %>" class="cm-card">
+                            <div class="cm-card-img">
+                                <% if (product.images && product.images.length > 0) { %>
+                                    <img src="<%= product.images[0].url %>" alt="<%= product.title %>" loading="lazy" />
+                                <% } else { %>
+                                    <img src="/images/default-product.jpg" alt="<%= product.title %>" loading="lazy" />
                                 <% } %>
-                                
-                                <% if(product.images && product.images.length > 0) { %>
-                                    <img src="<%= product.images[0].url %>" 
-                                         class="card-img-top" 
-                                         style="height: 200px; object-fit: cover;"
-                                         alt="<%= product.title %>">
+                                <% if (product.isSold) { %>
+                                    <span class="cm-sold-tag">SOLD</span>
                                 <% } %>
-                                
-                                <div class="card-body">
-                                    <h6 class="card-title"><%= product.title %></h6>
-                                    <p class="card-text text-muted small">
-                                        <%= product.description.substring(0, 80) %><%= product.description.length > 80 ? '...' : '' %>
-                                    </p>
-                                    <div class="mb-2">
-                                        <span class="badge bg-primary"><%= product.category %></span>
-                                        <span class="badge bg-info"><%= product.condition %></span>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="text-primary mb-0">₹<%= product.price.toLocaleString("en-IN") %></h5>
-                                        <small class="text-muted">
-                                            <i class="fas fa-eye"></i> <%= product.viewCount %>
-                                        </small>
-                                    </div>
-                                </div>
-                                <div class="card-footer bg-white">
-                                    <a href="/products/<%= product._id %>" class="btn btn-sm btn-outline-primary w-100">
-                                        <i class="fas fa-eye me-2"></i>View Details
-                                    </a>
+                                <span class="cm-cond-tag" data-cond="<%= product.condition %>"><%= product.condition %></span>
+                            </div>
+                            <div class="cm-card-body">
+                                <h3 class="cm-card-title" title="<%= product.title %>"><%= product.title %></h3>
+                                <span class="cm-card-cat"><%= product.category %></span>
+                                <div class="cm-card-price-row">
+                                    <span class="cm-card-price">₹<%= product.price.toLocaleString('en-IN') %></span>
+                                    <span class="text-xs text-cm-text/50 ml-auto" style="display:inline-flex;align-items:center;gap:3px;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <%= product.viewCount %>
+                                    </span>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     <% }) %>
                 </div>
             <% } else { %>
-                <div class="text-center py-4">
-                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">No listings yet</p>
+                <div class="cm-empty-state">
+                    <div class="cm-empty-art" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/></svg>
+                    </div>
+                    <p class="text-cm-text/60 mt-3 m-0">No listings yet from this user.</p>
                 </div>
             <% } %>
         </div>
     </div>
-</div>
+</section>
 
 <style>
-.product-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-}
+    .cm-dashboard { background: var(--cm-bg); min-height: 100vh; }
+    .cm-info-card { background: white; border: 1px solid var(--cm-border); border-radius: 22px; padding: 24px; box-shadow: 0 8px 28px -16px rgba(124,58,237,0.18); }
+    .cm-profile-header { position: relative; overflow: hidden; }
+    .cm-profile-bg { position: absolute; inset: 0; pointer-events: none; }
+    .cm-profile-row { position: relative; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .cm-profile-avatar { width: 88px; height: 88px; border-radius: 999px; object-fit: cover; border: 3px solid white; box-shadow: 0 8px 24px -10px rgba(124,58,237,0.45); flex-shrink: 0; }
+    .cm-profile-avatar-init { color: white; display: inline-flex; align-items: center; justify-content: center; font-family: 'Rubik', sans-serif; font-weight: 800; font-size: 36px; }
+    .cm-profile-meta { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--cm-muted); }
+    .cm-profile-meta li { display: inline-flex; align-items: center; gap: 6px; }
+    .cm-badge-verified { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; background: #DCFCE7; color: #166534; font-size: 11px; font-weight: 700; }
 
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
-}
+    .cm-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    @media (min-width: 768px) { .cm-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 1280px) { .cm-grid { grid-template-columns: repeat(4, 1fr); } }
+    .cm-card { background: white; border: 1px solid var(--cm-border); border-radius: 18px; overflow: hidden; text-decoration: none; color: inherit; display: flex; flex-direction: column; transition: transform .25s, border-color .2s, box-shadow .25s; }
+    .cm-card:hover { transform: translateY(-4px); border-color: var(--cm-primary); box-shadow: 0 16px 40px -16px rgba(124,58,237,0.35); }
+    .cm-card-img { position: relative; aspect-ratio: 1 / 1; background: var(--cm-bg); overflow: hidden; }
+    .cm-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s; }
+    .cm-card:hover .cm-card-img img { transform: scale(1.06); }
+    .cm-card-body { padding: 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .cm-card-title { font-family: 'Rubik', sans-serif; font-size: 14px; font-weight: 600; color: var(--cm-ink); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .cm-card-cat { font-size: 11px; font-weight: 600; color: var(--cm-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .cm-card-price-row { display: flex; align-items: baseline; gap: 6px; padding: 8px 10px; background: linear-gradient(135deg,#FAF5FF,#F0FDF4); border-radius: 10px; }
+    .cm-card-price { font-family: 'Rubik', sans-serif; font-size: 16px; font-weight: 800; color: var(--cm-primary); }
+    .cm-cond-tag { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: 999px; font-size: 10px; font-weight: 700; }
+    .cm-cond-tag[data-cond="New"] { background: #DCFCE7; color: #166534; }
+    .cm-cond-tag[data-cond="Like New"] { background: #DBEAFE; color: #1E40AF; }
+    .cm-cond-tag[data-cond="Good"] { background: #EDE9FE; color: #5B21B6; }
+    .cm-cond-tag[data-cond="Fair"] { background: #FEF3C7; color: #92400E; }
+    .cm-cond-tag[data-cond="Poor"] { background: #F3F4F6; color: #374151; }
+    .cm-sold-tag { position: absolute; top: 10px; right: 10px; background: #DC2626; color: white; padding: 4px 10px; border-radius: 999px; font-size: 10px; font-weight: 800; }
 
-.sold-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.sold-text {
-    background: #dc3545;
-    color: white;
-    padding: 10px 30px;
-    font-size: 2rem;
-    font-weight: bold;
-    transform: rotate(-15deg);
-    border: 3px solid white;
-}
+    .cm-empty-state { padding: 48px 24px; text-align: center; background: var(--cm-bg); border-radius: 16px; border: 2px dashed var(--cm-border); }
+    .cm-empty-art { color: var(--cm-secondary); }
 </style>

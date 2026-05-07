@@ -1,151 +1,272 @@
 <% layout("/layouts/boilerplate") %>
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-warning text-dark">
-                    <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Your Listing</h4>
-                </div>
-                <div class="card-body">
-                    <form method="POST" action="/products/<%= product._id %>?_method=PUT" enctype="multipart/form-data" class="needs-validation" novalidate>
-                        
-                        <!-- Basic Information -->
-                        <div class="mb-3">
-                            <label class="form-label">Product Title *</label>
-                            <input type="text" name="product[title]" class="form-control" 
-                                   value="<%= product.title %>" required>
-                            <div class="invalid-feedback">Please enter a product title.</div>
+<section class="cm-form-page">
+    <div class="cm-blob absolute" style="top:-150px; left:-100px; width:480px; height:480px; border-radius:50%; background:#A78BFA;"></div>
+    <div class="cm-blob absolute" style="bottom:-100px; right:-80px; width:380px; height:380px; border-radius:50%; background:#22C55E;"></div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 relative">
+        <div class="text-center mb-8">
+            <span class="cm-pill"><span class="cm-dot"></span>Edit listing</span>
+            <h1 class="font-display text-3xl sm:text-4xl font-bold text-cm-text mt-3">Update <%= product.title %></h1>
+            <p class="text-cm-text/65 mt-2">Tweak details and add fresh photos.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-7">
+                <form method="POST" action="/products/<%= product._id %>?_method=PUT" enctype="multipart/form-data" class="cm-info-card needs-validation" novalidate>
+                    <p class="cm-section-h">Basics</p>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="cm-label" for="f-title">Product title <span class="cm-req">*</span></label>
+                            <input id="f-title" type="text" name="product[title]" class="cm-input" value="<%= product.title %>" required maxlength="100" />
                         </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Description *</label>
-                            <textarea name="product[description]" class="form-control" rows="4" required><%= product.description %></textarea>
-                            <div class="invalid-feedback">Please enter a description.</div>
+                        <div>
+                            <label class="cm-label" for="f-desc">Description <span class="cm-req">*</span></label>
+                            <textarea id="f-desc" name="product[description]" rows="5" class="cm-input" required maxlength="2000"><%= product.description %></textarea>
                         </div>
-                        
-                        <!-- Category and Condition -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Category *</label>
-                                <select name="product[category]" class="form-select" required>
-                                    <option value="">Select Category</option>
-                                    <option value="Books" <%= product.category === 'Books' ? 'selected' : '' %>>Books</option>
-                                    <option value="Electronics" <%= product.category === 'Electronics' ? 'selected' : '' %>>Electronics</option>
-                                    <option value="Furniture" <%= product.category === 'Furniture' ? 'selected' : '' %>>Furniture</option>
-                                    <option value="Clothing" <%= product.category === 'Clothing' ? 'selected' : '' %>>Clothing</option>
-                                    <option value="Sports" <%= product.category === 'Sports' ? 'selected' : '' %>>Sports</option>
-                                    <option value="Other" <%= product.category === 'Other' ? 'selected' : '' %>>Other</option>
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="cm-label" for="f-cat">Category <span class="cm-req">*</span></label>
+                                <select id="f-cat" name="product[category]" class="cm-input" required>
+                                    <option value="">Select category</option>
+                                    <% ['Books','Electronics','Furniture','Clothing','Sports','Other'].forEach(function(c) { %>
+                                        <option value="<%= c %>" <%= product.category === c ? 'selected' : '' %>><%= c %></option>
+                                    <% }) %>
                                 </select>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Condition *</label>
-                                <select name="product[condition]" class="form-select" required>
-                                    <option value="">Select Condition</option>
-                                    <option value="New" <%= product.condition === 'New' ? 'selected' : '' %>>New</option>
-                                    <option value="Like New" <%= product.condition === 'Like New' ? 'selected' : '' %>>Like New</option>
-                                    <option value="Good" <%= product.condition === 'Good' ? 'selected' : '' %>>Good</option>
-                                    <option value="Fair" <%= product.condition === 'Fair' ? 'selected' : '' %>>Fair</option>
-                                    <option value="Poor" <%= product.condition === 'Poor' ? 'selected' : '' %>>Poor</option>
+                            <div>
+                                <label class="cm-label" for="f-cond">Condition <span class="cm-req">*</span></label>
+                                <select id="f-cond" name="product[condition]" class="cm-input" required>
+                                    <option value="">Select condition</option>
+                                    <% ['New','Like New','Good','Fair','Poor'].forEach(function(c) { %>
+                                        <option value="<%= c %>" <%= product.condition === c ? 'selected' : '' %>><%= c %></option>
+                                    <% }) %>
                                 </select>
                             </div>
                         </div>
-                        
-                        <!-- Pricing -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Original Price (₹) *</label>
-                                <input type="number" name="product[originalPrice]" class="form-control" 
-                                       value="<%= product.originalPrice %>" min="0" required>
+                    </div>
+
+                    <p class="cm-section-h" style="margin-top:24px;">Pricing & details</p>
+                    <div class="space-y-4">
+                        <div class="grid sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="cm-label" for="f-orig">Original price (₹) <span class="cm-req">*</span></label>
+                                <input id="f-orig" type="number" name="product[originalPrice]" class="cm-input" value="<%= product.originalPrice %>" min="0" required />
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Selling Price (₹) *</label>
-                                <input type="number" name="product[price]" class="form-control" 
-                                       value="<%= product.price %>" min="0" required>
-                            </div>
-                        </div>
-                        
-                        <!-- Negotiation -->
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="product[isNegotiable]" 
-                                       value="true" id="negotiable" <%= product.isNegotiable ? 'checked' : '' %>>
-                                <label class="form-check-label" for="negotiable">
-                                    Price is negotiable
-                                </label>
+                            <div>
+                                <label class="cm-label" for="f-price">Your price (₹) <span class="cm-req">*</span></label>
+                                <input id="f-price" type="number" name="product[price]" class="cm-input" value="<%= product.price %>" min="0" required />
                             </div>
                         </div>
-                        
-                        <!-- Location -->
-                        <div class="mb-3">
-                            <label class="form-label">Pickup Location *</label>
-                            <input type="text" name="product[location]" class="form-control" 
-                                   value="<%= product.location %>" required>
-                            <small class="text-muted">e.g., Hostel Block A, Library, Main Gate</small>
+                        <label class="cm-checkbox">
+                            <input type="checkbox" name="product[isNegotiable]" value="true" <%= product.isNegotiable ? 'checked' : '' %> />
+                            <span>Price is negotiable — buyers can make offers.</span>
+                        </label>
+                        <div>
+                            <label class="cm-label" for="f-loc">Pickup location <span class="cm-req">*</span></label>
+                            <input id="f-loc" type="text" name="product[location]" class="cm-input" value="<%= product.location %>" required />
                         </div>
-                        
-                        <!-- Contact Method -->
-                        <div class="mb-3">
-                            <label class="form-label">Preferred Contact Method</label>
-                            <select name="product[contactMethod]" class="form-select">
-                                <option value="WhatsApp" <%= product.contactMethod === 'WhatsApp' ? 'selected' : '' %>>WhatsApp</option>
-                                <option value="Email" <%= product.contactMethod === 'Email' ? 'selected' : '' %>>Email</option>
-                                <option value="Phone" <%= product.contactMethod === 'Phone' ? 'selected' : '' %>>Phone Call</option>
-                                <option value="In-person" <%= product.contactMethod === 'In-person' ? 'selected' : '' %>>In-person Meeting</option>
+                        <div>
+                            <label class="cm-label" for="f-contact">Preferred contact method</label>
+                            <select id="f-contact" name="product[contactMethod]" class="cm-input">
+                                <% ['WhatsApp','Email','Phone','In-person'].forEach(function(c) { %>
+                                    <option value="<%= c %>" <%= product.contactMethod === c ? 'selected' : '' %>><%= c %></option>
+                                <% }) %>
                             </select>
                         </div>
+                    </div>
 
-                        <!-- Current Images -->
-                        <% if(product.images && product.images.length > 0) { %>
-                            <div class="mb-3">
-                                <label class="form-label">Current Images</label>
-                                <div class="row">
-                                    <% product.images.forEach(image => { %>
-                                        <div class="col-md-3 mb-2">
-                                            <img src="<%= image.url %>" class="img-thumbnail" style="height: 120px; width: 100%; object-fit: cover;">
-                                        </div>
-                                    <% }) %>
+                    <p class="cm-section-h" style="margin-top:24px;">Photos</p>
+                    <% if (product.images && product.images.length > 0) { %>
+                        <div class="cm-preview-grid">
+                            <% product.images.forEach(function(image) { %>
+                                <div class="cm-preview-tile">
+                                    <img src="<%= image.url %>" alt="" loading="lazy" />
                                 </div>
-                                <small class="text-muted">Current images will be kept. Upload new images to add more.</small>
+                            <% }) %>
+                        </div>
+                        <p class="text-xs text-cm-text/55 mt-2">Existing photos will be kept. Add more below.</p>
+                    <% } %>
+
+                    <div class="cm-dropzone mt-3" id="cmDropzone" tabindex="0" role="button" aria-label="Click or drop images to upload">
+                        <input type="file" id="cmImages" name="product[images]" accept="image/*" multiple hidden />
+                        <div class="cm-dropzone-inner">
+                            <div class="cm-dropzone-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 15-3.5-3.5L11 18"/></svg>
                             </div>
-                        <% } %>
-                        
-                        <!-- Add More Images -->
-                        <div class="mb-3">
-                            <label class="form-label">Add More Images (Optional)</label>
-                            <input type="file" name="product[images]" class="form-control" 
-                                   accept="image/*" multiple>
-                            <small class="text-muted">You can add up to 5 images total</small>
+                            <h4 class="font-display font-bold text-cm-text">Add more images</h4>
+                            <p class="text-sm text-cm-text/65">or <span class="cm-link">click to browse</span></p>
                         </div>
-                        
-                        <!-- Submit Button -->
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-warning btn-lg">
-                                <i class="fas fa-save me-2"></i>Update Listing
-                            </button>
-                            <a href="/products/<%= product._id %>" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                    <div id="cmNewPreview" class="cm-preview-grid mt-3"></div>
+
+                    <div class="flex flex-wrap gap-3 mt-6">
+                        <button type="submit" class="cm-btn-action cm-btn-action-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+                            Save changes
+                        </button>
+                        <a href="/products/<%= product._id %>" class="cm-btn-action cm-btn-action-ghost" style="text-decoration:none;">Cancel</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Live preview -->
+            <div class="lg:col-span-5">
+                <div class="lg:sticky" style="top:96px;">
+                    <p class="cm-section-h" style="margin-bottom:8px;">Live preview</p>
+                    <div class="cm-card">
+                        <div class="cm-card-img">
+                            <img id="prevImg" src="<%= product.images[0] ? product.images[0].url : '/images/default-product.jpg' %>" alt="" loading="lazy" />
+                            <span id="prevCond" class="cm-cond-tag" data-cond="<%= product.condition %>"><%= product.condition %></span>
                         </div>
-                    </form>
+                        <div class="cm-card-body">
+                            <h3 class="cm-card-title" id="prevTitle"><%= product.title %></h3>
+                            <span class="cm-card-cat" id="prevCat"><%= product.category %></span>
+                            <div class="cm-card-price-row">
+                                <span class="cm-card-price" id="prevPrice">₹<%= product.price.toLocaleString('en-IN') %></span>
+                                <% if (product.originalPrice > product.price) { %>
+                                    <span class="cm-card-price-old" id="prevOrig">₹<%= product.originalPrice.toLocaleString('en-IN') %></span>
+                                    <span class="cm-card-disc" id="prevDisc"><%= Math.round((1 - product.price/product.originalPrice)*100) %>% off</span>
+                                <% } else { %>
+                                    <span class="cm-card-price-old" id="prevOrig" hidden></span>
+                                    <span class="cm-card-disc" id="prevDisc" hidden></span>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<style>
+    .cm-form-page { position: relative; overflow: hidden; min-height: 100vh; }
+    .cm-info-card { background: white; border: 1px solid var(--cm-border); border-radius: 22px; padding: 24px; box-shadow: 0 8px 28px -16px rgba(124,58,237,0.18); }
+    .cm-section-h { font-family: 'Rubik', sans-serif; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--cm-muted); margin: 0 0 16px; }
+    .cm-label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--cm-text); margin-bottom: 6px; }
+    .cm-req { color: #DC2626; }
+    .cm-input { width: 100%; background: white; border: 1px solid var(--cm-border); border-radius: 12px; padding: 12px 14px; font-size: 14px; color: var(--cm-ink); font-family: inherit; transition: border-color .2s, box-shadow .2s; }
+    textarea.cm-input { resize: vertical; min-height: 96px; line-height: 1.5; }
+    .cm-input:focus { outline: none; border-color: var(--cm-primary); box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+    .cm-checkbox { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--cm-bg); border: 1px solid var(--cm-border); border-radius: 12px; font-size: 14px; font-weight: 600; color: var(--cm-text); cursor: pointer; }
+    .cm-checkbox input { width: 18px; height: 18px; accent-color: var(--cm-primary); }
+    .space-y-4 > * + * { margin-top: 16px; }
+    .cm-btn-action { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 18px; border-radius: 12px; font-family: 'Rubik', sans-serif; font-weight: 600; font-size: 14px; text-decoration: none; cursor: pointer; border: 1px solid transparent; transition: all .2s; min-height: 44px; }
+    .cm-btn-action-primary { background: var(--cm-primary); color: white; }
+    .cm-btn-action-primary:hover { background: #6D28D9; color: white; }
+    .cm-btn-action-ghost { background: white; color: var(--cm-text); border-color: var(--cm-border); }
+    .cm-btn-action-ghost:hover { border-color: var(--cm-primary); color: var(--cm-primary); }
+    .cm-dropzone { position: relative; border: 2px dashed var(--cm-border); border-radius: 18px; padding: 28px 16px; background: var(--cm-bg); cursor: pointer; transition: all .2s; text-align: center; }
+    .cm-dropzone:hover, .cm-dropzone:focus-visible { border-color: var(--cm-primary); background: white; outline: none; }
+    .cm-dropzone.is-drag { border-color: var(--cm-cta); background: #F0FDF4; }
+    .cm-dropzone-inner { display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none; }
+    .cm-dropzone-icon { width: 56px; height: 56px; border-radius: 14px; background: white; display: inline-flex; align-items: center; justify-content: center; color: var(--cm-primary); margin-bottom: 6px; }
+    .cm-link { color: var(--cm-primary); font-weight: 700; }
+    .cm-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+    .cm-preview-tile { position: relative; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; border: 1px solid var(--cm-border); background: white; }
+    .cm-preview-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cm-preview-remove { position: absolute; top: 4px; right: 4px; width: 26px; height: 26px; border-radius: 999px; background: rgba(31,17,71,0.85); color: white; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+
+    /* Reuse listing card preview style */
+    .cm-card { background: white; border: 1px solid var(--cm-border); border-radius: 18px; overflow: hidden; }
+    .cm-card-img { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: var(--cm-bg); }
+    .cm-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .cm-card-body { padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+    .cm-card-title { font-family: 'Rubik', sans-serif; font-weight: 600; color: var(--cm-ink); margin: 0; }
+    .cm-card-cat { font-size: 11px; font-weight: 600; color: var(--cm-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .cm-card-price-row { display: flex; align-items: baseline; gap: 8px; padding: 8px 10px; background: linear-gradient(135deg,#FAF5FF,#F0FDF4); border-radius: 10px; flex-wrap: wrap; }
+    .cm-card-price { font-family: 'Rubik', sans-serif; font-size: 18px; font-weight: 800; color: var(--cm-primary); }
+    .cm-card-price-old { font-size: 12px; color: var(--cm-muted); text-decoration: line-through; }
+    .cm-card-disc { font-size: 11px; font-weight: 700; color: #16A34A; margin-left: auto; }
+    .cm-cond-tag { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: 999px; font-size: 10px; font-weight: 700; }
+    .cm-cond-tag[data-cond="New"] { background: #DCFCE7; color: #166534; }
+    .cm-cond-tag[data-cond="Like New"] { background: #DBEAFE; color: #1E40AF; }
+    .cm-cond-tag[data-cond="Good"] { background: #EDE9FE; color: #5B21B6; }
+    .cm-cond-tag[data-cond="Fair"] { background: #FEF3C7; color: #92400E; }
+    .cm-cond-tag[data-cond="Poor"] { background: #F3F4F6; color: #374151; }
+    .cm-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(255,255,255,0.7); backdrop-filter: blur(10px); border: 1px solid var(--cm-border); color: var(--cm-text); font-size: 13px; font-weight: 600; }
+    .cm-dot { width: 8px; height: 8px; border-radius: 50%; background: #22C55E; box-shadow: 0 0 0 3px rgba(34,197,94,0.2); }
+</style>
 
 <script>
-    // Form validation
-    (() => {
-        'use strict'
-        const forms = document.querySelectorAll('.needs-validation')
-        
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-                form.classList.add('was-validated')
-            }, false)
-        })
-    })()
+    (function () {
+        var prevTitle = document.getElementById('prevTitle');
+        var prevCat   = document.getElementById('prevCat');
+        var prevCond  = document.getElementById('prevCond');
+        var prevPrice = document.getElementById('prevPrice');
+        var prevOrig  = document.getElementById('prevOrig');
+        var prevDisc  = document.getElementById('prevDisc');
+        var prevImg   = document.getElementById('prevImg');
+
+        document.getElementById('f-title').addEventListener('input', function () {
+            prevTitle.textContent = this.value || 'Untitled item';
+        });
+        document.getElementById('f-cat').addEventListener('change', function () { prevCat.textContent = this.value; });
+        document.getElementById('f-cond').addEventListener('change', function () {
+            prevCond.textContent = this.value;
+            prevCond.setAttribute('data-cond', this.value);
+        });
+        function updatePrice() {
+            var p = Number(document.getElementById('f-price').value) || 0;
+            var o = Number(document.getElementById('f-orig').value) || 0;
+            prevPrice.textContent = '₹' + p.toLocaleString('en-IN');
+            if (o > p && p > 0) {
+                prevOrig.textContent = '₹' + o.toLocaleString('en-IN');
+                prevOrig.hidden = false;
+                var disc = Math.round((1 - p/o) * 100);
+                prevDisc.textContent = disc + '% off';
+                prevDisc.hidden = disc <= 0;
+            } else {
+                prevOrig.hidden = true;
+                prevDisc.hidden = true;
+            }
+        }
+        document.getElementById('f-price').addEventListener('input', updatePrice);
+        document.getElementById('f-orig').addEventListener('input', updatePrice);
+
+        // Drag and drop for new images
+        var dropzone = document.getElementById('cmDropzone');
+        var fileInput = document.getElementById('cmImages');
+        var grid = document.getElementById('cmNewPreview');
+        var tracked = [];
+
+        dropzone.addEventListener('click', function () { fileInput.click(); });
+        dropzone.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+        });
+        dropzone.addEventListener('dragover', function (e) { e.preventDefault(); dropzone.classList.add('is-drag'); });
+        dropzone.addEventListener('dragleave', function () { dropzone.classList.remove('is-drag'); });
+        dropzone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dropzone.classList.remove('is-drag');
+            handleFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', function () { handleFiles(fileInput.files, true); });
+
+        function handleFiles(fileList, replace) {
+            if (replace) tracked = [];
+            Array.from(fileList).forEach(function (f) {
+                if (tracked.length >= 5) return;
+                if (!f.type.startsWith('image/')) return;
+                tracked.push(f);
+            });
+            var dt = new DataTransfer();
+            tracked.forEach(function (f) { dt.items.add(f); });
+            fileInput.files = dt.files;
+            grid.innerHTML = '';
+            tracked.forEach(function (f, i) {
+                var url = URL.createObjectURL(f);
+                var tile = document.createElement('div');
+                tile.className = 'cm-preview-tile';
+                tile.innerHTML = '<img src="' + url + '" alt="">' +
+                                 '<button type="button" class="cm-preview-remove" aria-label="Remove">&times;</button>';
+                tile.querySelector('button').addEventListener('click', function () {
+                    tracked.splice(i, 1);
+                    handleFiles(tracked, true);
+                });
+                grid.appendChild(tile);
+            });
+        }
+    })();
 </script>

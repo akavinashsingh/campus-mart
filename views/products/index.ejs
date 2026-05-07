@@ -1,160 +1,118 @@
 <% layout("/layouts/boilerplate") %>
 
-<!-- Animated Hero Section -->
-<div class="hero-section">
-    <div class="animated-bg">
-        <div class="floating-element floating-book">
-            <i class="fas fa-book"></i>
-        </div>
-        <div class="floating-element floating-laptop">
-            <i class="fas fa-laptop"></i>
-        </div>
-        <div class="floating-element floating-dumbbell">
-            <i class="fas fa-dumbbell"></i>
-        </div>
-        <div class="floating-element floating-soccer">
-            <i class="fas fa-futbol"></i>
-        </div>
-        <div class="floating-element floating-graduation">
-            <i class="fas fa-graduation-cap"></i>
-        </div>
-        <div class="floating-element floating-pencil">
-            <i class="fas fa-pencil-alt"></i>
-        </div>
-        <div class="gradient-circle circle-1"></div>
-        <div class="gradient-circle circle-2"></div>
-        <div class="gradient-circle circle-3"></div>
-    </div>
-    <div class="hero-content">
-        <h1 class="hero-title">Welcome to CampusMart</h1>
-        <p class="hero-subtitle">Your Ultimate Campus Marketplace for Books, Electronics, Sports & More</p>
-        <!-- Floating Notes button added below; removed hero button to declutter -->
-        <% if(!currUser) { %>
-            <div class="hero-cta">
-                <a href="/login" class="btn btn-light btn-lg shadow-sm">
-                    <i class="fas fa-sign-in-alt me-2"></i>Login to Buy/Sell
-                </a>
-            </div>
-        <% } %>
-        <div class="hero-stats">
-            <div class="stat-item">
-                <span class="stat-number">📚</span>
-                <p>Academic Items</p>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">💻</span>
-                <p>Tech & Electronics</p>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">⚽</span>
-                <p>Sports & Fitness</p>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">🏆</span>
-                <p>Best Deals</p>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Hero: glass + bento + search-as-CTA -->
+<section class="cm-hero relative overflow-hidden">
+    <div class="cm-blob absolute" style="top:-150px; left:-100px; width:520px; height:520px; border-radius:50%; background:#A78BFA;"></div>
+    <div class="cm-blob absolute" style="top:120px; right:-120px; width:480px; height:480px; border-radius:50%; background:#22C55E;"></div>
+    <div class="cm-blob absolute" style="bottom:-180px; left:30%; width:420px; height:420px; border-radius:50%; background:#7C3AED;"></div>
 
-<div class="container mt-3">
-    <div class="d-md-none mb-3">
-        <button class="btn btn-outline-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#mobileFilters" aria-expanded="false" aria-controls="mobileFilters">
-            <i class="fas fa-filter me-2"></i>Show Filters
-        </button>
-    </div>
-    <div class="row">
-        <!-- Mobile Filters (collapsed) -->
-        <div class="col-12 d-md-none">
-            <div class="collapse mb-3" id="mobileFilters">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">
-                            <i class="fas fa-filter me-2"></i>Filters
-                        </h5>
-                        <form action="/products" method="GET" id="filterFormMobile">
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Category</label>
-                                <select class="form-select" name="category">
-                                    <option value="">All Categories</option>
-                                    <option value="Books" <%= filters?.category === 'Books' ? 'selected' : '' %>>Books</option>
-                                    <option value="Electronics" <%= filters?.category === 'Electronics' ? 'selected' : '' %>>Electronics</option>
-                                    <option value="Furniture" <%= filters?.category === 'Furniture' ? 'selected' : '' %>>Furniture</option>
-                                    <option value="Clothing" <%= filters?.category === 'Clothing' ? 'selected' : '' %>>Clothing</option>
-                                    <option value="Sports" <%= filters?.category === 'Sports' ? 'selected' : '' %>>Sports</option>
-                                    <option value="Other" <%= filters?.category === 'Other' ? 'selected' : '' %>>Other</option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Condition</label>
-                                <select class="form-select" name="condition">
-                                    <option value="">Any Condition</option>
-                                    <option value="New" <%= filters?.condition === 'New' ? 'selected' : '' %>>New</option>
-                                    <option value="Like New" <%= filters?.condition === 'Like New' ? 'selected' : '' %>>Like New</option>
-                                    <option value="Good" <%= filters?.condition === 'Good' ? 'selected' : '' %>>Good</option>
-                                    <option value="Fair" <%= filters?.condition === 'Fair' ? 'selected' : '' %>>Fair</option>
-                                    <option value="Poor" <%= filters?.condition === 'Poor' ? 'selected' : '' %>>Poor</option>
-                                </select>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Price Range</label>
-                                <div class="mb-2">
-                                    <input type="range" class="form-range" id="priceRangeMaxMobile" min="0" max="50000" step="100" 
-                                           value="<%= filters?.maxPrice || 50000 %>">
-                                    <div class="d-flex justify-content-between text-muted small">
-                                        <span>₹0</span>
-                                        <span id="maxPriceDisplayMobile">₹<%= (filters?.maxPrice || 50000).toLocaleString('en-IN') %></span>
-                                    </div>
-                                </div>
-                                <div class="row g-2">
-                                    <div class="col">
-                                        <input type="number" class="form-control form-control-sm" name="minPrice" 
-                                               id="minPriceInputMobile" placeholder="Min" min="0" 
-                                               value="<%= filters?.minPrice || '' %>">
-                                    </div>
-                                    <div class="col">
-                                        <input type="number" class="form-control form-control-sm" name="maxPrice" 
-                                               id="maxPriceInputMobile" placeholder="Max" min="0" 
-                                               value="<%= filters?.maxPrice || '' %>">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">College</label>
-                                <input type="text" class="form-control" name="college" 
-                                       placeholder="Enter college name" value="<%= filters?.college || '' %>">
-                            </div>
-                            
-                            <input type="hidden" name="sort" value="<%= filters?.sort || '' %>">
-                            
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-check me-2"></i>Apply Filters
-                                </button>
-                                <a href="/products" class="btn btn-outline-secondary btn-sm">
-                                    <i class="fas fa-redo me-2"></i>Reset All
-                                </a>
-                            </div>
-                        </form>
-                    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-12 relative">
+        <div class="grid lg:grid-cols-12 gap-6 items-center">
+            <div class="lg:col-span-7">
+                <span class="cm-pill">
+                    <span class="cm-dot"></span>
+                    Live · <strong><%= allProducts.length %></strong> items on your campus
+                </span>
+                <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-cm-text mt-4 leading-[1.05]">
+                    Buy & sell on campus.
+                    <br/>
+                    <span class="cm-grad-text">From students, for students.</span>
+                </h1>
+                <p class="mt-5 text-base sm:text-lg text-cm-text/75 max-w-xl">
+                    Books, electronics, sports gear, furniture and more — verified students,
+                    pay safely, meet locally.
+                </p>
+
+                <form action="/products/search" method="GET" class="cm-hero-search mt-7" role="search">
+                    <span class="cm-search-icon" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    </span>
+                    <label for="cm-hero-search" class="sr-only">Search items</label>
+                    <input id="cm-hero-search" type="search" name="q" placeholder="Try “calculus textbook” or “MacBook Air”…" autocomplete="off" />
+                    <button type="submit" class="cm-search-btn">Search</button>
+                </form>
+
+                <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
+                    <span class="text-cm-text/60 mr-1">Popular:</span>
+                    <a href="/products?category=Books" class="cm-chip">Books</a>
+                    <a href="/products?category=Electronics" class="cm-chip">Electronics</a>
+                    <a href="/products?category=Sports" class="cm-chip">Sports</a>
+                    <a href="/products?category=Furniture" class="cm-chip">Furniture</a>
+                    <a href="/products?category=Clothing" class="cm-chip">Clothing</a>
+                </div>
+            </div>
+
+            <!-- Bento right: category tiles -->
+            <div class="lg:col-span-5">
+                <div class="grid grid-cols-2 gap-3">
+                    <a href="/products?category=Books" class="cm-bento-tile" style="background:linear-gradient(135deg,#FDF4FF,#FAE8FF);">
+                        <div class="cm-bento-img">
+                            <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&auto=format&fit=crop" alt="Stack of books" loading="lazy" />
+                        </div>
+                        <div class="cm-bento-meta">
+                            <span class="font-display font-bold text-cm-text">Books</span>
+                            <span class="text-xs text-cm-text/60">Textbooks, notes</span>
+                        </div>
+                    </a>
+                    <a href="/products?category=Electronics" class="cm-bento-tile mt-6" style="background:linear-gradient(135deg,#EDE9FE,#DDD6FE);">
+                        <div class="cm-bento-img">
+                            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop" alt="Laptop on desk" loading="lazy" />
+                        </div>
+                        <div class="cm-bento-meta">
+                            <span class="font-display font-bold text-cm-text">Electronics</span>
+                            <span class="text-xs text-cm-text/60">Laptops, phones</span>
+                        </div>
+                    </a>
+                    <a href="/products?category=Sports" class="cm-bento-tile" style="background:linear-gradient(135deg,#DCFCE7,#BBF7D0);">
+                        <div class="cm-bento-img">
+                            <img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=600&auto=format&fit=crop" alt="Sports equipment" loading="lazy" />
+                        </div>
+                        <div class="cm-bento-meta">
+                            <span class="font-display font-bold text-cm-text">Sports</span>
+                            <span class="text-xs text-cm-text/60">Gear, fitness</span>
+                        </div>
+                    </a>
+                    <a href="/products?category=Furniture" class="cm-bento-tile mt-6" style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);">
+                        <div class="cm-bento-img">
+                            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&auto=format&fit=crop" alt="Hostel furniture" loading="lazy" />
+                        </div>
+                        <div class="cm-bento-meta">
+                            <span class="font-display font-bold text-cm-text">Furniture</span>
+                            <span class="text-xs text-cm-text/60">Chairs, beds</span>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
-        
-        <!-- Desktop Filters -->
-        <div class="col-md-3 mb-4 d-none d-md-block">
-            <div class="card shadow-sm sticky-top" style="top: 20px;">
-                <div class="card-body">
-                    <h5 class="card-title mb-3">
-                        <i class="fas fa-filter me-2"></i>Filters
-                    </h5>
-                    <form action="/products" method="GET" id="filterFormDesktop">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Category</label>
-                            <select class="form-select" name="category">
+    </div>
+</section>
+
+<!-- Marketplace body -->
+<section class="cm-listings">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+        <!-- Mobile filter trigger -->
+        <div class="d-md-none mb-3">
+            <button class="cm-mobile-filter-btn" type="button" data-cm-toggle="filter-sheet" aria-expanded="false" aria-controls="cmFilterSheet">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+                <span>Filters & sort</span>
+                <% if (filters && (filters.category || filters.condition || filters.minPrice || filters.maxPrice || filters.college)) { %>
+                    <span class="cm-pill-badge">Active</span>
+                <% } %>
+            </button>
+        </div>
+
+        <div class="row gx-md-4">
+            <!-- Desktop sticky filter sidebar -->
+            <aside class="col-md-3 mb-4 d-none d-md-block">
+                <div class="cm-filter-card sticky-top" style="top:90px;">
+                    <h2 class="cm-section-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+                        Filters
+                    </h2>
+                    <form action="/products" method="GET" id="filterFormDesktop" class="space-y-4">
+                        <div>
+                            <label class="cm-label" for="catDesk">Category</label>
+                            <select id="catDesk" class="cm-input" name="category">
                                 <option value="">All Categories</option>
                                 <option value="Books" <%= filters?.category === 'Books' ? 'selected' : '' %>>Books</option>
                                 <option value="Electronics" <%= filters?.category === 'Electronics' ? 'selected' : '' %>>Electronics</option>
@@ -164,10 +122,10 @@
                                 <option value="Other" <%= filters?.category === 'Other' ? 'selected' : '' %>>Other</option>
                             </select>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Condition</label>
-                            <select class="form-select" name="condition">
+
+                        <div>
+                            <label class="cm-label" for="condDesk">Condition</label>
+                            <select id="condDesk" class="cm-input" name="condition">
                                 <option value="">Any Condition</option>
                                 <option value="New" <%= filters?.condition === 'New' ? 'selected' : '' %>>New</option>
                                 <option value="Like New" <%= filters?.condition === 'Like New' ? 'selected' : '' %>>Like New</option>
@@ -176,743 +134,688 @@
                                 <option value="Poor" <%= filters?.condition === 'Poor' ? 'selected' : '' %>>Poor</option>
                             </select>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Price Range</label>
-                            <div class="mb-2">
-                                <input type="range" class="form-range" id="priceRangeMax" min="0" max="50000" step="100" 
-                                       value="<%= filters?.maxPrice || 50000 %>">
-                                <div class="d-flex justify-content-between text-muted small">
-                                    <span>₹0</span>
-                                    <span id="maxPriceDisplay">₹<%= (filters?.maxPrice || 50000).toLocaleString('en-IN') %></span>
-                                </div>
+
+                        <div>
+                            <label class="cm-label">Price Range</label>
+                            <input type="range" class="cm-range" id="priceRangeMax" min="0" max="50000" step="100"
+                                value="<%= filters?.maxPrice || 50000 %>">
+                            <div class="d-flex justify-content-between text-cm-text/60 small mt-1">
+                                <span>₹0</span>
+                                <span id="maxPriceDisplay">₹<%= (filters?.maxPrice || 50000).toLocaleString('en-IN') %></span>
                             </div>
-                            <div class="row g-2">
-                                <div class="col">
-                                    <input type="number" class="form-control form-control-sm" name="minPrice" 
-                                           id="minPriceInput" placeholder="Min" min="0" 
-                                           value="<%= filters?.minPrice || '' %>">
-                                </div>
-                                <div class="col">
-                                    <input type="number" class="form-control form-control-sm" name="maxPrice" 
-                                           id="maxPriceInput" placeholder="Max" min="0" 
-                                           value="<%= filters?.maxPrice || '' %>">
-                                </div>
+                            <div class="grid grid-cols-2 gap-2 mt-2">
+                                <input type="number" class="cm-input cm-input-sm" name="minPrice" id="minPriceInput" placeholder="Min" min="0" value="<%= filters?.minPrice || '' %>">
+                                <input type="number" class="cm-input cm-input-sm" name="maxPrice" id="maxPriceInput" placeholder="Max" min="0" value="<%= filters?.maxPrice || '' %>">
                             </div>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">College</label>
-                            <input type="text" class="form-control" name="college" 
-                                   placeholder="Enter college name" value="<%= filters?.college || '' %>">
+
+                        <div>
+                            <label class="cm-label" for="collegeDesk">College</label>
+                            <input id="collegeDesk" type="text" class="cm-input" name="college" placeholder="Enter college name" value="<%= filters?.college || '' %>">
                         </div>
-                        
+
                         <input type="hidden" name="sort" value="<%= filters?.sort || '' %>">
-                        
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-check me-2"></i>Apply Filters
-                            </button>
-                            <a href="/products" class="btn btn-outline-secondary btn-sm">
-                                <i class="fas fa-redo me-2"></i>Reset All
-                            </a>
+
+                        <div class="flex flex-col gap-2 pt-2">
+                            <button type="submit" class="cm-btn-primary w-full justify-center cm-focus" style="padding:10px;">Apply Filters</button>
+                            <a href="/products" class="cm-btn-ghost w-full justify-center cm-focus" style="border:1px solid var(--cm-border);padding:10px;">Reset all</a>
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Product Listings -->
-        <div class="col-md-9">
-            <!-- Header with sort and count -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="mb-0">
-                    <i class="fas fa-box me-2"></i>
-                    <span class="text-muted fw-normal">Found <%= allProducts.length %> items</span>
-                </h4>
-                <div class="d-flex align-items-center gap-2">
-                    <label class="mb-0 text-muted small">Sort by:</label>
-                    <select class="form-select form-select-sm" style="width: auto;" onchange="sortProducts(this.value)">
-                        <option value="newest" <%= filters?.sort === 'newest' || !filters?.sort ? 'selected' : '' %>>Newest First</option>
-                        <option value="oldest" <%= filters?.sort === 'oldest' ? 'selected' : '' %>>Oldest First</option>
-                        <option value="price-low" <%= filters?.sort === 'price-low' ? 'selected' : '' %>>Price: Low to High</option>
-                        <option value="price-high" <%= filters?.sort === 'price-high' ? 'selected' : '' %>>Price: High to Low</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="row g-3">
-                <% if(allProducts.length === 0) { %>
-                    <div class="col-12">
-                        <div class="alert alert-info">
-                            No products found. Be the first to list an item!
-                        </div>
+            </aside>
+
+            <!-- Listings column -->
+            <div class="col-md-9">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
+                    <h2 class="font-display text-xl sm:text-2xl font-bold text-cm-text m-0">
+                        <%= allProducts.length %> <%= allProducts.length === 1 ? 'item' : 'items' %> found
+                    </h2>
+                    <div class="flex items-center gap-2">
+                        <label class="text-sm text-cm-text/60 m-0" for="sortSelect">Sort:</label>
+                        <select id="sortSelect" class="cm-input cm-input-sm" style="width:auto;" onchange="sortProducts(this.value)">
+                            <option value="newest" <%= filters?.sort === 'newest' || !filters?.sort ? 'selected' : '' %>>Newest</option>
+                            <option value="oldest" <%= filters?.sort === 'oldest' ? 'selected' : '' %>>Oldest</option>
+                            <option value="price-low" <%= filters?.sort === 'price-low' ? 'selected' : '' %>>Price ↑</option>
+                            <option value="price-high" <%= filters?.sort === 'price-high' ? 'selected' : '' %>>Price ↓</option>
+                        </select>
                     </div>
-                <% } %>
-                
-                <% for(let product of allProducts) { %>
-                    <div class="col-6 col-md-6 col-lg-4 col-xl-3">
-                        <a href="/products/<%= product._id %>" class="product-card-link">
-                            <div class="card product-card h-100 shadow-sm">
-                                <!-- Product Image Container -->
-                                <div class="product-image-container position-relative">
-                                    <img src="<%= product.images[0] ? product.images[0].url : '/images/default-product.jpg' %>" 
-                                         class="card-img-top product-image" 
-                                         alt="<%= product.title %>">
-                                    
-                                    <% if(product.isSold) { %>
-                                        <div class="sold-badge">SOLD</div>
+                </div>
+
+                <% if (allProducts.length === 0) { %>
+                    <div class="cm-empty-state">
+                        <div class="cm-empty-art" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 4l9 5"/><path d="M21 9v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9"/><path d="M9 22V12h6v10"/></svg>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-cm-text mt-4">No items match your filters</h3>
+                        <p class="text-cm-text/60 mt-2 mb-4">Try widening your filters or be the first to list something here.</p>
+                        <a href="/products/new" class="cm-btn-cta cm-focus" style="padding:12px 24px;font-size:15px;">+ List your first item</a>
+                    </div>
+                <% } else { %>
+                    <div class="cm-grid">
+                        <% for (let product of allProducts) { %>
+                            <a href="/products/<%= product._id %>" class="cm-card cm-focus" aria-label="<%= product.title %>, ₹<%= product.price.toLocaleString('en-IN') %>">
+                                <div class="cm-card-img">
+                                    <img src="<%= product.images[0] ? product.images[0].url : '/images/default-product.jpg' %>" alt="<%= product.title %>" loading="lazy" />
+                                    <% if (product.isSold) { %>
+                                        <span class="cm-sold-tag">SOLD</span>
                                     <% } %>
-                                    
-                                    <!-- View Count Badge -->
-                                    <div class="view-badge">
-                                        <i class="fas fa-eye"></i> <%= product.viewCount || 0 %>
-                                    </div>
-                                    
-                                    <!-- Condition Badge -->
-                                    <div class="condition-badge badge bg-<%= 
-                                        product.condition === 'New' ? 'success' : 
-                                        product.condition === 'Like New' ? 'info' : 
-                                        product.condition === 'Good' ? 'primary' : 'secondary' 
-                                    %>">
-                                        <%= product.condition %>
-                                    </div>
+                                    <span class="cm-cond-tag" data-cond="<%= product.condition %>"><%= product.condition %></span>
+                                    <span class="cm-views-tag" aria-label="<%= product.viewCount || 0 %> views">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <%= product.viewCount || 0 %>
+                                    </span>
                                 </div>
-                                
-                                <div class="card-body p-2 d-flex flex-column">
-                                    <!-- Title -->
-                                    <h6 class="card-title mb-1 text-truncate" title="<%= product.title %>">
-                                        <%= product.title %>
-                                    </h6>
-                                    
-                                    <!-- Meta Info -->
-                                    <div class="meta-info mb-1">
-                                        <small class="text-muted d-block lh-1">
-                                            <i class="fas fa-tag me-1" style="color: #6c757d; font-size: 10px;"></i><%= product.category %>
-                                        </small>
-                                    </div>
-                                    
-                                    <!-- Price Section -->
-                                    <div class="price-section mb-1">
-                                        <div class="d-flex align-items-baseline gap-1">
-                                            <span class="price-main text-primary fw-bold">
-                                                ₹<%= product.price.toLocaleString("en-IN") %>
-                                            </span>
-                                            <span class="price-original text-muted text-decoration-line-through" style="font-size: 11px;">
-                                                ₹<%= product.originalPrice.toLocaleString("en-IN") %>
-                                            </span>
-                                        </div>
-                                        <% let discount = Math.round((1 - product.price/product.originalPrice) * 100); %>
-                                        <% if(discount > 0) { %>
-                                            <small class="text-success fw-semibold" style="font-size: 11px;">
-                                                <i class="fas fa-arrow-down me-1"></i><%= discount %>% off
-                                            </small>
+                                <div class="cm-card-body">
+                                    <h3 class="cm-card-title" title="<%= product.title %>"><%= product.title %></h3>
+                                    <span class="cm-card-cat"><%= product.category %></span>
+                                    <div class="cm-card-price-row">
+                                        <span class="cm-card-price">₹<%= product.price.toLocaleString('en-IN') %></span>
+                                        <% if (product.originalPrice && product.originalPrice > product.price) { %>
+                                            <span class="cm-card-price-old">₹<%= product.originalPrice.toLocaleString('en-IN') %></span>
+                                            <% const disc = Math.round((1 - product.price/product.originalPrice) * 100); %>
+                                            <% if (disc > 0) { %>
+                                                <span class="cm-card-disc"><%= disc %>% off</span>
+                                            <% } %>
                                         <% } %>
                                     </div>
-                                    
-                                    <!-- Seller Info -->
-                                    <div class="seller-info">
-                                        <% if(product.owner && product.owner.profileImage && product.owner.profileImage.url) { %>
-                                            <img src="<%= product.owner.profileImage.url %>" 
-                                                 class="rounded-circle me-1" 
-                                                 width="20" height="20" 
-                                                 style="object-fit: cover;"
-                                                 alt="<%= product.owner.fullName %>">
-                                        <% } else if(product.owner && product.owner.fullName) { %>
-                                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center me-1" 
-                                                 style="width: 20px; height: 20px; background: <%= product.owner.profileColor || '#667eea' %>; font-size: 9px; color: white;">
+                                    <div class="cm-card-seller">
+                                        <% if (product.owner && product.owner.profileImage && product.owner.profileImage.url) { %>
+                                            <img src="<%= product.owner.profileImage.url %>" alt="" loading="lazy" />
+                                        <% } else if (product.owner && product.owner.fullName) { %>
+                                            <span class="cm-card-seller-init" style="background:<%= product.owner.profileColor || '#7C3AED' %>;">
                                                 <%= product.owner.fullName.charAt(0).toUpperCase() %>
-                                            </div>
+                                            </span>
                                         <% } %>
-                                        <small class="text-muted fw-medium" style="font-size: 11px;">
-                                            <%= product.owner ? product.owner.fullName : 'Unknown' %>
-                                        </small>
+                                        <span class="cm-card-seller-name"><%= product.owner ? product.owner.fullName : 'Unknown' %></span>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
+                            </a>
+                        <% } %>
                     </div>
                 <% } %>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- Notes floating button removed as per request -->
+<!-- Mobile filter bottom sheet -->
+<div id="cmFilterScrim" class="cm-sheet-scrim" hidden></div>
+<aside id="cmFilterSheet" class="cm-sheet" aria-hidden="true" aria-label="Filters">
+    <div class="cm-sheet-grip" aria-hidden="true"></div>
+    <div class="cm-sheet-head">
+        <h3 class="font-display font-bold text-cm-text m-0">Filters & sort</h3>
+        <button id="cmFilterClose" class="cm-icon-btn" aria-label="Close" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+    </div>
+    <form action="/products" method="GET" id="filterFormMobile" class="cm-sheet-body">
+        <div>
+            <label class="cm-label" for="catMob">Category</label>
+            <select id="catMob" class="cm-input" name="category">
+                <option value="">All Categories</option>
+                <option value="Books" <%= filters?.category === 'Books' ? 'selected' : '' %>>Books</option>
+                <option value="Electronics" <%= filters?.category === 'Electronics' ? 'selected' : '' %>>Electronics</option>
+                <option value="Furniture" <%= filters?.category === 'Furniture' ? 'selected' : '' %>>Furniture</option>
+                <option value="Clothing" <%= filters?.category === 'Clothing' ? 'selected' : '' %>>Clothing</option>
+                <option value="Sports" <%= filters?.category === 'Sports' ? 'selected' : '' %>>Sports</option>
+                <option value="Other" <%= filters?.category === 'Other' ? 'selected' : '' %>>Other</option>
+            </select>
+        </div>
+        <div>
+            <label class="cm-label" for="condMob">Condition</label>
+            <select id="condMob" class="cm-input" name="condition">
+                <option value="">Any Condition</option>
+                <option value="New" <%= filters?.condition === 'New' ? 'selected' : '' %>>New</option>
+                <option value="Like New" <%= filters?.condition === 'Like New' ? 'selected' : '' %>>Like New</option>
+                <option value="Good" <%= filters?.condition === 'Good' ? 'selected' : '' %>>Good</option>
+                <option value="Fair" <%= filters?.condition === 'Fair' ? 'selected' : '' %>>Fair</option>
+                <option value="Poor" <%= filters?.condition === 'Poor' ? 'selected' : '' %>>Poor</option>
+            </select>
+        </div>
+        <div>
+            <label class="cm-label">Price Range</label>
+            <input type="range" class="cm-range" id="priceRangeMaxMobile" min="0" max="50000" step="100" value="<%= filters?.maxPrice || 50000 %>">
+            <div class="d-flex justify-content-between text-cm-text/60 small mt-1">
+                <span>₹0</span>
+                <span id="maxPriceDisplayMobile">₹<%= (filters?.maxPrice || 50000).toLocaleString('en-IN') %></span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 mt-2">
+                <input type="number" class="cm-input cm-input-sm" name="minPrice" id="minPriceInputMobile" placeholder="Min" min="0" value="<%= filters?.minPrice || '' %>">
+                <input type="number" class="cm-input cm-input-sm" name="maxPrice" id="maxPriceInputMobile" placeholder="Max" min="0" value="<%= filters?.maxPrice || '' %>">
+            </div>
+        </div>
+        <div>
+            <label class="cm-label" for="collegeMob">College</label>
+            <input id="collegeMob" type="text" class="cm-input" name="college" placeholder="Enter college name" value="<%= filters?.college || '' %>">
+        </div>
+        <input type="hidden" name="sort" value="<%= filters?.sort || '' %>">
+        <div class="flex flex-col gap-2 pt-2">
+            <button type="submit" class="cm-btn-primary w-full justify-center" style="padding:12px;">Apply Filters</button>
+            <a href="/products" class="cm-btn-ghost w-full justify-center" style="border:1px solid var(--cm-border);padding:12px;">Reset all</a>
+        </div>
+    </form>
+</aside>
 
 <style>
-    /* Card Link Wrapper */
-    .product-card-link {
+    .cm-hero { background: var(--cm-bg); }
+    .cm-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--cm-border);
+        color: var(--cm-text);
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .cm-pill-badge {
+        background: var(--cm-cta);
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 999px;
+        margin-left: auto;
+    }
+    .cm-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #22C55E;
+        box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+    }
+    .cm-grad-text {
+        background: linear-gradient(90deg, #7C3AED 0%, #A78BFA 50%, #22C55E 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+    }
+    .cm-hero-search {
+        display: flex;
+        align-items: center;
+        max-width: 600px;
+        background: white;
+        border: 1px solid var(--cm-border);
+        border-radius: 999px;
+        padding: 6px 6px 6px 18px;
+        box-shadow: 0 8px 28px -10px rgba(124, 58, 237, 0.25);
+        transition: box-shadow .2s, border-color .2s;
+    }
+    .cm-hero-search:focus-within {
+        border-color: var(--cm-primary);
+        box-shadow: 0 12px 32px -10px rgba(124, 58, 237, 0.45);
+    }
+    .cm-hero-search input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        padding: 12px 8px;
+        font-size: 15px;
+        min-width: 0;
+        color: var(--cm-ink);
+    }
+    .cm-hero-search input::placeholder { color: #a99dc7; }
+    .cm-hero-search .cm-search-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+        min-height: 44px;
+    }
+    .cm-chip {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: white;
+        border: 1px solid var(--cm-border);
+        color: var(--cm-text);
         text-decoration: none;
-        color: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all .2s;
+    }
+    .cm-chip:hover {
+        background: var(--cm-primary);
+        border-color: var(--cm-primary);
+        color: white;
+    }
+
+    /* Bento tiles */
+    .cm-bento-tile {
+        position: relative;
+        border-radius: 22px;
+        overflow: hidden;
+        text-decoration: none;
         display: block;
-        height: 100%;
+        aspect-ratio: 1 / 1;
+        transition: transform .3s ease, box-shadow .3s ease;
+        border: 1px solid rgba(255,255,255,0.6);
     }
-    
-    /* Card Styling */
-    .product-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid #e9ecef;
-        border-radius: 12px;
-        overflow: hidden;
-        background: #fff;
-        height: 100%;
-        cursor: pointer;
-        position: relative;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    .cm-bento-tile:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px -16px rgba(124,58,237,0.4);
     }
-    
-    .product-card::before {
-        content: '';
+    .cm-bento-img {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        border-radius: 12px;
-        padding: 2px;
-        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-    }
-    
-    .product-card-link:hover .product-card {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 28px rgba(102, 126, 234, 0.25) !important;
-    }
-    
-    .product-card-link:hover .product-card::before {
-        opacity: 1;
-    }
-    
-    /* Image Container */
-    .product-image-container {
-        position: relative;
+        inset: 0;
         overflow: hidden;
-        background: #f8f9fa;
-        aspect-ratio: 1;
     }
-    
-    .product-image {
+    .cm-bento-img img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.3s ease;
+        transition: transform .4s ease;
     }
-    
-    .product-card-link:hover .product-image {
-        transform: scale(1.1);
-    }
-    
-    /* Badges */
-    .sold-badge {
+    .cm-bento-tile:hover .cm-bento-img img { transform: scale(1.06); }
+    .cm-bento-meta {
         position: absolute;
-        top: 6px;
-        right: 6px;
-        background: rgba(220, 53, 69, 0.95);
-        color: white;
-        padding: 3px 10px;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 10px;
-        z-index: 2;
-        backdrop-filter: blur(4px);
-    }
-    
-    .view-badge {
-        position: absolute;
-        bottom: 6px;
-        left: 6px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 10px;
-        font-weight: 600;
-        z-index: 2;
-        backdrop-filter: blur(8px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
-    
-    .view-badge i {
-        margin-right: 3px;
-    }
-    
-    .condition-badge {
-        position: absolute;
-        top: 6px;
-        left: 6px;
-        font-size: 10px;
-        font-weight: 600;
-        padding: 4px 10px !important;
-        z-index: 2;
-        border-radius: 20px !important;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(8px);
-    }
-    
-    /* Card Body */
-    .card-body {
-        padding: 8px !important;
-    }
-    
-    .card-title {
-        font-size: 13px;
-        font-weight: 600;
-        line-height: 1.3;
-        color: #212529;
-        margin-bottom: 4px !important;
-    }
-    
-    .meta-info {
+        left: 14px;
+        bottom: 14px;
         display: flex;
         flex-direction: column;
-        gap: 1px;
-        margin-bottom: 4px !important;
+        gap: 2px;
+        padding: 8px 12px;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(8px);
+        border-radius: 12px;
+        max-width: calc(100% - 28px);
     }
-    
-    .meta-info small {
-        font-size: 11px;
-        line-height: 1.2;
+
+    /* Filter card */
+    .cm-filter-card {
+        background: white;
+        border: 1px solid var(--cm-border);
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 4px 20px -10px rgba(124,58,237,0.12);
     }
-    
-    /* Price Section */
-    .price-section {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        padding: 8px 10px;
-        border-radius: 8px;
-        margin-bottom: 4px !important;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    
-    .price-main {
-        font-size: 14px;
-    }
-    
-    .price-original {
-        font-size: 11px;
-    }
-    
-    /* Seller Info */
-    .seller-info {
+    .cm-section-title {
         display: flex;
         align-items: center;
-        font-size: 11px;
-        gap: 3px;
+        gap: 8px;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--cm-text);
+        margin: 0 0 16px;
     }
-    
-    .seller-info small {
-        margin: 0;
-        line-height: 1.2;
+    .cm-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--cm-text);
+        margin-bottom: 6px;
     }
-    
-    /* Hero Section Animations */
-    .hero-section {
-        position: relative;
-        min-height: 300px;
+    .cm-input {
+        width: 100%;
+        background: white;
+        border: 1px solid var(--cm-border);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 14px;
+        color: var(--cm-ink);
+        transition: border-color .2s, box-shadow .2s;
+        font-family: inherit;
+    }
+    .cm-input:focus {
+        outline: none;
+        border-color: var(--cm-primary);
+        box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+    }
+    .cm-input-sm { padding: 8px 10px; font-size: 13px; }
+    .cm-range {
+        width: 100%;
+        height: 6px;
+        appearance: none;
+        background: linear-gradient(90deg, var(--cm-primary), var(--cm-secondary));
+        border-radius: 999px;
+        outline: none;
+    }
+    .cm-range::-webkit-slider-thumb {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        background: white;
+        border: 2px solid var(--cm-primary);
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(124,58,237,0.4);
+    }
+    .cm-range::-moz-range-thumb {
+        width: 18px;
+        height: 18px;
+        background: white;
+        border: 2px solid var(--cm-primary);
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    .space-y-4 > * + * { margin-top: 16px; }
+
+    /* Mobile filter button */
+    .cm-mobile-filter-btn {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: white;
+        border: 1px solid var(--cm-border);
+        border-radius: 14px;
+        color: var(--cm-text);
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: border-color .2s;
+        min-height: 48px;
+    }
+    .cm-mobile-filter-btn:hover { border-color: var(--cm-primary); }
+
+    /* Listings grid */
+    .cm-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    @media (min-width: 640px) {
+        .cm-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    }
+    @media (min-width: 1024px) {
+        .cm-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    }
+    @media (min-width: 1280px) {
+        .cm-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .cm-card {
+        background: white;
+        border: 1px solid var(--cm-border);
+        border-radius: 18px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
         display: flex;
+        flex-direction: column;
+        transition: transform .25s ease, box-shadow .25s ease, border-color .2s;
+    }
+    .cm-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--cm-primary);
+        box-shadow: 0 16px 40px -16px rgba(124, 58, 237, 0.35);
+    }
+    .cm-card-img {
+        position: relative;
+        aspect-ratio: 1 / 1;
+        background: var(--cm-bg);
+        overflow: hidden;
+    }
+    .cm-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform .35s ease;
+    }
+    .cm-card:hover .cm-card-img img { transform: scale(1.06); }
+    .cm-sold-tag {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #DC2626;
+        color: white;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        padding: 4px 10px;
+        border-radius: 999px;
+        z-index: 2;
+    }
+    .cm-cond-tag {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(8px);
+        color: var(--cm-text);
+        font-size: 10px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 999px;
+        z-index: 2;
+    }
+    .cm-cond-tag[data-cond="New"]      { background: #DCFCE7; color: #166534; }
+    .cm-cond-tag[data-cond="Like New"] { background: #DBEAFE; color: #1E40AF; }
+    .cm-cond-tag[data-cond="Good"]     { background: #EDE9FE; color: #5B21B6; }
+    .cm-cond-tag[data-cond="Fair"]     { background: #FEF3C7; color: #92400E; }
+    .cm-cond-tag[data-cond="Poor"]     { background: #F3F4F6; color: #374151; }
+    .cm-views-tag {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: rgba(31,17,71,0.78);
+        backdrop-filter: blur(8px);
+        color: white;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 999px;
+        z-index: 2;
+    }
+    .cm-card-body {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        flex: 1;
+    }
+    .cm-card-title {
+        font-family: 'Rubik', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--cm-ink);
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.3;
+    }
+    .cm-card-cat {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--cm-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    .cm-card-price-row {
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 8px 10px;
+        background: linear-gradient(135deg, #FAF5FF 0%, #F0FDF4 100%);
+        border-radius: 10px;
+    }
+    .cm-card-price {
+        font-family: 'Rubik', sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--cm-primary);
+    }
+    .cm-card-price-old {
+        font-size: 11px;
+        color: var(--cm-muted);
+        text-decoration: line-through;
+    }
+    .cm-card-disc {
+        font-size: 11px;
+        font-weight: 700;
+        color: #16A34A;
+        margin-left: auto;
+    }
+    .cm-card-seller {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--cm-muted);
+    }
+    .cm-card-seller img {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        object-fit: cover;
+    }
+    .cm-card-seller-init {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        color: white;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
+        font-weight: 700;
+        font-size: 11px;
+    }
+    .cm-card-seller-name {
+        white-space: nowrap;
         overflow: hidden;
-        margin: 0 -12px;
-        padding: 30px 16px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-        box-shadow: inset 0 -4px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .animated-bg {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: 1;
-        overflow: hidden;
-    }
-    
-    /* Gradient Circles */
-    .gradient-circle {
-        position: absolute;
-        border-radius: 50%;
-        opacity: 0.15;
-        mix-blend-mode: screen;
-    }
-    
-    .circle-1 {
-        width: 220px;
-        height: 220px;
-        background: rgba(255, 255, 255, 0.5);
-        top: -110px;
-        right: -110px;
-        animation: float 20s infinite ease-in-out;
-    }
-    
-    .circle-2 {
-        width: 150px;
-        height: 150px;
-        background: rgba(255, 255, 255, 0.3);
-        bottom: -75px;
-        left: 10%;
-        animation: float 25s infinite ease-in-out;
-        animation-delay: 2s;
-    }
-    
-    .circle-3 {
-        width: 180px;
-        height: 180px;
-        background: rgba(255, 255, 255, 0.4);
-        bottom: 20%;
-        right: 5%;
-        animation: float 22s infinite ease-in-out;
-        animation-delay: 4s;
-    }
-    
-    /* Floating Elements */
-    .floating-element {
-        position: absolute;
-        font-size: 44px;
-        opacity: 0.8;
-        z-index: 2;
-        animation: float 6s infinite ease-in-out;
-        color: rgba(255, 255, 255, 0.9);
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-    }
-    
-    .floating-book {
-        top: 10%;
-        left: 5%;
-        animation-delay: 0s;
-    }
-    
-    .floating-laptop {
-        top: 20%;
-        right: 8%;
-        animation-delay: 1s;
-        font-size: 38px;
-    }
-    
-    .floating-dumbbell {
-        bottom: 15%;
-        left: 8%;
-        animation-delay: 2s;
-        font-size: 34px;
-    }
-    
-    .floating-soccer {
-        top: 30%;
-        left: 50%;
-        animation-delay: 0.5s;
-    }
-    
-    .floating-graduation {
-        bottom: 25%;
-        right: 12%;
-        animation-delay: 1.5s;
-        font-size: 40px;
-    }
-    
-    .floating-pencil {
-        top: 15%;
-        left: 25%;
-        animation-delay: 2.5s;
-        font-size: 30px;
-    }
-    
-    @keyframes float {
-        0%, 100% {
-            transform: translateY(0px) translateX(0px) rotate(0deg);
-        }
-        25% {
-            transform: translateY(-20px) translateX(10px) rotate(5deg);
-        }
-        50% {
-            transform: translateY(-40px) translateX(-10px) rotate(-5deg);
-        }
-        75% {
-            transform: translateY(-20px) translateX(15px) rotate(3deg);
-        }
-    }
-    
-    /* Hero Content */
-    .hero-content {
-        position: relative;
-        z-index: 3;
-        text-align: center;
-        color: white;
-        animation: slideUp 0.8s ease-out;
-    }
-    
-    @keyframes slideUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .hero-title {
-        font-size: 2.4rem;
-        font-weight: 800;
-        margin-bottom: 10px;
-        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        letter-spacing: -1px;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.05rem;
-        margin-bottom: 24px;
-        opacity: 0.95;
-        font-weight: 300;
-    }
-    
-    /* Hero CTA */
-    .hero-cta {
-        margin: 20px 0 10px;
-        animation: fadeInUp 1s ease-out 0.3s both;
-    }
-    
-    .hero-cta .btn {
+        text-overflow: ellipsis;
+        max-width: 140px;
         font-weight: 600;
-        padding: 14px 36px;
-        border-radius: 50px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        font-size: 1.1rem;
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
-        border: 2px solid rgba(255, 255, 255, 0.3) !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .hero-cta .btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-        transition: left 0.5s;
-    }
-    
-    .hero-cta .btn:hover::before {
-        left: 100%;
-    }
-    
-    .hero-cta .btn:hover {
-        transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
-        border-color: rgba(255, 255, 255, 0.6) !important;
-    }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    /* Hero Stats */
-    .hero-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-        gap: 14px;
-        margin-top: 24px;
-        max-width: 520px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    .stat-item {
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(15px);
-        padding: 12px;
-        border-radius: 16px;
-        border: 1.5px solid rgba(255, 255, 255, 0.4);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    
-    .stat-item:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: translateY(-5px) scale(1.02);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
-        border-color: rgba(255, 255, 255, 0.6);
-    }
-    
-    .stat-number {
-        display: block;
-        font-size: 1.5rem;
-        margin-bottom: 8px;
-    }
-    
-    .stat-item p {
-        margin: 0;
-        font-size: 0.9rem;
-        font-weight: 500;
-    }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-        .hero-section {
-            min-height: 260px;
-            padding: 24px 12px;
-        }
-        
-        .hero-title {
-            font-size: 1.8rem;
-        }
-        
-        .hero-subtitle {
-            font-size: 0.9rem;
-        }
-        
-        .hero-cta .btn {
-            font-size: 1rem;
-            padding: 10px 28px;
-        }
-        
-        .floating-element {
-            font-size: 32px;
-        }
-        
-        .circle-1, .circle-2, .circle-3 {
-            display: none;
-        }
     }
 
-    /* Extra-small devices (portrait phones, less than 576px) */
-    @media (max-width: 576px) {
-        /* Hero tightening */
-        .hero-section {
-            min-height: 220px;
-            padding: 16px 10px;
-        }
-        .hero-title {
-            font-size: 1.6rem;
-            margin-bottom: 6px;
-        }
-        .hero-subtitle {
-            font-size: 0.85rem;
-            margin-bottom: 14px;
-        }
-        .hero-stats {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            max-width: 360px;
-            margin-top: 14px;
-        }
-        .stat-item {
-            padding: 8px;
-        }
-        .stat-number {
-            font-size: 1.3rem;
-            margin-bottom: 4px;
-        }
-        /* Reduce background load on phones */
-        .floating-element {
-            display: none;
-        }
+    /* Empty state */
+    .cm-empty-state {
+        background: white;
+        border: 2px dashed var(--cm-border);
+        border-radius: 22px;
+        padding: 56px 24px;
+        text-align: center;
+    }
+    .cm-empty-art { color: var(--cm-secondary); display: inline-block; }
 
-        /* Filters: disable sticky on small screens */
-        .sticky-top {
-            position: static !important;
-            top: auto !important;
-        }
-
-        /* Cards: compact spacing & typography */
-        .card-body {
-            padding: 6px !important;
-        }
-        .card-title {
-            font-size: 12px;
-            margin-bottom: 2px !important;
-        }
-        .meta-info small {
-            font-size: 10px;
-        }
-        .price-section {
-            padding: 6px;
-        }
-        .price-main {
-            font-size: 13px;
-        }
-        .price-original {
-            font-size: 10px;
-        }
-        .seller-info {
-            gap: 2px;
-            font-size: 10px;
-        }
-        .product-image-container {
-            aspect-ratio: 4 / 3;
-        }
-        .condition-badge {
-            font-size: 9px;
-            padding: 3px 7px !important;
-        }
-        .view-badge {
-            font-size: 9px;
-            padding: 3px 6px;
-            border-radius: 10px;
-        }
-        .sold-badge {
-            font-size: 9px;
-            padding: 3px 9px;
-        }
+    /* Mobile bottom sheet */
+    .cm-sheet-scrim {
+        position: fixed;
+        inset: 0;
+        background: rgba(31, 17, 71, 0.45);
+        z-index: 110;
+        opacity: 0;
+        transition: opacity .25s ease;
+    }
+    .cm-sheet-scrim.is-open { opacity: 1; }
+    .cm-sheet {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 111;
+        background: white;
+        border-radius: 22px 22px 0 0;
+        max-height: 86vh;
+        transform: translateY(100%);
+        transition: transform .3s ease;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 -10px 40px rgba(31,17,71,0.18);
+    }
+    .cm-sheet.is-open { transform: translateY(0); }
+    .cm-sheet-grip {
+        width: 44px;
+        height: 4px;
+        background: var(--cm-border);
+        border-radius: 999px;
+        margin: 10px auto 0;
+    }
+    .cm-sheet-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--cm-border);
+    }
+    .cm-sheet-body {
+        padding: 20px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
     }
 
-    
-    /* Responsive Adjustments */
-    @media (max-width: 768px) {
-        .card-title {
-            font-size: 12px;
-        }
-        
-        .price-main {
-            font-size: 13px;
-        }
+    /* Tighter card on small screens */
+    @media (max-width: 575.98px) {
+        .cm-card-img { aspect-ratio: 4 / 3; }
+        .cm-card-title { font-size: 13px; }
+        .cm-card-price { font-size: 14px; }
+        .cm-bento-tile { aspect-ratio: 1 / 1; }
     }
 </style>
 
 <script>
-    // Price range slider functionality
-    const priceRangeMax = document.getElementById('priceRangeMax');
-    const maxPriceDisplay = document.getElementById('maxPriceDisplay');
-    const maxPriceInput = document.getElementById('maxPriceInput');
-    
-    priceRangeMax.addEventListener('input', function() {
-        const value = this.value;
-        maxPriceDisplay.textContent = '₹' + Number(value).toLocaleString('en-IN');
-        maxPriceInput.value = value;
-    });
-    
-    maxPriceInput.addEventListener('input', function() {
-        const value = this.value;
-        if (value && value <= 50000) {
-            priceRangeMax.value = value;
-            maxPriceDisplay.textContent = '₹' + Number(value).toLocaleString('en-IN');
-        }
-    });
-    
-    // Sort functionality
+    // Sort handler
     function sortProducts(sortValue) {
-        // Get current URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
+        var urlParams = new URLSearchParams(window.location.search);
         urlParams.set('sort', sortValue);
-        
-        // Redirect with new sort parameter
         window.location.href = '/products?' + urlParams.toString();
     }
+
+    // Price range sync
+    (function () {
+        function bindRange(rangeId, displayId, inputId) {
+            var range = document.getElementById(rangeId);
+            var disp  = document.getElementById(displayId);
+            var input = document.getElementById(inputId);
+            if (!range || !disp || !input) return;
+            range.addEventListener('input', function () {
+                disp.textContent = '₹' + Number(this.value).toLocaleString('en-IN');
+                input.value = this.value;
+            });
+            input.addEventListener('input', function () {
+                if (this.value && this.value <= 50000) {
+                    range.value = this.value;
+                    disp.textContent = '₹' + Number(this.value).toLocaleString('en-IN');
+                }
+            });
+        }
+        bindRange('priceRangeMax',       'maxPriceDisplay',       'maxPriceInput');
+        bindRange('priceRangeMaxMobile', 'maxPriceDisplayMobile', 'maxPriceInputMobile');
+    })();
+
+    // Mobile filter sheet
+    (function () {
+        var trigger = document.querySelector('[data-cm-toggle="filter-sheet"]');
+        var sheet   = document.getElementById('cmFilterSheet');
+        var scrim   = document.getElementById('cmFilterScrim');
+        var close   = document.getElementById('cmFilterClose');
+        if (!trigger || !sheet || !scrim || !close) return;
+
+        function open() {
+            scrim.hidden = false;
+            requestAnimationFrame(function () {
+                scrim.classList.add('is-open');
+                sheet.classList.add('is-open');
+            });
+            sheet.setAttribute('aria-hidden', 'false');
+            trigger.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        }
+        function shut() {
+            scrim.classList.remove('is-open');
+            sheet.classList.remove('is-open');
+            sheet.setAttribute('aria-hidden', 'true');
+            trigger.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+            setTimeout(function () { scrim.hidden = true; }, 300);
+        }
+        trigger.addEventListener('click', open);
+        close.addEventListener('click', shut);
+        scrim.addEventListener('click', shut);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && sheet.classList.contains('is-open')) shut();
+        });
+    })();
 </script>

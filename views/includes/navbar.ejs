@@ -1,84 +1,397 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-    <div class="container">
-        <a class="navbar-brand fw-bold text-primary" href="/products">
-            <i class="fas fa-graduation-cap me-2"></i>CampusMart
-        </a>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/products">Browse Items</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/products/new">Sell Item</a>
-                </li>
-                   <li class="nav-item">
-                       <a class="nav-link fw-bold" href="https://mremsolutions.netlify.app/" target="_blank">
-                           <i class="fas fa-sticky-note me-1"></i>Notes!
-                       </a>
-                   </li>
-                <li class="nav-item">
-                    <form class="d-flex" action="/products/search" method="GET">
-                        <div class="input-group">
-                            <input type="search" name="q" class="form-control" placeholder="Search items...">
-                            <button class="btn btn-outline-primary" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </form>
-                </li>
-            </ul>
-            
-            <ul class="navbar-nav">
-                <% if(!currUser) { %>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/signup">Sign Up</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
-                    </li>
+<!-- CampusMart navbar — sticky glass + mobile drawer -->
+<header class="cm-nav sticky top-0 z-50">
+    <div class="cm-nav-bar cm-glass">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+            <!-- Brand -->
+            <a href="/products" class="flex items-center gap-2 shrink-0 cm-focus rounded-lg" aria-label="CampusMart home">
+                <span class="cm-brand-mark">
+                    <!-- graduation cap icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M22 10 12 5 2 10l10 5 10-5Z"/>
+                        <path d="M6 12v5c0 1 3 3 6 3s6-2 6-3v-5"/>
+                    </svg>
+                </span>
+                <span class="font-display font-bold text-lg text-cm-text leading-none">CampusMart</span>
+            </a>
+
+            <!-- Desktop search (always visible on md+) -->
+            <form action="/products/search" method="GET" class="cm-search hidden md:flex flex-1 mx-2" role="search">
+                <label for="cm-search-input" class="sr-only">Search items</label>
+                <span class="cm-search-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </span>
+                <input id="cm-search-input" type="search" name="q" placeholder="Search textbooks, laptops, cycles…" />
+                <button type="submit" class="cm-search-btn cm-focus" aria-label="Search">Search</button>
+            </form>
+
+            <!-- Desktop nav links -->
+            <nav class="hidden lg:flex items-center gap-1 text-sm" aria-label="Primary">
+                <a href="/products" class="cm-nav-link cm-focus">Browse</a>
+                <a href="/products/new" class="cm-nav-link cm-focus">Sell</a>
+                <a href="https://mremsolutions.netlify.app/" target="_blank" rel="noopener" class="cm-nav-link cm-focus">Notes</a>
+            </nav>
+
+            <!-- Right cluster: auth + sell CTA -->
+            <div class="hidden md:flex items-center gap-2 ml-auto">
+                <% if (!currUser) { %>
+                    <a href="/login" class="cm-btn-ghost cm-focus">Login</a>
+                    <a href="/signup" class="cm-btn-primary cm-focus">Sign up</a>
                 <% } else { %>
                     <% if (currUser.isAdmin) { %>
-                        <li class="nav-item">
-                            <a class="nav-link text-danger" href="/admin">
-                                <i class="fas fa-shield-alt me-1"></i>Admin
-                            </a>
-                        </li>
-                    <% } %>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle me-1"></i><%= currUser.fullName %>
+                        <a href="/admin" class="cm-nav-link cm-focus" style="color:#dc2626;font-weight:600;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-2px;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
+                            Admin
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
-                                <a class="dropdown-item" href="/profile">
-                                    <i class="fas fa-tachometer-alt me-2"></i>My Dashboard
-                                </a>
+                    <% } %>
+                    <a href="/products/new" class="cm-btn-cta cm-focus">+ List item</a>
+                    <div class="dropdown">
+                        <button class="cm-avatar-btn dropdown-toggle cm-focus" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Account menu">
+                            <% if (currUser.profileImage && currUser.profileImage.url) { %>
+                                <img src="<%= currUser.profileImage.url %>" alt="" loading="lazy" />
+                            <% } else { %>
+                                <span class="cm-avatar-initial" style="background: <%= currUser.profileColor || '#7C3AED' %>;">
+                                    <%= (currUser.fullName || 'U').charAt(0).toUpperCase() %>
+                                </span>
+                            <% } %>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="border-radius:14px;border:1px solid var(--cm-border);">
+                            <li class="px-3 pt-2 pb-1 text-cm-text" style="font-size:12px;color:var(--cm-muted);">
+                                Signed in as <strong style="color:var(--cm-text);"><%= currUser.fullName %></strong>
                             </li>
-                            <li>
-                                <a class="dropdown-item" href="/saved-items">
-                                    <i class="fas fa-heart me-2 text-danger"></i>Saved Items
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="/products?college=<%= currUser.college %>">
-                                    <i class="fas fa-university me-2"></i>My Campus
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" href="/logout">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                </a>
-                            </li>
+                            <li><hr class="dropdown-divider"/></li>
+                            <li><a class="dropdown-item" href="/profile"><i class="fas fa-tachometer-alt me-2"></i>My Dashboard</a></li>
+                            <li><a class="dropdown-item" href="/saved-items"><i class="fas fa-heart me-2"></i>Saved Items</a></li>
+                            <li><a class="dropdown-item" href="/products?college=<%= encodeURIComponent(currUser.college || '') %>"><i class="fas fa-university me-2"></i>My Campus</a></li>
+                            <li><hr class="dropdown-divider"/></li>
+                            <li><a class="dropdown-item text-danger" href="/logout"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                         </ul>
-                    </li>
+                    </div>
                 <% } %>
-            </ul>
+            </div>
+
+            <!-- Mobile hamburger -->
+            <button id="cmDrawerToggle" class="cm-hamburger md:hidden ml-auto cm-focus" aria-label="Open menu" aria-controls="cmDrawer" aria-expanded="false" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            </button>
+        </div>
+
+        <!-- Mobile search row -->
+        <div class="md:hidden px-4 pb-3">
+            <form action="/products/search" method="GET" class="cm-search w-full" role="search">
+                <label for="cm-search-input-mobile" class="sr-only">Search items</label>
+                <span class="cm-search-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </span>
+                <input id="cm-search-input-mobile" type="search" name="q" placeholder="Search items…" />
+                <button type="submit" class="cm-search-btn" aria-label="Search">Go</button>
+            </form>
         </div>
     </div>
-</nav>
+
+    <!-- Mobile drawer -->
+    <div id="cmDrawerScrim" class="cm-drawer-scrim" hidden></div>
+    <aside id="cmDrawer" class="cm-drawer" aria-hidden="true" aria-label="Mobile navigation">
+        <div class="cm-drawer-head">
+            <span class="font-display font-bold text-lg text-cm-text">Menu</span>
+            <button id="cmDrawerClose" class="cm-icon-btn cm-focus" aria-label="Close menu" type="button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <nav class="cm-drawer-nav" aria-label="Mobile primary">
+            <a href="/products" class="cm-drawer-link"><i class="fas fa-store"></i>Browse Items</a>
+            <a href="/products/new" class="cm-drawer-link"><i class="fas fa-plus-circle"></i>Sell an Item</a>
+            <a href="https://mremsolutions.netlify.app/" target="_blank" rel="noopener" class="cm-drawer-link"><i class="fas fa-sticky-note"></i>Notes</a>
+            <div class="cm-drawer-sep"></div>
+            <% if (!currUser) { %>
+                <a href="/login" class="cm-drawer-link"><i class="fas fa-sign-in-alt"></i>Login</a>
+                <a href="/signup" class="cm-drawer-link"><i class="fas fa-user-plus"></i>Sign up</a>
+            <% } else { %>
+                <a href="/profile" class="cm-drawer-link"><i class="fas fa-tachometer-alt"></i>My Dashboard</a>
+                <a href="/saved-items" class="cm-drawer-link"><i class="fas fa-heart"></i>Saved Items</a>
+                <a href="/products?college=<%= encodeURIComponent(currUser.college || '') %>" class="cm-drawer-link"><i class="fas fa-university"></i>My Campus</a>
+                <% if (currUser.isAdmin) { %>
+                    <a href="/admin" class="cm-drawer-link" style="color:#dc2626;"><i class="fas fa-shield-alt"></i>Admin Panel</a>
+                <% } %>
+                <a href="/logout" class="cm-drawer-link" style="color:#dc2626;"><i class="fas fa-sign-out-alt"></i>Logout</a>
+            <% } %>
+        </nav>
+    </aside>
+</header>
+
+<style>
+    .cm-nav-bar {
+        background: rgba(255, 255, 255, 0.78);
+        backdrop-filter: blur(18px) saturate(180%);
+        -webkit-backdrop-filter: blur(18px) saturate(180%);
+        border-bottom: 1px solid var(--cm-border);
+        box-shadow: 0 2px 12px rgba(76, 29, 149, 0.05);
+    }
+    .cm-brand-mark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
+        color: white;
+        box-shadow: 0 4px 14px -4px rgba(124, 58, 237, 0.45);
+    }
+    .cm-search {
+        position: relative;
+        display: flex;
+        align-items: center;
+        max-width: 560px;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid var(--cm-border);
+        border-radius: 999px;
+        padding: 4px 4px 4px 14px;
+        transition: border-color .2s, box-shadow .2s;
+    }
+    .cm-search:focus-within {
+        border-color: var(--cm-primary);
+        box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.12);
+    }
+    .cm-search-icon {
+        color: var(--cm-muted);
+        display: flex;
+        align-items: center;
+        margin-right: 8px;
+    }
+    .cm-search input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        padding: 8px 4px;
+        font-size: 14px;
+        color: var(--cm-ink);
+        min-width: 0;
+    }
+    .cm-search input::placeholder { color: #9b8fb8; }
+    .cm-search-btn {
+        background: var(--cm-primary);
+        color: white;
+        border: none;
+        border-radius: 999px;
+        padding: 8px 18px;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        transition: background .2s;
+        min-height: 36px;
+    }
+    .cm-search-btn:hover { background: #6D28D9; }
+    .cm-nav-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        color: var(--cm-text);
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        transition: background .2s, color .2s;
+    }
+    .cm-nav-link:hover { background: rgba(124, 58, 237, 0.08); color: var(--cm-primary); }
+    .cm-btn-ghost {
+        padding: 8px 16px;
+        border-radius: 999px;
+        color: var(--cm-text);
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        transition: background .2s;
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+    }
+    .cm-btn-ghost:hover { background: rgba(124, 58, 237, 0.08); color: var(--cm-primary); }
+    .cm-btn-primary {
+        padding: 8px 18px;
+        border-radius: 999px;
+        background: var(--cm-primary);
+        color: white !important;
+        font-weight: 600;
+        font-size: 14px;
+        text-decoration: none;
+        transition: background .2s, transform .15s;
+        box-shadow: 0 4px 14px -4px rgba(124, 58, 237, 0.45);
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+    }
+    .cm-btn-primary:hover { background: #6D28D9; color: white; transform: translateY(-1px); }
+    .cm-btn-cta {
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: var(--cm-cta);
+        color: white !important;
+        font-weight: 700;
+        font-size: 13px;
+        text-decoration: none;
+        transition: background .2s, transform .15s;
+        box-shadow: 0 4px 14px -4px rgba(34, 197, 94, 0.45);
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+    }
+    .cm-btn-cta:hover { background: #16A34A; color: white; transform: translateY(-1px); }
+    .cm-avatar-btn {
+        background: transparent;
+        border: 2px solid var(--cm-border);
+        padding: 2px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: border-color .2s;
+        min-width: 44px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cm-avatar-btn:hover { border-color: var(--cm-primary); }
+    .cm-avatar-btn::after { display: none; }
+    .cm-avatar-btn img {
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        object-fit: cover;
+        display: block;
+    }
+    .cm-avatar-initial {
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        color: white;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+    }
+    .cm-hamburger {
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid var(--cm-border);
+        color: var(--cm-text);
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background .2s;
+    }
+    .cm-hamburger:hover { background: white; }
+    .cm-icon-btn {
+        background: transparent;
+        border: none;
+        color: var(--cm-text);
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background .2s;
+    }
+    .cm-icon-btn:hover { background: rgba(124, 58, 237, 0.08); }
+    .cm-drawer-scrim {
+        position: fixed;
+        inset: 0;
+        background: rgba(31, 17, 71, 0.4);
+        z-index: 100;
+        opacity: 0;
+        transition: opacity .25s ease;
+        backdrop-filter: blur(2px);
+    }
+    .cm-drawer-scrim.is-open { opacity: 1; }
+    .cm-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 86%;
+        max-width: 340px;
+        height: 100vh;
+        background: white;
+        z-index: 101;
+        transform: translateX(100%);
+        transition: transform .28s ease;
+        box-shadow: -8px 0 32px rgba(31, 17, 71, 0.15);
+        display: flex;
+        flex-direction: column;
+    }
+    .cm-drawer.is-open { transform: translateX(0); }
+    .cm-drawer-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--cm-border);
+    }
+    .cm-drawer-nav {
+        display: flex;
+        flex-direction: column;
+        padding: 12px;
+        gap: 4px;
+    }
+    .cm-drawer-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        color: var(--cm-text);
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        transition: background .2s;
+        min-height: 44px;
+    }
+    .cm-drawer-link i { width: 20px; text-align: center; color: var(--cm-primary); }
+    .cm-drawer-link:hover { background: var(--cm-bg); color: var(--cm-primary); }
+    .cm-drawer-sep {
+        height: 1px;
+        background: var(--cm-border);
+        margin: 8px 14px;
+    }
+    main { padding-top: 0; }
+</style>
+
+<script>
+    (function () {
+        var toggle = document.getElementById('cmDrawerToggle');
+        var drawer = document.getElementById('cmDrawer');
+        var scrim  = document.getElementById('cmDrawerScrim');
+        var close  = document.getElementById('cmDrawerClose');
+        if (!toggle || !drawer || !scrim || !close) return;
+
+        function open() {
+            scrim.hidden = false;
+            requestAnimationFrame(function () {
+                scrim.classList.add('is-open');
+                drawer.classList.add('is-open');
+            });
+            drawer.setAttribute('aria-hidden', 'false');
+            toggle.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        }
+        function shut() {
+            scrim.classList.remove('is-open');
+            drawer.classList.remove('is-open');
+            drawer.setAttribute('aria-hidden', 'true');
+            toggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+            setTimeout(function () { scrim.hidden = true; }, 280);
+        }
+        toggle.addEventListener('click', open);
+        close.addEventListener('click', shut);
+        scrim.addEventListener('click', shut);
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && drawer.classList.contains('is-open')) shut();
+        });
+    })();
+</script>

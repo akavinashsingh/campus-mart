@@ -1,17 +1,76 @@
+<!-- CampusMart flash messages -->
 <% if (success && success.length > 0) { %>
-    <div class="container mt-3">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <%= success %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="cm-flash cm-flash-success" role="status">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+            <span class="cm-flash-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </span>
+            <p class="flex-1 m-0 text-sm font-semibold"><%= success %></p>
+            <button type="button" class="cm-flash-close" data-cm-dismiss="flash" aria-label="Dismiss">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
         </div>
     </div>
 <% } %>
 
 <% if (error && error.length > 0) { %>
-    <div class="container mt-3">
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <%= error %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div class="cm-flash cm-flash-error" role="alert">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+            <span class="cm-flash-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+            </span>
+            <p class="flex-1 m-0 text-sm font-semibold"><%= error %></p>
+            <button type="button" class="cm-flash-close" data-cm-dismiss="flash" aria-label="Dismiss">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
         </div>
     </div>
 <% } %>
+
+<style>
+    .cm-flash {
+        border-bottom: 1px solid;
+        animation: cm-flash-in .25s ease-out;
+    }
+    .cm-flash-success {
+        background: linear-gradient(90deg, #DCFCE7 0%, #ECFDF5 100%);
+        color: #166534;
+        border-color: rgba(34, 197, 94, 0.3);
+    }
+    .cm-flash-error {
+        background: linear-gradient(90deg, #FEE2E2 0%, #FEF2F2 100%);
+        color: #991B1B;
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+    .cm-flash-icon { display: inline-flex; }
+    .cm-flash-close {
+        background: transparent;
+        border: none;
+        color: currentColor;
+        opacity: 0.6;
+        padding: 6px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: opacity .2s, background .2s;
+    }
+    .cm-flash-close:hover { opacity: 1; background: rgba(0, 0, 0, 0.06); }
+    @keyframes cm-flash-in {
+        from { opacity: 0; transform: translateY(-6px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+</style>
+<script>
+    (function () {
+        document.querySelectorAll('[data-cm-dismiss="flash"]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var flash = btn.closest('.cm-flash');
+                if (flash) {
+                    flash.style.transition = 'opacity .2s, transform .2s';
+                    flash.style.opacity = '0';
+                    flash.style.transform = 'translateY(-6px)';
+                    setTimeout(function () { flash.remove(); }, 220);
+                }
+            });
+        });
+    })();
+</script>

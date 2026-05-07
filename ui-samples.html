@@ -17,17 +17,17 @@
   .font-inter { font-family: 'Inter', sans-serif; }
   .font-mono { font-family: 'JetBrains Mono', monospace; }
 
-  /* Sample-2 glass blobs */
   .blob { filter: blur(80px); opacity: 0.55; }
   .glass { backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%); }
 
-  /* Sample-3 brutalism */
   .neo-shadow { box-shadow: 6px 6px 0 0 #000; transition: transform .15s ease, box-shadow .15s ease; }
   .neo-shadow:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 0 #000; }
   .neo-shadow:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 0 #000; }
 
-  /* Sample-5 dark glow */
   .glow-ring { box-shadow: 0 0 0 1px rgba(167,139,250,0.25), 0 8px 32px -8px rgba(124,58,237,0.4); }
+
+  .img-zoom img { transition: transform .4s ease; }
+  .img-zoom:hover img { transform: scale(1.06); }
 
   @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; }
@@ -36,15 +36,13 @@
 </head>
 <body class="bg-slate-100 text-slate-900">
 
-<!-- ============================================================== -->
-<!-- TOP NAVIGATION between samples                                  -->
-<!-- ============================================================== -->
+<!-- =============================================================== -->
+<!-- TOP NAVIGATION                                                  -->
+<!-- =============================================================== -->
 <header class="sticky top-0 z-50 bg-white/90 glass border-b border-slate-200">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
     <div class="flex items-center gap-2">
-      <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-violet-600 text-white">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-      </span>
+      <span class="inline-flex h-9 w-9 items-center justify-center rounded-lg bg-violet-600 text-white font-rubik font-bold text-lg">C</span>
       <span class="font-rubik font-bold text-lg">CampusMart UI Samples</span>
     </div>
     <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
@@ -57,9 +55,9 @@
   </div>
 </header>
 
-<!-- ============================================================== -->
+<!-- =============================================================== -->
 <!-- SAMPLE 01 — MINIMALISM                                          -->
-<!-- ============================================================== -->
+<!-- =============================================================== -->
 <section id="sample-1" class="bg-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20">
     <div class="mb-10 flex items-center gap-3">
@@ -94,46 +92,54 @@
       </div>
 
       <div class="grid grid-cols-2 gap-4">
-        <article class="rounded-2xl border border-slate-200 p-5 hover:border-slate-900 transition-colors duration-200 cursor-pointer">
-          <div class="aspect-square rounded-xl bg-slate-100 mb-4 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+        <article class="rounded-2xl border border-slate-200 overflow-hidden hover:border-slate-900 transition-colors duration-200 cursor-pointer img-zoom">
+          <div class="aspect-square overflow-hidden bg-slate-100">
+            <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=600&auto=format&fit=crop" alt="Stack of textbooks" class="h-full w-full object-cover" loading="lazy" />
           </div>
-          <p class="text-xs uppercase tracking-wider text-slate-500">Books</p>
-          <h3 class="font-semibold mt-1">Calculus, 8th Ed.</h3>
-          <p class="mt-2 font-rubik font-bold">$24</p>
+          <div class="p-4">
+            <p class="text-xs uppercase tracking-wider text-slate-500">Books</p>
+            <h3 class="font-semibold mt-1">Calculus, 8th Ed.</h3>
+            <p class="mt-2 font-rubik font-bold">$24</p>
+          </div>
         </article>
-        <article class="rounded-2xl border border-slate-200 p-5 mt-8 hover:border-slate-900 transition-colors duration-200 cursor-pointer">
-          <div class="aspect-square rounded-xl bg-slate-100 mb-4 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M2 18h20"/></svg>
+        <article class="rounded-2xl border border-slate-200 overflow-hidden mt-8 hover:border-slate-900 transition-colors duration-200 cursor-pointer img-zoom">
+          <div class="aspect-square overflow-hidden bg-slate-100">
+            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop" alt="MacBook on desk" class="h-full w-full object-cover" loading="lazy" />
           </div>
-          <p class="text-xs uppercase tracking-wider text-slate-500">Tech</p>
-          <h3 class="font-semibold mt-1">MacBook Air M1</h3>
-          <p class="mt-2 font-rubik font-bold">$680</p>
+          <div class="p-4">
+            <p class="text-xs uppercase tracking-wider text-slate-500">Tech</p>
+            <h3 class="font-semibold mt-1">MacBook Air M1</h3>
+            <p class="mt-2 font-rubik font-bold">$680</p>
+          </div>
         </article>
-        <article class="rounded-2xl border border-slate-200 p-5 hover:border-slate-900 transition-colors duration-200 cursor-pointer">
-          <div class="aspect-square rounded-xl bg-slate-100 mb-4 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20"/><path d="M12 2a14.5 14.5 0 0 1 0 20"/><path d="M2 12h20"/></svg>
+        <article class="rounded-2xl border border-slate-200 overflow-hidden hover:border-slate-900 transition-colors duration-200 cursor-pointer img-zoom">
+          <div class="aspect-square overflow-hidden bg-slate-100">
+            <img src="https://images.unsplash.com/photo-1614632537190-23e4b21b25e9?w=600&auto=format&fit=crop" alt="Football on grass" class="h-full w-full object-cover" loading="lazy" />
           </div>
-          <p class="text-xs uppercase tracking-wider text-slate-500">Sports</p>
-          <h3 class="font-semibold mt-1">Football, size 5</h3>
-          <p class="mt-2 font-rubik font-bold">$15</p>
+          <div class="p-4">
+            <p class="text-xs uppercase tracking-wider text-slate-500">Sports</p>
+            <h3 class="font-semibold mt-1">Football, size 5</h3>
+            <p class="mt-2 font-rubik font-bold">$15</p>
+          </div>
         </article>
-        <article class="rounded-2xl border border-slate-200 p-5 mt-8 hover:border-slate-900 transition-colors duration-200 cursor-pointer">
-          <div class="aspect-square rounded-xl bg-slate-100 mb-4 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        <article class="rounded-2xl border border-slate-200 overflow-hidden mt-8 hover:border-slate-900 transition-colors duration-200 cursor-pointer img-zoom">
+          <div class="aspect-square overflow-hidden bg-slate-100">
+            <img src="https://images.unsplash.com/photo-1517344884509-a0c97ec11bcc?w=600&auto=format&fit=crop" alt="Pair of dumbbells" class="h-full w-full object-cover" loading="lazy" />
           </div>
-          <p class="text-xs uppercase tracking-wider text-slate-500">Fitness</p>
-          <h3 class="font-semibold mt-1">Dumbbells 10kg</h3>
-          <p class="mt-2 font-rubik font-bold">$30</p>
+          <div class="p-4">
+            <p class="text-xs uppercase tracking-wider text-slate-500">Fitness</p>
+            <h3 class="font-semibold mt-1">Dumbbells 10kg</h3>
+            <p class="mt-2 font-rubik font-bold">$30</p>
+          </div>
         </article>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================== -->
+<!-- =============================================================== -->
 <!-- SAMPLE 02 — GLASSMORPHISM                                       -->
-<!-- ============================================================== -->
+<!-- =============================================================== -->
 <section id="sample-2" class="relative overflow-hidden bg-gradient-to-br from-violet-100 via-fuchsia-100 to-emerald-100">
   <div class="blob absolute -top-32 -left-20 h-96 w-96 rounded-full bg-violet-400"></div>
   <div class="blob absolute top-40 right-0 h-[28rem] w-[28rem] rounded-full bg-fuchsia-400"></div>
@@ -159,41 +165,32 @@
             Discover textbooks, gadgets, and gear from verified students on your campus. Pay safely, meet locally.
           </p>
           <div class="mt-8 flex flex-wrap gap-3">
-            <button class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-6 py-3 font-semibold text-white hover:bg-emerald-600 transition-colors duration-200 cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-              List your item
-            </button>
+            <button class="inline-flex items-center gap-2 rounded-full bg-emerald-500 px-6 py-3 font-semibold text-white hover:bg-emerald-600 transition-colors duration-200 cursor-pointer">List your item</button>
             <button class="glass inline-flex items-center gap-2 rounded-full border border-white bg-white/50 px-6 py-3 font-semibold text-violet-900 hover:bg-white/80 transition-colors duration-200 cursor-pointer">Browse marketplace</button>
           </div>
         </div>
 
         <div class="lg:col-span-2 space-y-3">
-          <div class="glass bg-white/70 border border-white rounded-2xl p-4 flex items-center gap-3 hover:bg-white/90 transition-colors duration-200 cursor-pointer">
-            <div class="h-12 w-12 rounded-xl bg-violet-200 flex items-center justify-center text-violet-700">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-            </div>
-            <div class="flex-1">
-              <p class="font-semibold text-violet-950">Organic Chemistry</p>
+          <div class="glass bg-white/70 border border-white rounded-2xl p-3 flex items-center gap-3 hover:bg-white/90 transition-colors duration-200 cursor-pointer">
+            <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=200&auto=format&fit=crop" alt="Chemistry book" class="h-14 w-14 rounded-xl object-cover" loading="lazy" />
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-violet-950 truncate">Organic Chemistry</p>
               <p class="text-xs text-violet-900/60">Posted 2 min ago · ENG block</p>
             </div>
             <span class="font-rubik font-bold text-emerald-600">$32</span>
           </div>
-          <div class="glass bg-white/70 border border-white rounded-2xl p-4 flex items-center gap-3 hover:bg-white/90 transition-colors duration-200 cursor-pointer">
-            <div class="h-12 w-12 rounded-xl bg-fuchsia-200 flex items-center justify-center text-fuchsia-700">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/></svg>
-            </div>
-            <div class="flex-1">
-              <p class="font-semibold text-violet-950">iPad Air, 2022</p>
+          <div class="glass bg-white/70 border border-white rounded-2xl p-3 flex items-center gap-3 hover:bg-white/90 transition-colors duration-200 cursor-pointer">
+            <img src="https://images.unsplash.com/photo-1561154464-82e9adf32764?w=200&auto=format&fit=crop" alt="iPad on desk" class="h-14 w-14 rounded-xl object-cover" loading="lazy" />
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-violet-950 truncate">iPad Air, 2022</p>
               <p class="text-xs text-violet-900/60">Posted 18 min ago · Hostel B</p>
             </div>
             <span class="font-rubik font-bold text-emerald-600">$340</span>
           </div>
-          <div class="glass bg-white/70 border border-white rounded-2xl p-4 flex items-center gap-3 hover:bg-white/90 transition-colors duration-200 cursor-pointer">
-            <div class="h-12 w-12 rounded-xl bg-emerald-200 flex items-center justify-center text-emerald-700">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a14 14 0 0 1 0 20"/></svg>
-            </div>
-            <div class="flex-1">
-              <p class="font-semibold text-violet-950">Yoga mat, lavender</p>
+          <div class="glass bg-white/70 border border-white rounded-2xl p-3 flex items-center gap-3 hover:bg-white/90 transition-colors duration-200 cursor-pointer">
+            <img src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=200&auto=format&fit=crop" alt="Yoga mat rolled up" class="h-14 w-14 rounded-xl object-cover" loading="lazy" />
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-violet-950 truncate">Yoga mat, lavender</p>
               <p class="text-xs text-violet-900/60">Posted 1 hr ago · Sports complex</p>
             </div>
             <span class="font-rubik font-bold text-emerald-600">$12</span>
@@ -204,9 +201,9 @@
   </div>
 </section>
 
-<!-- ============================================================== -->
+<!-- =============================================================== -->
 <!-- SAMPLE 03 — BRUTALISM                                           -->
-<!-- ============================================================== -->
+<!-- =============================================================== -->
 <section id="sample-3" class="bg-yellow-300">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20">
     <div class="mb-10 flex items-center gap-3">
@@ -218,7 +215,7 @@
     <div class="grid lg:grid-cols-12 gap-6">
       <div class="lg:col-span-7 bg-white border-4 border-black neo-shadow rounded-none p-8">
         <p class="font-mono text-xs font-bold uppercase tracking-widest mb-4 inline-block bg-black text-yellow-300 px-2 py-1">/ marketplace.exe</p>
-        <h1 class="font-archivo text-6xl sm:text-7xl uppercase leading-none">
+        <h1 class="font-archivo text-5xl sm:text-7xl uppercase leading-none">
           STUDENTS SELL.<br/>STUDENTS BUY.<br/><span class="bg-black text-yellow-300 px-2">NO MIDDLEMEN.</span>
         </h1>
         <p class="font-grotesk mt-6 text-lg max-w-xl">
@@ -231,34 +228,50 @@
       </div>
 
       <div class="lg:col-span-5 grid grid-cols-2 gap-4">
-        <div class="bg-pink-400 border-4 border-black neo-shadow p-5 cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-          <p class="font-archivo uppercase text-2xl">Books</p>
-          <p class="font-mono text-xs mt-1">3,204 listed</p>
+        <div class="bg-pink-400 border-4 border-black neo-shadow overflow-hidden cursor-pointer">
+          <div class="aspect-[4/3] overflow-hidden border-b-4 border-black">
+            <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=500&auto=format&fit=crop" alt="Books on shelf" class="h-full w-full object-cover" loading="lazy" />
+          </div>
+          <div class="p-4">
+            <p class="font-archivo uppercase text-2xl">Books</p>
+            <p class="font-mono text-xs mt-1">3,204 listed</p>
+          </div>
         </div>
-        <div class="bg-cyan-300 border-4 border-black neo-shadow p-5 cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="1"/></svg>
-          <p class="font-archivo uppercase text-2xl">Tech</p>
-          <p class="font-mono text-xs mt-1">912 listed</p>
+        <div class="bg-cyan-300 border-4 border-black neo-shadow overflow-hidden cursor-pointer">
+          <div class="aspect-[4/3] overflow-hidden border-b-4 border-black">
+            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&auto=format&fit=crop" alt="Laptop on desk" class="h-full w-full object-cover" loading="lazy" />
+          </div>
+          <div class="p-4">
+            <p class="font-archivo uppercase text-2xl">Tech</p>
+            <p class="font-mono text-xs mt-1">912 listed</p>
+          </div>
         </div>
-        <div class="bg-lime-400 border-4 border-black neo-shadow p-5 cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a14 14 0 0 1 0 20"/></svg>
-          <p class="font-archivo uppercase text-2xl">Sports</p>
-          <p class="font-mono text-xs mt-1">441 listed</p>
+        <div class="bg-lime-400 border-4 border-black neo-shadow overflow-hidden cursor-pointer">
+          <div class="aspect-[4/3] overflow-hidden border-b-4 border-black">
+            <img src="https://images.unsplash.com/photo-1551958219-acbc608c6377?w=500&auto=format&fit=crop" alt="Football and shoes" class="h-full w-full object-cover" loading="lazy" />
+          </div>
+          <div class="p-4">
+            <p class="font-archivo uppercase text-2xl">Sports</p>
+            <p class="font-mono text-xs mt-1">441 listed</p>
+          </div>
         </div>
-        <div class="bg-orange-400 border-4 border-black neo-shadow p-5 cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8H4l4.8 3.5-1.8 5.8L12 14.6l5 3.5-1.9-5.8L20 8.8h-6.1z"/></svg>
-          <p class="font-archivo uppercase text-2xl">Misc</p>
-          <p class="font-mono text-xs mt-1">1,107 listed</p>
+        <div class="bg-orange-400 border-4 border-black neo-shadow overflow-hidden cursor-pointer">
+          <div class="aspect-[4/3] overflow-hidden border-b-4 border-black">
+            <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=500&auto=format&fit=crop" alt="Student backpack and gear" class="h-full w-full object-cover" loading="lazy" />
+          </div>
+          <div class="p-4">
+            <p class="font-archivo uppercase text-2xl">Misc</p>
+            <p class="font-mono text-xs mt-1">1,107 listed</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================== -->
+<!-- =============================================================== -->
 <!-- SAMPLE 04 — BENTO GRID                                          -->
-<!-- ============================================================== -->
+<!-- =============================================================== -->
 <section id="sample-4" class="bg-stone-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20">
     <div class="mb-10 flex items-center gap-3">
@@ -272,21 +285,24 @@
       <p class="mt-4 text-stone-600 text-lg">A full snapshot of what's trending on CampusMart right now.</p>
     </div>
 
-    <div class="grid grid-cols-12 grid-rows-6 gap-4 h-[640px]">
+    <div class="grid grid-cols-12 auto-rows-[110px] gap-4">
       <!-- Big hero tile -->
-      <div class="col-span-12 md:col-span-7 row-span-3 rounded-3xl bg-gradient-to-br from-violet-600 to-fuchsia-500 p-8 text-white relative overflow-hidden cursor-pointer hover:shadow-2xl transition-shadow duration-200">
-        <p class="font-mono text-xs uppercase tracking-widest opacity-80">Featured today</p>
-        <h2 class="font-grotesk text-4xl font-bold mt-2 max-w-md">Engineering textbook bundle — 8 books, 1 price.</h2>
-        <p class="mt-3 max-w-sm opacity-90">Saved by 142 students this week. Posted by Aarav, Year 3 ECE.</p>
-        <div class="absolute bottom-6 left-8 flex items-center gap-3">
-          <span class="font-grotesk text-3xl font-bold">$120</span>
-          <span class="line-through text-white/60">$240</span>
+      <div class="col-span-12 md:col-span-7 row-span-3 rounded-3xl overflow-hidden relative cursor-pointer hover:shadow-2xl transition-shadow duration-200 group">
+        <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&auto=format&fit=crop" alt="Stack of academic textbooks" class="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+        <div class="absolute inset-0 bg-gradient-to-tr from-violet-900/85 via-violet-800/70 to-fuchsia-700/40"></div>
+        <div class="relative h-full p-8 text-white flex flex-col">
+          <p class="font-mono text-xs uppercase tracking-widest opacity-80">Featured today</p>
+          <h2 class="font-grotesk text-3xl sm:text-4xl font-bold mt-2 max-w-md">Engineering textbook bundle — 8 books, 1 price.</h2>
+          <p class="mt-3 max-w-sm opacity-90">Saved by 142 students this week. Posted by Aarav, Year 3 ECE.</p>
+          <div class="mt-auto flex items-center gap-3">
+            <span class="font-grotesk text-3xl font-bold">$120</span>
+            <span class="line-through text-white/60">$240</span>
+          </div>
         </div>
-        <svg xmlns="http://www.w3.org/2000/svg" class="absolute -right-8 -bottom-8 h-56 w-56 opacity-20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
       </div>
 
       <!-- Stats tile -->
-      <div class="col-span-6 md:col-span-5 row-span-2 rounded-3xl bg-white border border-stone-200 p-6 cursor-pointer hover:border-stone-400 transition-colors duration-200">
+      <div class="col-span-12 md:col-span-5 row-span-2 rounded-3xl bg-white border border-stone-200 p-6 cursor-pointer hover:border-stone-400 transition-colors duration-200">
         <p class="font-mono text-xs uppercase tracking-widest text-stone-500">Live activity</p>
         <div class="mt-4 grid grid-cols-3 gap-4">
           <div><p class="font-grotesk text-3xl font-bold">12k</p><p class="text-xs text-stone-500">Listings</p></div>
@@ -304,49 +320,60 @@
       </div>
 
       <!-- Search tile -->
-      <div class="col-span-6 md:col-span-5 row-span-1 rounded-3xl bg-stone-900 text-white p-5 flex items-center gap-3 cursor-pointer hover:bg-stone-800 transition-colors duration-200">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-stone-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <div class="col-span-12 md:col-span-5 row-span-1 rounded-3xl bg-stone-900 text-white p-5 flex items-center gap-3 cursor-pointer hover:bg-stone-800 transition-colors duration-200">
+        <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-stone-700 text-stone-300 font-bold">?</span>
         <span class="text-stone-400">Try "graphic calculator under $50"</span>
       </div>
 
-      <!-- Category small -->
-      <div class="col-span-4 md:col-span-3 row-span-3 rounded-3xl bg-emerald-100 p-6 cursor-pointer hover:bg-emerald-200 transition-colors duration-200">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a14 14 0 0 1 0 20"/></svg>
-        <p class="font-grotesk text-2xl font-bold mt-3 text-emerald-950">Sports & Fitness</p>
-        <p class="text-emerald-800/70 text-sm mt-1">441 listings, 38 nearby</p>
+      <!-- Category tiles with images -->
+      <div class="col-span-6 md:col-span-3 row-span-3 rounded-3xl overflow-hidden relative cursor-pointer group">
+        <img src="https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=600&auto=format&fit=crop" alt="Sports gear" class="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+        <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/85 to-emerald-800/30"></div>
+        <div class="relative h-full p-5 flex flex-col justify-end text-white">
+          <p class="font-grotesk text-2xl font-bold">Sports & Fitness</p>
+          <p class="text-emerald-100/90 text-sm mt-1">441 listings, 38 nearby</p>
+        </div>
       </div>
 
-      <div class="col-span-4 md:col-span-2 row-span-3 rounded-3xl bg-amber-100 p-6 cursor-pointer hover:bg-amber-200 transition-colors duration-200">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="14" rx="2"/></svg>
-        <p class="font-grotesk text-2xl font-bold mt-3 text-amber-950">Tech</p>
-        <p class="text-amber-800/70 text-sm mt-1">912 listings</p>
+      <div class="col-span-6 md:col-span-2 row-span-3 rounded-3xl overflow-hidden relative cursor-pointer group">
+        <img src="https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500&auto=format&fit=crop" alt="Laptop and gadgets" class="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+        <div class="absolute inset-0 bg-gradient-to-t from-amber-900/85 to-amber-800/30"></div>
+        <div class="relative h-full p-5 flex flex-col justify-end text-white">
+          <p class="font-grotesk text-2xl font-bold">Tech</p>
+          <p class="text-amber-100/90 text-sm mt-1">912 listings</p>
+        </div>
       </div>
 
-      <div class="col-span-4 md:col-span-2 row-span-3 rounded-3xl bg-rose-100 p-6 cursor-pointer hover:bg-rose-200 transition-colors duration-200">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-rose-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-        <p class="font-grotesk text-2xl font-bold mt-3 text-rose-950">Books</p>
-        <p class="text-rose-800/70 text-sm mt-1">3,204 listings</p>
+      <div class="col-span-6 md:col-span-2 row-span-3 rounded-3xl overflow-hidden relative cursor-pointer group">
+        <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=500&auto=format&fit=crop" alt="Open books" class="absolute inset-0 h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+        <div class="absolute inset-0 bg-gradient-to-t from-rose-900/85 to-rose-800/30"></div>
+        <div class="relative h-full p-5 flex flex-col justify-end text-white">
+          <p class="font-grotesk text-2xl font-bold">Books</p>
+          <p class="text-rose-100/90 text-sm mt-1">3,204 listings</p>
+        </div>
       </div>
 
-      <div class="col-span-12 md:col-span-5 row-span-3 rounded-3xl bg-white border border-stone-200 p-6 cursor-pointer hover:border-stone-400 transition-colors duration-200">
+      <div class="col-span-12 md:col-span-5 row-span-3 rounded-3xl bg-white border border-stone-200 p-6 cursor-pointer hover:border-stone-400 transition-colors duration-200 flex flex-col">
         <p class="font-mono text-xs uppercase tracking-widest text-stone-500">Trust & safety</p>
         <h3 class="font-grotesk text-2xl font-bold mt-2">Verified IDs only.</h3>
         <p class="text-stone-600 mt-2">Every seller is a registered student. Every chat is logged. Every meetup, on campus.</p>
-        <div class="mt-4 flex -space-x-3">
-          <div class="h-10 w-10 rounded-full bg-violet-500 border-2 border-white"></div>
-          <div class="h-10 w-10 rounded-full bg-emerald-500 border-2 border-white"></div>
-          <div class="h-10 w-10 rounded-full bg-amber-500 border-2 border-white"></div>
-          <div class="h-10 w-10 rounded-full bg-rose-500 border-2 border-white"></div>
-          <div class="h-10 w-10 rounded-full bg-stone-200 border-2 border-white text-xs flex items-center justify-center font-semibold">+8k</div>
+        <div class="mt-auto flex items-center gap-2">
+          <div class="flex -space-x-3">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&auto=format&fit=crop" alt="Student avatar" class="h-10 w-10 rounded-full border-2 border-white object-cover" loading="lazy" />
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop" alt="Student avatar" class="h-10 w-10 rounded-full border-2 border-white object-cover" loading="lazy" />
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&auto=format&fit=crop" alt="Student avatar" class="h-10 w-10 rounded-full border-2 border-white object-cover" loading="lazy" />
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&auto=format&fit=crop" alt="Student avatar" class="h-10 w-10 rounded-full border-2 border-white object-cover" loading="lazy" />
+            <span class="h-10 w-10 rounded-full bg-stone-200 border-2 border-white text-xs flex items-center justify-center font-semibold">+8k</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================================================== -->
+<!-- =============================================================== -->
 <!-- SAMPLE 05 — DARK MODE                                           -->
-<!-- ============================================================== -->
+<!-- =============================================================== -->
 <section id="sample-5" class="bg-slate-950 text-slate-100">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 py-20">
     <div class="mb-10 flex items-center gap-3">
@@ -369,7 +396,7 @@
         </p>
 
         <form class="mt-8 max-w-md flex items-center rounded-2xl border border-slate-800 bg-slate-900/60 p-2 glow-ring focus-within:border-violet-500 transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="ml-3 h-5 w-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span class="ml-2 text-slate-500 text-lg">⌕</span>
           <label for="s5-search" class="sr-only">Search items</label>
           <input id="s5-search" type="text" placeholder="What are you looking for?" class="flex-1 bg-transparent px-3 py-2 text-sm placeholder:text-slate-500 focus:outline-none" />
           <button class="rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 px-5 py-2 text-sm font-semibold hover:opacity-90 transition-opacity duration-200 cursor-pointer">Search</button>
@@ -386,48 +413,40 @@
 
       <div class="relative">
         <div class="absolute -inset-4 bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-emerald-500 opacity-30 blur-2xl rounded-3xl"></div>
-        <div class="relative rounded-2xl border border-slate-800 bg-slate-900/80 glass p-6 glow-ring">
+        <div class="relative rounded-2xl border border-slate-800 bg-slate-900/80 glass p-5 glow-ring">
           <div class="flex items-center justify-between mb-4">
             <p class="font-rubik font-semibold">Live feed</p>
             <span class="text-xs text-slate-500">Updated just now</span>
           </div>
           <ul class="divide-y divide-slate-800">
             <li class="py-3 flex items-center gap-3 hover:bg-slate-800/40 -mx-2 px-2 rounded-lg transition-colors duration-200 cursor-pointer">
-              <div class="h-10 w-10 rounded-lg bg-violet-500/20 text-violet-300 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-              </div>
-              <div class="flex-1">
-                <p class="text-sm font-medium">DBMS Korth, 7th Ed.</p>
+              <img src="https://images.unsplash.com/photo-1532012197267-da84d127e765?w=160&auto=format&fit=crop" alt="DBMS textbook" class="h-12 w-12 rounded-lg object-cover" loading="lazy" />
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium truncate">DBMS Korth, 7th Ed.</p>
                 <p class="text-xs text-slate-500">Priya · Hostel C · 2 min ago</p>
               </div>
               <span class="font-rubik font-bold text-emerald-400">$18</span>
             </li>
             <li class="py-3 flex items-center gap-3 hover:bg-slate-800/40 -mx-2 px-2 rounded-lg transition-colors duration-200 cursor-pointer">
-              <div class="h-10 w-10 rounded-lg bg-fuchsia-500/20 text-fuchsia-300 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18a4 4 0 0 0-8 0"/><circle cx="12" cy="11" r="3"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
-              </div>
-              <div class="flex-1">
-                <p class="text-sm font-medium">Sony WH-1000XM4</p>
+              <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=160&auto=format&fit=crop" alt="Sony headphones" class="h-12 w-12 rounded-lg object-cover" loading="lazy" />
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium truncate">Sony WH-1000XM4</p>
                 <p class="text-xs text-slate-500">Karan · Block A · 12 min ago</p>
               </div>
               <span class="font-rubik font-bold text-emerald-400">$140</span>
             </li>
             <li class="py-3 flex items-center gap-3 hover:bg-slate-800/40 -mx-2 px-2 rounded-lg transition-colors duration-200 cursor-pointer">
-              <div class="h-10 w-10 rounded-lg bg-emerald-500/20 text-emerald-300 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6h4l2 4-4.5 7.5"/><path d="M5.5 17.5 12 6h3"/></svg>
-              </div>
-              <div class="flex-1">
-                <p class="text-sm font-medium">Hercules cycle, gear</p>
+              <img src="https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=160&auto=format&fit=crop" alt="Bicycle" class="h-12 w-12 rounded-lg object-cover" loading="lazy" />
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium truncate">Hercules cycle, gear</p>
                 <p class="text-xs text-slate-500">Ananya · Gate 2 · 1 hr ago</p>
               </div>
               <span class="font-rubik font-bold text-emerald-400">$95</span>
             </li>
             <li class="py-3 flex items-center gap-3 hover:bg-slate-800/40 -mx-2 px-2 rounded-lg transition-colors duration-200 cursor-pointer">
-              <div class="h-10 w-10 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M7 6V4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2"/></svg>
-              </div>
-              <div class="flex-1">
-                <p class="text-sm font-medium">Mini fridge, 45L</p>
+              <img src="https://images.unsplash.com/photo-1584568694244-14fbdf83bd02?w=160&auto=format&fit=crop" alt="Mini refrigerator" class="h-12 w-12 rounded-lg object-cover" loading="lazy" />
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium truncate">Mini fridge, 45L</p>
                 <p class="text-xs text-slate-500">Rohit · Hostel D · 3 hr ago</p>
               </div>
               <span class="font-rubik font-bold text-emerald-400">$65</span>
