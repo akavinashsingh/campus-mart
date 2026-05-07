@@ -270,6 +270,67 @@
     </div>
 </section>
 
+<!-- Sticky mobile action bar (≤ 768px) -->
+<% if (!product.isSold && currUser && !product.owner._id.equals(currUser._id)) { %>
+    <%
+        const mIsSaved = currUser.savedItems &&
+                         currUser.savedItems.some(id => id.equals(product._id));
+    %>
+    <div class="cm-mobile-action-bar" role="group" aria-label="Quick actions">
+        <button id="mabSaveBtn" class="cm-mab-icon-btn <%= mIsSaved ? 'is-saved' : '' %>" type="button" aria-label="<%= mIsSaved ? 'Unsave item' : 'Save item' %>" data-product-id="<%= product._id %>" data-saved="<%= mIsSaved %>">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="<%= mIsSaved ? 'currentColor' : 'none' %>" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+        </button>
+        <button class="cm-btn-action cm-btn-action-primary" data-bs-toggle="modal" data-bs-target="#contactModal" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
+            Chat
+        </button>
+        <% if (product.isNegotiable) { %>
+            <button class="cm-btn-action cm-btn-action-cta" data-bs-toggle="modal" data-bs-target="#offerModal" type="button">
+                Make offer
+            </button>
+        <% } %>
+    </div>
+    <script>
+        document.body.classList.add('cm-has-action-bar');
+        (function () {
+            var b = document.getElementById('mabSaveBtn');
+            var inline = document.getElementById('saveBtn');
+            if (!b) return;
+            b.addEventListener('click', function () {
+                var saved = b.getAttribute('data-saved') === 'true';
+                fetch('/products/' + b.getAttribute('data-product-id') + '/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: saved ? 'unsave' : 'save' })
+                })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (data && data.success) {
+                        var nowSaved = !saved;
+                        b.setAttribute('data-saved', nowSaved);
+                        b.classList.toggle('is-saved', nowSaved);
+                        b.setAttribute('aria-label', nowSaved ? 'Unsave item' : 'Save item');
+                        var svg = b.querySelector('svg');
+                        if (svg) svg.setAttribute('fill', nowSaved ? 'currentColor' : 'none');
+                        // keep inline button in sync if it's also on the page
+                        if (inline) {
+                            inline.setAttribute('data-saved', nowSaved);
+                            inline.classList.toggle('is-saved', nowSaved);
+                            var txt = document.getElementById('saveBtnText');
+                            if (txt) txt.textContent = nowSaved ? 'Saved' : 'Save item';
+                            var isvg = inline.querySelector('svg');
+                            if (isvg) isvg.setAttribute('fill', nowSaved ? 'currentColor' : 'none');
+                        }
+                    } else {
+                        window.location.href = '/login';
+                    }
+                })
+                .catch(function () { window.location.href = '/login'; });
+            });
+        })();
+    </script>
+<% } %>
+
 <!-- Contact modal -->
 <div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
