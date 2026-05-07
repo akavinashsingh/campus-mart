@@ -17,19 +17,22 @@
                     Buy &amp; sell on campus. <span class="cm-grad-text">From students, for students.</span>
                 </h1>
                 <p class="mt-4 text-sm sm:text-lg text-cm-text/75 max-w-xl">
-                    Verified students. Pay safely. Meet on campus.
+                    Verified students. Pay safely. Meet on campus. Use the search up top to find anything.
                 </p>
 
-                <form action="/products/search" method="GET" class="cm-hero-search mt-5" role="search">
-                    <span class="cm-search-icon" aria-hidden="true">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                    </span>
-                    <label for="cm-hero-search" class="sr-only">Search items</label>
-                    <input id="cm-hero-search" type="search" name="q" placeholder="Search calculus, MacBook, cycle…" autocomplete="off" />
-                    <button type="submit" class="cm-search-btn">Search</button>
-                </form>
+                <div class="cm-hero-cta mt-6 flex flex-wrap gap-3">
+                    <% if (currUser) { %>
+                        <a href="/products/new" class="cm-btn-action cm-btn-action-cta cm-focus" style="text-decoration:none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                            List your item
+                        </a>
+                    <% } else { %>
+                        <a href="/signup" class="cm-btn-action cm-btn-action-cta cm-focus" style="text-decoration:none;">Join your campus</a>
+                        <a href="/login" class="cm-btn-action cm-btn-action-ghost cm-focus" style="text-decoration:none;border:1px solid var(--cm-border);">Login</a>
+                    <% } %>
+                </div>
 
-                <div class="cm-popular-chips mt-4">
+                <div class="cm-popular-chips mt-5">
                     <span class="cm-popular-label">Popular:</span>
                     <a href="/products?category=Books" class="cm-chip">Books</a>
                     <a href="/products?category=Electronics" class="cm-chip">Electronics</a>
