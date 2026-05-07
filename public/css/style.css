@@ -632,5 +632,64 @@ main {
     color: #DC2626;
 }
 
+/* === Popular chips: horizontal scroll on phones, wrap on desktop === */
+.cm-popular-chips {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+}
+.cm-popular-label {
+    color: var(--cm-muted);
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-right: 2px;
+}
+@media (max-width: 640px) {
+    .cm-popular-chips {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 2px 16px 6px;
+        margin-left: -16px;
+        margin-right: -16px;
+        scrollbar-width: none;
+    }
+    .cm-popular-chips::-webkit-scrollbar { display: none; }
+    .cm-popular-chips .cm-chip { flex-shrink: 0; }
+}
+
+/* Smaller pill variant for tighter hero */
+.cm-pill-sm { font-size: 12px; padding: 4px 12px; }
+.cm-pill-sm .cm-dot { width: 7px; height: 7px; }
+
+/* Tighter hero on phones (overrides earlier mobile block) */
+@media (max-width: 640px) {
+    .cm-hero h1 { font-size: 1.7rem !important; line-height: 1.15 !important; }
+    .cm-hero .cm-grad-text { display: inline; }
+    .cm-hero p { font-size: 14px !important; margin-top: 12px !important; }
+    .cm-hero .cm-pill-sm { font-size: 11px; padding: 3px 10px; }
+    .cm-hero-search { padding: 4px 4px 4px 12px !important; box-shadow: 0 4px 14px -8px rgba(124, 58, 237, 0.25); }
+    .cm-hero-search .cm-search-icon { margin-right: 4px; }
+    .cm-hero-search .cm-search-icon svg { width: 16px; height: 16px; }
+    .cm-hero-search input { padding: 9px 4px !important; }
+    .cm-hero-search .cm-search-btn { padding: 9px 14px !important; font-size: 13px; min-height: 38px; }
+    .cm-bento-tile { aspect-ratio: 4 / 3 !important; }
+    .cm-bento-tile.mt-6 { margin-top: 0 !important; }
+    /* Brand mark slightly smaller in mobile navbar */
+    .cm-nav-bar .cm-brand-mark { width: 32px; height: 32px; }
+    .cm-nav-bar .cm-brand-mark svg { width: 17px; height: 17px; }
+    .cm-nav-bar a > span:last-child { font-size: 16px; }
+}
+
+@media (max-width: 380px) {
+    .cm-hero h1 { font-size: 1.5rem !important; }
+    .cm-hero p { font-size: 13px !important; }
+    .cm-bento-tile .cm-bento-meta { padding: 4px 8px; }
+    .cm-bento-tile .cm-bento-meta span:first-child { font-size: 12px !important; }
+    .cm-bento-tile .cm-bento-meta span:last-child { display: none; }
+}
+
 
 }
