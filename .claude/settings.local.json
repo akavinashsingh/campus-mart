@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python \".claude/skills/ui-ux-pro-max/scripts/search.py\" \"student campus marketplace ecommerce peer-to-peer products\" --design-system -p \"Campus Mart\" -f markdown)"
+    ]
+  }
+}
