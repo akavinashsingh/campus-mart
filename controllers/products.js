@@ -146,47 +146,74 @@ module.exports.showProduct = async (req, res) => {
         await product.save();
         
         // Build SEO data for product page
-        const pageTitle = `${product.title} - ${product.category} | CampusMart`;
-        const pageDescription = `${product.description ? product.description.substring(0, 155) : product.title + ' for sale on CampusMart'}. Price: $${product.price}. Condition: ${product.condition}.`;
-        const ogImage = product.images && product.images.length > 0 ? product.images[0].url : '';
-        
-        // Structured data for product
-        const structuredData = {
+        const baseUrl = process.env.BASE_URL || 'https://campusmart.com';
+        const productUrl = `${baseUrl}/products/${product._id}`;
+
+        const cleanDesc = product.description
+            ? product.description.replace(/\s+/g, ' ').trim()
+            : product.title;
+        const descSnippet = cleanDesc.length > 140 ? cleanDesc.substring(0, 140).trim() + '…' : cleanDesc;
+        const priceFmt = `₹${Number(product.price).toLocaleString('en-IN')}`;
+
+        const pageTitle = `${product.title} – ${priceFmt} · ${product.category} | CampusMart`;
+        const pageDescription = `${descSnippet} · ${priceFmt} · ${product.condition} · ${product.college}`;
+        const ogImage = product.images && product.images.length > 0
+            ? product.images[0].url
+            : `${baseUrl}/images/og-image.jpg`;
+
+        // Product + Offer schema (rich snippets: price, availability, condition)
+        const productSchema = {
             "@context": "https://schema.org",
             "@type": "Product",
             "name": product.title,
-            "description": product.description || product.title,
+            "description": cleanDesc,
             "image": product.images.map(img => img.url),
+            "url": productUrl,
+            "sku": String(product._id),
+            "productID": String(product._id),
+            "category": product.category,
             "offers": {
                 "@type": "Offer",
+                "url": productUrl,
                 "price": product.price,
-                "priceCurrency": "USD",
-                "availability": product.isSold ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+                "priceCurrency": "INR",
+                "availability": product.isSold
+                    ? "https://schema.org/SoldOut"
+                    : "https://schema.org/InStock",
                 "itemCondition": `https://schema.org/${product.condition === 'New' ? 'NewCondition' : 'UsedCondition'}`,
                 "seller": {
                     "@type": "Person",
-                    "name": product.owner.fullName || product.owner.username
+                    "name": product.owner.fullName || 'Verified student',
+                    "url": `${baseUrl}/user/${product.owner._id}`
                 }
-            },
-            "category": product.category,
-            "brand": product.brand || "Generic"
+            }
         };
-        
-        if (product.reviews && product.reviews.length > 0) {
-            const avgRating = product.reviews.reduce((sum, r) => sum + r.rating, 0) / product.reviews.length;
-            structuredData.aggregateRating = {
-                "@type": "AggregateRating",
-                "ratingValue": avgRating.toFixed(1),
-                "reviewCount": product.reviews.length
-            };
-        }
-        
-        res.render("products/show.ejs", { 
+
+        // BreadcrumbList schema (gives Google the SERP breadcrumb)
+        const breadcrumbSchema = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "Browse", "item": `${baseUrl}/products` },
+                { "@type": "ListItem", "position": 2, "name": product.category, "item": `${baseUrl}/products?category=${encodeURIComponent(product.category)}` },
+                { "@type": "ListItem", "position": 3, "name": product.title, "item": productUrl }
+            ]
+        };
+
+        const structuredData = [productSchema, breadcrumbSchema];
+
+        res.render("products/show.ejs", {
             product,
             pageTitle,
             pageDescription,
+            ogTitle: `${product.title} · ${priceFmt}`,
+            ogDescription: descSnippet,
             ogImage,
             ogType: 'product',
+            twitterTitle: product.title,
+            twitterDescription: descSnippet,
+            twitterImage: ogImage,
+            canonicalUrl: productUrl,
             structuredData,
             currentPath: req.path
         });
@@ -340,11 +367,16 @@ module.exports.searchProducts = async (req, res) => {
             isSold: false
         }).populate("owner");
         
-        res.render("products/index.ejs", { 
-            allProducts: products, 
+        const baseUrl = process.env.BASE_URL || 'https://campusmart.com';
+        res.render("products/index.ejs", {
+            allProducts: products,
             filters: req.query,
             pageTitle: `Search Results for "${q}" - CampusMart`,
             pageDescription: `Find ${q} on CampusMart student marketplace. Browse products from fellow students.`,
+            // Canonical points to /products so search-result URLs don't accumulate in the index
+            canonicalUrl: `${baseUrl}/products`,
+            // Don't index search result pages — too many low-value combinations
+            robots: 'noindex, follow',
             currentPath: req.path
         });
     } catch (err) {
