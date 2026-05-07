@@ -6,34 +6,31 @@
     <div class="cm-blob absolute" style="top:120px; right:-120px; width:480px; height:480px; border-radius:50%; background:#22C55E;"></div>
     <div class="cm-blob absolute" style="bottom:-180px; left:30%; width:420px; height:420px; border-radius:50%; background:#7C3AED;"></div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-12 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-10 sm:pt-10 sm:pb-12 relative">
         <div class="grid lg:grid-cols-12 gap-6 items-center">
             <div class="lg:col-span-7">
-                <span class="cm-pill">
+                <span class="cm-pill cm-pill-sm">
                     <span class="cm-dot"></span>
-                    Live · <strong><%= allProducts.length %></strong> items on your campus
+                    <span class="cm-pill-text"><strong><%= allProducts.length %></strong> items live on your campus</span>
                 </span>
-                <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-cm-text mt-4 leading-[1.05]">
-                    Buy & sell on campus.
-                    <br/>
-                    <span class="cm-grad-text">From students, for students.</span>
+                <h1 class="font-display text-3xl sm:text-5xl lg:text-6xl font-bold text-cm-text mt-3 leading-[1.05]">
+                    Buy &amp; sell on campus. <span class="cm-grad-text">From students, for students.</span>
                 </h1>
-                <p class="mt-5 text-base sm:text-lg text-cm-text/75 max-w-xl">
-                    Books, electronics, sports gear, furniture and more — verified students,
-                    pay safely, meet locally.
+                <p class="mt-4 text-sm sm:text-lg text-cm-text/75 max-w-xl">
+                    Verified students. Pay safely. Meet on campus.
                 </p>
 
-                <form action="/products/search" method="GET" class="cm-hero-search mt-7" role="search">
+                <form action="/products/search" method="GET" class="cm-hero-search mt-5" role="search">
                     <span class="cm-search-icon" aria-hidden="true">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                     </span>
                     <label for="cm-hero-search" class="sr-only">Search items</label>
-                    <input id="cm-hero-search" type="search" name="q" placeholder="Try “calculus textbook” or “MacBook Air”…" autocomplete="off" />
+                    <input id="cm-hero-search" type="search" name="q" placeholder="Search calculus, MacBook, cycle…" autocomplete="off" />
                     <button type="submit" class="cm-search-btn">Search</button>
                 </form>
 
-                <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
-                    <span class="text-cm-text/60 mr-1">Popular:</span>
+                <div class="cm-popular-chips mt-4">
+                    <span class="cm-popular-label">Popular:</span>
                     <a href="/products?category=Books" class="cm-chip">Books</a>
                     <a href="/products?category=Electronics" class="cm-chip">Electronics</a>
                     <a href="/products?category=Sports" class="cm-chip">Sports</a>
