@@ -216,7 +216,16 @@ module.exports.updateProfile = async (req, res) => {
             return res.redirect("/profile");
         }
         
-        const user = await User.findByIdAndUpdate(id, { ...req.body.user });
+        // Only accept the fields the profile form edits. Everything else on the user
+        // (isAdmin, isVerified, rating, password hash) must never come from the request.
+        const updates = {};
+        for (const field of ["fullName", "email", "phone", "college"]) {
+            if (typeof req.body.user?.[field] === "string") {
+                updates[field] = req.body.user[field];
+            }
+        }
+
+        const user = await User.findByIdAndUpdate(id, updates);
         
         if (!user) {
             req.flash("error", "User not found");
