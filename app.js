@@ -18,12 +18,7 @@ const LocalStrategy = require("passport-local");
 const User = require("./models/User.js");
 
 const server = http.createServer(app);
-const io = socketIO(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
-});
+const io = socketIO(server);
 
 // Make io accessible to routes..=
 app.set('io', io);
@@ -123,7 +118,8 @@ const sessionOptions = {
     },
 };
 
-app.use(session(sessionOptions));
+const sessionMiddleware = session(sessionOptions);
+app.use(sessionMiddleware);
 app.use(flash());
 
 // Passport configuration
@@ -142,15 +138,32 @@ app.use((req, res, next) => {
     next();
 });
 
+// Socket.IO is only used for admin notifications, so only logged-in admins may connect.
+// Session and passport run on the handshake request so we know who is connecting.
+const onlyForHandshake = (middleware) => (req, res, next) => {
+    if (req._query.sid === undefined) {
+        middleware(req, res, next);
+    } else {
+        next();
+    }
+};
+io.engine.use(onlyForHandshake(sessionMiddleware));
+io.engine.use(onlyForHandshake(passport.session()));
+// Reject here, not with res.end() in an engine middleware: express-session throws on
+// the stand-in response engine.io uses for WebSocket upgrades, which crashes the app.
+io.use((socket, next) => {
+    const user = socket.request.user;
+    if (user && user.isAdmin) {
+        return next();
+    }
+    next(new Error("Admin login required"));
+});
+
 // Socket.IO connection handling for real-time notifications
 io.on('connection', (socket) => {
+    socket.join('admins');
     console.log('Admin connected:', socket.id);
-    
-    socket.on('join-admin', (adminId) => {
-        socket.join(`admin-${adminId}`);
-        console.log(`Admin ${adminId} joined notification room`);
-    });
-    
+
     socket.on('disconnect', () => {
         console.log('Admin disconnected:', socket.id);
     });

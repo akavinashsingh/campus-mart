@@ -148,15 +148,14 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-    // Connect to Socket.IO
+    // Connect to Socket.IO (the server adds admin sockets to the notification room)
     const socket = io();
-    const adminId = '<%= currUser?._id %>';
-    
-    if (adminId) {
-        socket.emit('join-admin', adminId);
-        console.log('Admin connected to real-time notifications');
-    }
-    
+
+    // Names and product titles are user input, so escape them before using innerHTML
+    const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[ch]);
+
     // Listen for new buyer contacts
     socket.on('new-buyer-contact', (data) => {
         console.log('New contact notification:', data);
@@ -167,7 +166,7 @@
         // Show notification alert
         const alert = document.getElementById('notificationAlert');
         const alertText = document.getElementById('notificationText');
-        alertText.innerHTML = `<strong>New Contact!</strong> ${data.message}`;
+        alertText.innerHTML = `<strong>New Contact!</strong> ${escapeHtml(data.message)}`;
         alert.classList.add('show');
         alert.style.display = 'block';
         
@@ -177,11 +176,11 @@
             const newRow = document.createElement('tr');
             newRow.innerHTML = `
                 <td>
-                    <small>${data.timestamp}</small>
+                    <small>${escapeHtml(data.timestamp)}</small>
                 </td>
-                <td>${data.contact.buyer?.username || 'Unknown'}</td>
-                <td>${data.contact.seller?.username || 'Unknown'}</td>
-                <td>${data.contact.product?.title || 'Deleted'}</td>
+                <td>${escapeHtml(data.contact.buyer?.fullName || 'Unknown')}</td>
+                <td>${escapeHtml(data.contact.seller?.fullName || 'Unknown')}</td>
+                <td>${escapeHtml(data.contact.product?.title || 'Deleted')}</td>
                 <td>
                     <span class="badge bg-${
                         data.contact.contactMethod === 'Email' ? 'primary' : 
@@ -193,7 +192,7 @@
                             data.contact.contactMethod === 'WhatsApp' ? 'fab fa-whatsapp' : 
                             data.contact.contactMethod === 'Phone' ? 'phone' : 'handshake'
                         } me-1"></i>
-                        ${data.contact.contactMethod}
+                        ${escapeHtml(data.contact.contactMethod)}
                     </span>
                 </td>
             `;

@@ -350,19 +350,23 @@ module.exports.destroyProduct = async (req, res) => {
     }
 };
 
+// Escape regex special characters so search text is matched literally
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 module.exports.searchProducts = async (req, res) => {
     try {
         const { q } = req.query;
         
-        if (!q || q.trim() === '') {
+        if (typeof q !== 'string' || q.trim() === '') {
             return res.redirect('/products');
         }
         
+        const pattern = escapeRegex(q.trim());
         const products = await Product.find({
             $or: [
-                { title: { $regex: q, $options: 'i' } },
-                { description: { $regex: q, $options: 'i' } },
-                { category: { $regex: q, $options: 'i' } }
+                { title: { $regex: pattern, $options: 'i' } },
+                { description: { $regex: pattern, $options: 'i' } },
+                { category: { $regex: pattern, $options: 'i' } }
             ],
             isSold: false
         }).populate("owner");
@@ -514,10 +518,10 @@ module.exports.logContact = async (req, res) => {
             { path: 'product', select: 'title price' }
         ]);
         
-        // Emit real-time notification to admin
+        // Emit real-time notification to admins only (sockets join this room in app.js)
         const io = req.app.get('io');
         if (io) {
-            io.emit('new-buyer-contact', {
+            io.to('admins').emit('new-buyer-contact', {
                 message: `New buyer contact: ${contactLog.buyer.fullName} contacted ${contactLog.seller.fullName} about "${contactLog.product.title}"`,
                 contact: contactLog,
                 timestamp: new Date().toLocaleString()
